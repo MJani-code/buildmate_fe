@@ -15,8 +15,11 @@
                 </div>
             </template>
         </v-data-table>
+        <v-btn @click="openDialog('edit')">Szerkesztés</v-btn>
+        <DialogFieldVue :dialog="dialog" :dialogType="dialogType" :editedItem="editedItem" @save="saveItem"
+            @delete="deleteItem" @close="closeDialog" />
 
-        <v-dialog v-model="dialog" max-width="500px">
+        <!-- <v-dialog v-model="dialog" max-width="500px">
             <v-card>
                 <v-card-title>
                     {{ dialogType === 'edit' ? 'Szerkesztés' : 'Törlés' }}
@@ -34,11 +37,136 @@
                     </v-btn>
                 </v-card-actions>
             </v-card>
-        </v-dialog>
+        </v-dialog> -->
     </v-card>
 </template>
 
+
 <script>
+import DialogFieldVue from '../../components/Fields/DialogField.vue';
+
+export default {
+    components: {
+        DialogFieldVue,
+    },
+    data() {
+        return {
+            dialog: false,
+            dialogType: '',
+            editedItem: {},
+            deletedItem: {
+                index: '',
+                name: ''
+            },
+            editedIndex: -1,
+            deletedIndex: -1,
+            isLoading: false,
+            search: '',
+            headers: [
+                {
+                    text: 'Dokumentum neve',
+                    align: 'start',
+                    filterable: true,
+                    value: 'name',
+                },
+                { text: 'Feltöltés dátuma', value: 'uploadingdate' },
+                { text: 'Feltöltötte', value: 'uploadedby' },
+                { text: 'Műveletek', align: 'center', value: 'actions' },
+
+            ],
+            documents: [
+                {
+                    name: 'Dokumentum1',
+                    uploadingdate: '2023-01-01',
+                    uploadedby: 'John Doe',
+                    path: '',
+                    actions: '',
+                },
+                {
+                    name: 'Dokumentum2',
+                    uploadingdate: '2023-01-01',
+                    uploadedby: 'Jane Doe',
+                    actions: '',
+                },
+                {
+                    name: 'Dokumentum3',
+                    uploadingdate: '2023-01-01',
+                    uploadedby: 'John Doe',
+                    path: '',
+                    actions: '',
+                },
+                {
+                    name: 'Dokumentum4',
+                    uploadingdate: '2023-01-01',
+                    uploadedby: 'John Doe',
+                    path: '',
+                    actions: '',
+                },
+                {
+                    name: 'Dokumentum5',
+                    uploadingdate: '2023-01-01',
+                    uploadedby: 'John Doe',
+                    path: '',
+                    actions: '',
+                },
+                {
+                    name: 'Dokumentum6',
+                    uploadingdate: '2023-01-01',
+                    uploadedby: 'John Doe',
+                    path: '',
+                    actions: '',
+                },
+                {
+                    name: 'Dokumentum7',
+                    uploadingdate: '2023-01-01',
+                    uploadedby: 'John Doe',
+                    path: '',
+                    actions: '',
+                },
+                {
+                    name: 'Dokumentum8',
+                    uploadingdate: '2023-01-01',
+                    uploadedby: 'John Doe',
+                    path: '',
+                    actions: '',
+                },
+                {
+                    name: 'Dokumentum9',
+                    uploadingdate: '2023-01-01',
+                    uploadedby: 'John Doe',
+                    path: '',
+                    actions: '',
+                },
+            ],
+        };
+    },
+    methods: {
+        openDialog(dialogType, index) {
+            this.dialog = true;
+            this.dialogType = dialogType;
+            if(this.dialogType === 'edit'){
+                this.editedItem = Object.assign({}, this.documents[index]);
+            }
+        },
+        saveItem() {
+            // implement save logic here
+            this.dialog = false;
+            console.log(this.editedItem.name);
+        },
+        deleteItem() {
+            // implement delete logic here
+            this.dialog = false;
+        },
+        closeDialog() {
+            this.dialog = false;
+        },
+    },
+};
+</script>
+
+
+
+<!-- <script>
 
 import moment from "moment/moment";
 
@@ -196,7 +324,7 @@ export default {
         }
     }
 }
-</script>
+</script> -->
 
 <style scoped>
 .my-table>>>tr:hover {
