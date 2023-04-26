@@ -1,13 +1,14 @@
 <template>
-    <v-dialog :value="dialog" max-width="500px">
+    <v-dialog :value="itemDialog" max-width="500px" persistent>
         <v-card>
             <v-card-title>
                 {{ dialogType === 'edit' ? 'Szerkesztés' : 'Törlés' }}
             </v-card-title>
             <v-card-text>
                 {{ dialogType === 'edit' ? '' : 'Biztosan törölni szeretnéd?' }}
-                <v-text-field v-if="editedItem.name" v-model="editedItem.name" label="Dokumentum neve"
+                <v-text-field v-if="dialogType === 'edit'" v-model="editedItem.name" label="Dokumentum neve"
                     color="#359756"></v-text-field>
+                <v-card-text v-else v-model="editedItem.name">{{ editedItem.name }} </v-card-text>
             </v-card-text>
             <v-card-actions>
                 <v-btn @click="closeDialog">Mégsem</v-btn>
@@ -23,7 +24,7 @@
 <script>
 export default {
     props: {
-        dialog: Boolean,
+        itemDialog: Boolean,
         dialogType: String,
         editedItem: Object,
     },

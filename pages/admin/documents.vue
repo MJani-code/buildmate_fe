@@ -1,6 +1,8 @@
 <template>
     <v-card>
-        <UploadField></UploadField>
+        <Alert :show="show" :showMessage="showMessage"></Alert>
+        <UploadFile :uploadDialog="uploadDialog" @save-item="saveUploadedItem" @close="closeDialog"></UploadFile>
+        <v-btn class="ma-10" @click="openUploadDialog">Új dokumentum</v-btn>
         <v-card-title>
             <v-text-field v-model="search" append-icon="mdi-magnify" label="Keresés" single-line hide-details
                 color="#359756"></v-text-field>
@@ -16,7 +18,7 @@
                 </div>
             </template>
         </v-data-table>
-        <DialogFieldVue :dialog="dialog" :dialogType="dialogType" :editedItem="editedItem" @save="saveItem"
+        <DialogFieldVue :itemDialog="itemDialog" :dialogType="dialogType" :editedItem="editedItem" @save="saveItem"
             @delete="deleteItem" @close="closeDialog" />
     </v-card>
 </template>
@@ -24,16 +26,21 @@
 
 <script>
 import DialogFieldVue from '../../components/Fields/DialogField.vue';
-import UploadField from '../../components/Fields/UploadField.vue';
+import UploadFile from '../../components/Fields/UploadFile.vue';
+import Alert from '../../components/Alert.vue';
 
 export default {
     components: {
         DialogFieldVue,
-        UploadField
+        UploadFile,
+        Alert
     },
     data() {
         return {
-            dialog: false,
+            itemDialog: false,
+            uploadDialog: false,
+            show: false,
+            showMessage: '',
             dialogType: '',
             editedItem: {},
             deletedItem: {
@@ -124,23 +131,30 @@ export default {
     },
     methods: {
         openDialog(dialogType, index) {
-            this.dialog = true;
+            this.itemDialog = true;
             this.dialogType = dialogType;
-            if(this.dialogType === 'edit'){
-                this.editedItem = Object.assign({}, this.documents[index]);
-            }
+            this.editedItem = Object.assign({}, this.documents[index]);
+        },
+        openUploadDialog(){
+            this.uploadDialog = true;
         },
         saveItem() {
             // implement save logic here
-            this.dialog = false;
-            console.log(this.editedItem.name);
+            this.itemDialog = false;
         },
         deleteItem() {
             // implement delete logic here
-            this.dialog = false;
+            this.itemDialog = false;
         },
         closeDialog() {
-            this.dialog = false;
+            this.itemDialog = false;
+            this.uploadDialog = false;
+        },
+        saveUploadedItem() {
+            // implement save logic here
+            this.uploadDialog = false;
+            this.show = true;
+            console.log("file feltöltve");
         },
     },
 };
