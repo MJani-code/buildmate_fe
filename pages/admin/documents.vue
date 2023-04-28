@@ -1,6 +1,6 @@
 <template>
     <v-card>
-        <Alert :show="show" :showMessage="showMessage"></Alert>
+        <Alert :show="showAlert" :message="alertMessage" :type="alertType"></Alert>
         <UploadFile :uploadDialog="uploadDialog" @save-item="saveUploadedItem" @close="closeDialog"></UploadFile>
         <v-btn class="ma-10" @click="openUploadDialog">Új dokumentum</v-btn>
         <v-card-title>
@@ -39,8 +39,9 @@ export default {
         return {
             itemDialog: false,
             uploadDialog: false,
-            show: false,
-            showMessage: '',
+            showAlert: false,
+            alertMessage: '',
+            alertType: '',
             dialogType: '',
             editedItem: {},
             deletedItem: {
@@ -135,7 +136,7 @@ export default {
             this.dialogType = dialogType;
             this.editedItem = Object.assign({}, this.documents[index]);
         },
-        openUploadDialog(){
+        openUploadDialog() {
             this.uploadDialog = true;
         },
         saveItem() {
@@ -153,8 +154,17 @@ export default {
         saveUploadedItem() {
             // implement save logic here
             this.uploadDialog = false;
-            this.show = true;
-            console.log("file feltöltve");
+            // If error
+
+            //If succes
+            this.alertMessage = 'A mentés sikeres volt!'
+            this.alertType = 'success';
+            this.showAlert = true
+            if (this.showAlert = true) {
+                setTimeout(() => {
+                    this.showAlert = false; // Az értesítés elrejtése
+                }, 3000);
+            }
         },
     },
 };

@@ -2,9 +2,9 @@
 <template>
     <div class="alert-container">
         <transition name="alert-animation"> <!-- 1. A transition komponens beállítása az animáció nevére -->
-            <v-alert v-if="AlertToShow" class="alert" :class="type"> <!-- Az animációs tranzíció alkalmazása a div-re -->
+            <v-alert v-if="show" class="alert" :class="type"> <!-- Az animációs tranzíció alkalmazása a div-re -->
                 <!-- Értesítés tartalma -->
-                <v-card-text class="text-center alert-text">Sikeres</v-card-text>
+                <v-card-text class="text-center alert-text">{{ this.message }}</v-card-text>
             </v-alert>
         </transition>
     </div>
@@ -14,24 +14,18 @@
 export default {
     name: 'Alert',
     props: {
-        show: Boolean,
-        showMessage: String
-    },
-    data() {
-        return {
-            type: 'success',
-            AlertToShow: false,
-        };
+        message: {
+            type: String,
+            required: true,
+        },
+        show: {
+            type: Boolean,
+            required: true,
+        },
+        type: '',
     },
     methods: {
-        showAlert() {
-            if (this.props.show === true) {
-                this.AlertToShow === true;
-                setTimeout(() => {
-                    this.AlertToShow = false; // Az értesítés elrejtése
-                }, 5000);
-            }
-        }
+
     }
 };
 </script>
@@ -56,7 +50,7 @@ export default {
 .alert-animation-enter-active,
 .alert-animation-leave-active {
     /* 3. Az animációs időtartam beállítása (0.5 másodperces idővel) */
-    transition: transform 1s;
+    transition: transform 0.5s;
 }
 
 /* 3. Az animáció beállítása */
