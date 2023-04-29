@@ -1,7 +1,7 @@
 <template>
     <v-container class="lighten-5">
         <v-row no-gutters>
-            <v-col xs="12" sm="12" md="6" lg="5" xl="4">
+            <v-col xs="12" sm="12" md="6" lg="6" xl="6" class="col">
                 <v-card class="pa-2"
                     :class="{ 'create-poll-bg-dark': $vuetify.theme.dark, 'create-poll-bg-light': !$vuetify.theme.dark }"
                     outlined tile>
@@ -12,12 +12,12 @@
                                 <div v-for="(query, index) in queries" :key="index">
                                     <div class="v-form-group">
                                         <v-text-field type="text" v-model="query.question"
-                                            :placeholder="'Ide írd a kérdést'">></v-text-field>
+                                            :placeholder="'Ide írd a kérdést'" color="#359756"></v-text-field>
                                     </div>
                                     <div class="v-form-group" v-for="(choice, choiceIndex) in query.choices"
                                         :key="choiceIndex">
                                         <v-text-field type="text" v-model="query.choices[choiceIndex]"
-                                            :placeholder="'Válasz ' + (choiceIndex + 1)">
+                                            :placeholder="'Válasz ' + (choiceIndex + 1)" color="#359756">
                                             <template #append>
                                                 <v-icon class="icon-text-field-icon"
                                                     @click="addChoice(query.choices)">mdi-plus</v-icon>
@@ -37,13 +37,15 @@
                                 <div style="display: block; margin: 20px 20px;">
                                     <v-btn style="width: 100%;" @click="addquery">Új kérdés hozzáadása</v-btn>
                                 </div>
-                                <v-btn type="submit">Szavazás indítása</v-btn>
+                                <div style="display: block; margin: 20px 20px;">
+                                    <v-btn type="submit" style="width: 100%;" color="#359756">Szavazás indítása</v-btn>
+                                </div>
                             </v-form>
                         </v-card-text>
                     </template>
                 </v-card>
             </v-col>
-            <v-col xs="12" sm="12" md="6" lg="7" xl="8">
+            <v-col xs="12" sm="12" md="6" lg="6" xl="6">
                 <v-row no-gutters>
                     <v-col cols="12">
                         <v-card class="ml-2 no-border" outlined tile>
@@ -99,7 +101,7 @@ export default {
 </script>
 
 <style scoped>
-.no-border{
-    border:none !important;
+.no-border {
+    border: none !important;
 }
 </style>

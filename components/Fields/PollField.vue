@@ -10,7 +10,7 @@
                     <v-form>
                         <v-checkbox v-for="(choice, choiceIndex) in poll.choices" :key="choiceIndex" :id="poll.id"
                             :value="choice" :label="poll.choices[choiceIndex].label" :disabled="!choice.enabled"
-                            @click="handleClick(poll, choice)"></v-checkbox>
+                            @click="handleClick(poll, choice)" color="#359756"></v-checkbox>
                     </v-form>
                 </v-expansion-panel-content>
             </v-expansion-panel>

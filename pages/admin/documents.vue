@@ -25,6 +25,7 @@
 
 
 <script>
+
 import DialogFieldVue from '../../components/Fields/DialogField.vue';
 import UploadFile from '../../components/Fields/UploadFile.vue';
 import Alert from '../../components/Alert.vue';

@@ -1,16 +1,15 @@
 <template>
     <v-container fluid>
-        <Alert></Alert>
         <v-row>
             <v-col class="col-12 col-md-6 col-lg-6 col-xl-6">
                 <!-- Új bejelentés -->
                 <template>
-                    <v-card>
+                    <v-card class="sticky-top">
                         <v-card-title>Új bejelentés</v-card-title>
                         <v-card-text>
                             <div>
                                 <div class="v-form-group">
-                                    <v-text-field type="text" :placeholder="'Cím'">></v-text-field>
+                                    <v-text-field type="text" :placeholder="'Cím'" color="#359756"></v-text-field>
                                 </div>
                                 <div class="v-form-group">
                                     <v-textarea solo name="input-7-4" label="Bejelentés szövege"></v-textarea>
@@ -28,7 +27,7 @@
                                 <img :src="selectedFilePath" alt="Selected Image" v-if="selectedFilePath"
                                     class="selected-picture" height="100">
                             </div>
-                            <v-btn type="submit">Küldés</v-btn>
+                            <v-btn type="submit" color="#359756">Küldés</v-btn>
                         </v-card-text>
                     </v-card>
                 </template> </v-col>
@@ -38,7 +37,7 @@
                     <v-card class="mb-4 pa-4">
                         <v-row>
                             <v-col class="pa-2 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                                <v-text-field label="Keresés" v-model="search" />
+                                <v-text-field label="Keresés" v-model="search" color="#359756" />
                             </v-col>
                             <v-col class="pa-2 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
                                 <v-select color="#359756" v-model="filterStatus" :items="statuses" item-text="name"
@@ -57,12 +56,12 @@
                         <v-expansion-panels>
                             <v-expansion-panel class="mb-4">
                                 <v-expansion-panel-header>
-                                    <v-card-text class="pa-0">Fotók</v-card-text>
+                                <v-card-text class="pa-0">Fotók</v-card-text>
                                 </v-expansion-panel-header>
                                 <v-expansion-panel-content>
                                     <v-card v-if="statement.images" class="mt-2">
                                         <template>
-                                            <v-row class="mb-2 pa-2">
+                                            <v-row class="mb-2 mt-2 pa-2">
                                                 <v-col xs="12" sm="4" v-for="(image, index) in statement.images"
                                                     :key="index">
                                                     <a :href="image.url">
@@ -89,11 +88,11 @@
                                 <v-expansion-panel-content>
                                     <v-card v-if="statement.documents" class="mt-2">
                                         <template>
-                                            <v-row class="mb-2 pa-2">
-                                                <v-col xs="12" sm="4" v-for="(documents, index) in statement.documents"
+                                            <v-row class="mb-2 mt-2 pa-2">
+                                                <v-col xs="12" sm="6" v-for="(documents, index) in statement.documents"
                                                     :key="index" class="text-center justify-center align-center">
                                                     <a :href="documents.url" target="_blank" color="#359756">
-                                                        <v-icon size="50">
+                                                        <v-icon size="50" color="#359756">
                                                             mdi-file-pdf-box
                                                         </v-icon>
                                                     </a>
@@ -121,12 +120,8 @@
 
 <script>
 
-import Alert from '../../components/Alert.vue'
 
 export default {
-    components: {
-        Alert
-    },
     data: () => ({
         selectedFilePath: null,
         search: '',
@@ -290,5 +285,13 @@ img.selected-picture {
     transform: translateX(-50%);
     bottom: 0px;
     color: black;
+}
+
+.v-expansion-panel-header{
+    background-color: #359756;
+}
+.sticky-top{
+    position: sticky !important;
+    top: 60px !important;
 }
 </style>

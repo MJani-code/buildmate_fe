@@ -1,7 +1,7 @@
 <template>
-    <v-dialog max-width="50%" :value="uploadDialog" @click:outside="closeDialog">
+    <v-dialog :value="uploadDialog" @click:outside="closeDialog" class="dialog-width" width="auto">
         <v-card class="p-20">
-            <v-text-field label="Dokumentum címe" class="input-group" ></v-text-field>
+            <v-text-field label="Dokumentum címe" class="input-group" color="#359756"></v-text-field>
             <div class="block items-center justify-center text-center">
                 <div class="p-50 bg-gray-100 border border-gray-300" @dragover="dragover" @dragleave="dragleave"
                     @drop="drop">
@@ -31,7 +31,7 @@
             </div>
             <v-card-actions class="mt-10">
                 <v-btn @click="closeDialog()">Mégsem</v-btn>
-                <v-btn @click="saveUploadedItem()">Mentés</v-btn>
+                <v-btn color="#359756" @click="saveUploadedItem()">Mentés</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
