@@ -12,6 +12,7 @@
                 <div>
                     <v-btn icon><v-icon size="20">mdi-eye</v-icon></v-btn>
                     <v-btn @click="openDialog('edit', index)" icon><v-icon size="20">mdi-pencil-outline</v-icon></v-btn>
+                    <v-btn @click="openDialog('download', index)" icon><v-icon size="20">mdi-download-outline</v-icon></v-btn>
                     <v-btn @click="openDialog('delete', index)" icon><v-icon size="20">mdi-delete-outline</v-icon></v-btn>
                 </div>
                 <div>
@@ -133,9 +134,11 @@ export default {
     },
     methods: {
         openDialog(dialogType, index) {
-            this.itemDialog = true;
             this.dialogType = dialogType;
-            this.editedItem = Object.assign({}, this.documents[index]);
+            if(dialogType !== 'download'){
+                this.itemDialog = true;
+                this.editedItem = Object.assign({}, this.documents[index]);
+            }
         },
         openUploadDialog() {
             this.uploadDialog = true;

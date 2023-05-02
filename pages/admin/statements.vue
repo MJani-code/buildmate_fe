@@ -47,16 +47,22 @@
                         </v-row>
                     </v-card>
                 </template>
-                <!-- Bejegyzések -->
+                <!-- Statements -->
                 <template>
                     <v-card v-for="(statement, index) in filteredStatements" :key="index" :id="statement.id"
                         class="mb-4 pa-4">
-                        <v-card-title>{{ statement.title }}</v-card-title>
+                        <v-layout justify-space-between align-center>
+                            <v-card-title>{{ statement.title }}
+                            </v-card-title>
+                            <p class="font-italic subtitle-2 ma-0">
+                                {{ statement.cretedBy }}
+                            </p>
+                        </v-layout>
                         <v-card-text>{{ statement.description }}</v-card-text>
-                        <v-expansion-panels>
+                        <v-expansion-panels >
                             <v-expansion-panel class="mb-4">
-                                <v-expansion-panel-header>
-                                <v-card-text class="pa-0">Fotók</v-card-text>
+                                <v-expansion-panel-header >
+                                    <v-card-text class="pa-0">Fotók</v-card-text>
                                 </v-expansion-panel-header>
                                 <v-expansion-panel-content>
                                     <v-card v-if="statement.images" class="mt-2">
@@ -66,8 +72,8 @@
                                                     :key="index">
                                                     <a :href="image.url">
                                                         <v-img :src=image.url>
-                                                            <v-icon size="30"
-                                                                class="trash-photo">mdi-trash-can-outline</v-icon>
+                                                            <v-icon size="30" class="trash-photo" color="red"
+                                                                @click="openDialog('delete', index)" @click.prevent>mdi-trash-can-outline</v-icon>
                                                         </v-img>
                                                     </a>
                                                 </v-col>
@@ -96,7 +102,8 @@
                                                             mdi-file-pdf-box
                                                         </v-icon>
                                                     </a>
-                                                    <v-icon size="25" class="trash-doc">mdi-trash-can-outline</v-icon>
+                                                    <v-icon size="25" class="trash-doc"
+                                                        @click="openDialog('delete', index)" @click.prevent>mdi-trash-can-outline</v-icon>
                                                     <v-card-text>{{ documents.title }}</v-card-text>
                                                 </v-col>
                                                 <v-col xs="12" sm="4" class="text-center file-upload">
@@ -114,15 +121,25 @@
                 </template>
             </v-col>
         </v-row>
+        <DialogFieldVue :itemDialog="itemDialog" :dialogType="dialogType" :editedItem="editedItem" @delete="deleteItem"
+            @close="closeDialog" />
+            <!-- Ide jöhet majd az UploadDialog a fotó és dokumentum feltöltéshez -->
     </v-container>
 </template>
 
 
 <script>
 
+import DialogFieldVue from '../../components/Fields/DialogField.vue';
 
 export default {
+    components: {
+        DialogFieldVue,
+    },
     data: () => ({
+        itemDialog: false,
+        dialogType: '',
+        editedItem: {},
         selectedFilePath: null,
         search: '',
         statuses: [
@@ -159,7 +176,9 @@ export default {
                         title: "document 2",
                         url: "https://www.buds.com.ua/images/Lorem_ipsum.pdf"
                     }
-                ]
+                ],
+                createdAt: '2023-01-01',
+                cretedBy: 'John Doe',
             },
             {
                 id: 2,
@@ -187,7 +206,9 @@ export default {
                         title: "document 4",
                         url: "https://www.buds.com.ua/images/Lorem_ipsum.pdf"
                     }
-                ]
+                ],
+                createdAt: '2023-01-01',
+                cretedBy: 'John Doe',
             },
         ],
     }),
@@ -234,7 +255,21 @@ export default {
         },
         filterStatements() {
             // A szűrt állítások frissítése
-        }
+        },
+        openDialog(dialogType, index) {
+            this.dialogType = dialogType;
+            if (dialogType !== 'download') {
+                this.itemDialog = true;
+                this.editedItem = Object.assign({}, this.statements[index]);
+            }
+        },
+        deleteItem() {
+            // implement delete logic here
+            this.itemDialog = false;
+        },
+        closeDialog() {
+            this.itemDialog = false;
+        },
     },
     created() {
         // Alapértelmezett érték beállítása
@@ -287,10 +322,12 @@ img.selected-picture {
     color: black;
 }
 
-.v-expansion-panel-header{
+.v-expansion-panel-header
+ {
     background-color: #359756;
 }
-.sticky-top{
+
+.sticky-top {
     position: sticky !important;
     top: 60px !important;
 }

@@ -5,7 +5,7 @@
                 <v-card class="pa-2"
                     :class="{ 'create-poll-bg-dark': $vuetify.theme.dark, 'create-poll-bg-light': !$vuetify.theme.dark }"
                     outlined tile>
-                    <v-card-title>Szavazás-létrehozása</v-card-title>
+                    <v-card-title>Szavazás létrehozása</v-card-title>
                     <template>
                         <v-card-text>
                             <v-form>
