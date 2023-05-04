@@ -1,7 +1,7 @@
 <template>
     <v-card>
         <Alert :show="showAlert" :message="alertMessage" :type="alertType"></Alert>
-        <UploadFile :uploadDialog="uploadDialog" @save-item="saveUploadedItem" @close="closeDialog"></UploadFile>
+        <UploadFile :uploadDialog="uploadDialog" @save="saveUploadedItem" @close="closeDialog"></UploadFile>
         <v-btn class="ma-10" @click="openUploadDialog">Új dokumentum</v-btn>
         <v-card-title>
             <v-text-field v-model="search" append-icon="mdi-magnify" label="Keresés" single-line hide-details
@@ -145,6 +145,7 @@ export default {
         },
         saveItem() {
             // implement save logic here
+            console.log("file is saved");
             this.itemDialog = false;
         },
         deleteItem() {
