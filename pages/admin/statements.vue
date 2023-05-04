@@ -1,6 +1,10 @@
 <template>
     <v-container fluid>
         <v-row>
+            <Alert :show="showAlert" :message="alertMessage" :type="alertType"></Alert>
+            <DialogFieldVue :itemDialog="itemDialog" :dialogType="dialogType" :editedItem="editedItem" @delete="deleteItem"
+                @close="closeDialog" />
+            <UploadFile :uploadDialog="uploadDialog" @save="saveUploadedItem" @close="closeDialog"></UploadFile>
             <v-col class="col-12 col-md-6 col-lg-6 col-xl-6">
                 <!-- Új bejelentés -->
                 <template>
@@ -55,13 +59,13 @@
                             <v-card-title>{{ statement.title }}
                             </v-card-title>
                             <p class="font-italic subtitle-2 ma-0">
-                                {{ statement.cretedBy }}
+                                {{ getStatusName(statement.status) }}
                             </p>
                         </v-layout>
                         <v-card-text>{{ statement.description }}</v-card-text>
-                        <v-expansion-panels >
+                        <v-expansion-panels>
                             <v-expansion-panel class="mb-4">
-                                <v-expansion-panel-header >
+                                <v-expansion-panel-header>
                                     <v-card-text class="pa-0">Fotók</v-card-text>
                                 </v-expansion-panel-header>
                                 <v-expansion-panel-content>
@@ -73,12 +77,14 @@
                                                     <a :href="image.url">
                                                         <v-img :src=image.url>
                                                             <v-icon size="30" class="trash-photo" color="red"
-                                                                @click="openDialog('delete', index)" @click.prevent>mdi-trash-can-outline</v-icon>
+                                                                @click="openDialog('delete', index)"
+                                                                @click.prevent>mdi-trash-can-outline</v-icon>
                                                         </v-img>
                                                     </a>
                                                 </v-col>
                                                 <v-col xs="12" sm="4" class="text-center file-upload">
-                                                    <v-icon size="50" color="#359756">
+                                                    <v-icon size="50" color="#359756"
+                                                        @click="openDialog('uploadPhoto', index)">
                                                         mdi-cloud-upload
                                                     </v-icon>
                                                 </v-col>
@@ -102,12 +108,13 @@
                                                             mdi-file-pdf-box
                                                         </v-icon>
                                                     </a>
-                                                    <v-icon size="25" class="trash-doc"
-                                                        @click="openDialog('delete', index)" @click.prevent>mdi-trash-can-outline</v-icon>
+                                                    <v-icon size="25" class="trash-doc" @click="openDialog('delete', index)"
+                                                        @click.prevent>mdi-trash-can-outline</v-icon>
                                                     <v-card-text>{{ documents.title }}</v-card-text>
                                                 </v-col>
                                                 <v-col xs="12" sm="4" class="text-center file-upload">
-                                                    <v-icon size="50" color="#359756">
+                                                    <v-icon size="50" color="#359756"
+                                                        @click="openDialog('uploadFile', index)">
                                                         mdi-cloud-upload
                                                     </v-icon>
                                                 </v-col>
@@ -117,13 +124,18 @@
                                 </v-expansion-panel-content>
                             </v-expansion-panel>
                         </v-expansion-panels>
+                        <v-layout justify-space-between align-center>
+                            <p class="font-italic subtitle-2 ma-0">
+                                {{ statement.cretedBy }}
+                            </p>
+                            <p class="font-italic subtitle-2 ma-0">
+                                {{ statement.createdAt }}
+                            </p>
+                        </v-layout>
                     </v-card>
                 </template>
             </v-col>
         </v-row>
-        <DialogFieldVue :itemDialog="itemDialog" :dialogType="dialogType" :editedItem="editedItem" @delete="deleteItem"
-            @close="closeDialog" />
-            <!-- Ide jöhet majd az UploadDialog a fotó és dokumentum feltöltéshez -->
     </v-container>
 </template>
 
@@ -131,12 +143,20 @@
 <script>
 
 import DialogFieldVue from '../../components/Fields/DialogField.vue';
+import UploadFile from '../../components/Fields/UploadFile.vue';
+import Alert from '../../components/Alert.vue';
 
 export default {
     components: {
         DialogFieldVue,
+        UploadFile,
+        Alert
     },
     data: () => ({
+        uploadDialog: false,
+        showAlert: false,
+        alertMessage: '',
+        alertType: '',
         itemDialog: false,
         dialogType: '',
         editedItem: {},
@@ -220,11 +240,6 @@ export default {
             } else {
                 filterStatus = this.filterStatus
             }
-            if (filterStatus === 0) {
-                return this.statements.filter(statement => {
-                    return true;
-                });
-            }
             // Az állítások szűrése a search és filterStatus alapján
             return this.statements.filter(statement => {
                 // Ellenőrizzük, hogy a search változó definiált-e
@@ -234,7 +249,10 @@ export default {
                     const title = statement.title.toLowerCase();
                     const description = statement.description.toLowerCase();
                     const search = this.search.toLowerCase();
-                    if ((title.includes(search) || description.includes(search)) && status === filterStatus) {
+                    if(filterStatus === 0 && (title.includes(search) || description.includes(search))){
+                        return true;
+                    }
+                    else if ((title.includes(search) || description.includes(search)) && status === filterStatus) {
                         return true;
                     }
                 } else {
@@ -258,9 +276,11 @@ export default {
         },
         openDialog(dialogType, index) {
             this.dialogType = dialogType;
-            if (dialogType !== 'download') {
+            if (dialogType === 'edit' || dialogType === 'delete') {
                 this.itemDialog = true;
                 this.editedItem = Object.assign({}, this.statements[index]);
+            } else if (dialogType === 'uploadPhoto' || dialogType === 'uploadFile') {
+                this.uploadDialog = true;
             }
         },
         deleteItem() {
@@ -269,6 +289,24 @@ export default {
         },
         closeDialog() {
             this.itemDialog = false;
+        },
+        saveUploadedItem() {
+            // implement save logic here
+            this.uploadDialog = false;
+            // If error
+
+            //If succes
+            this.alertMessage = 'A mentés sikeres volt!'
+            this.alertType = 'success';
+            this.showAlert = true
+            if (this.showAlert = true) {
+                setTimeout(() => {
+                    this.showAlert = false; // Az értesítés elrejtése
+                }, 3000);
+            }
+        },
+        getStatusName(status) {
+            return this.statuses.find((s) => s.id === status)?.name || "unknown";
         },
     },
     created() {
@@ -322,8 +360,7 @@ img.selected-picture {
     color: black;
 }
 
-.v-expansion-panel-header
- {
+.v-expansion-panel-header {
     background-color: #359756;
 }
 
