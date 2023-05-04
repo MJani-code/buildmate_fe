@@ -145,7 +145,6 @@ export default {
         },
         saveItem() {
             // implement save logic here
-            console.log("file is saved");
             this.itemDialog = false;
         },
         deleteItem() {
