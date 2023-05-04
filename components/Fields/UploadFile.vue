@@ -78,7 +78,7 @@ export default {
             event.currentTarget.classList.remove('bg-success');
         },
         saveUploadedItem() {
-            this.$emit('save-item');
+            this.$emit('save');
         },
         closeDialog() {
             this.$emit('close');
