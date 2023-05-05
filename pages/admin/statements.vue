@@ -60,6 +60,7 @@
                             </v-card-title>
                             <p class="font-italic subtitle-2 ma-0">
                                 {{ getStatusName(statement.status) }}
+                                <v-icon size="30" :color=getStatusColor(statement.status)>mdi-circle-small</v-icon>
                             </p>
                         </v-layout>
                         <v-card-text>{{ statement.description }}</v-card-text>
@@ -164,9 +165,9 @@ export default {
         search: '',
         statuses: [
             { id: 0, name: "mind" },
-            { id: 1, name: "nyitott" },
-            { id: 2, name: "folyamatban" },
-            { id: 3, name: "lezárt" },
+            { id: 1, name: "nyitott", color: 'red' },
+            { id: 2, name: "folyamatban", color: 'yellow' },
+            { id: 3, name: "lezárt", color: 'green' },
         ],
         filterStatus: '',
         statements: [
@@ -249,7 +250,7 @@ export default {
                     const title = statement.title.toLowerCase();
                     const description = statement.description.toLowerCase();
                     const search = this.search.toLowerCase();
-                    if(filterStatus === 0 && (title.includes(search) || description.includes(search))){
+                    if (filterStatus === 0 && (title.includes(search) || description.includes(search))) {
                         return true;
                     }
                     else if ((title.includes(search) || description.includes(search)) && status === filterStatus) {
@@ -289,8 +290,9 @@ export default {
         },
         closeDialog() {
             this.itemDialog = false;
+            this.uploadDialog = false;
         },
-        saveUploadedItem() {
+        saveUploadedItem(item) {
             // implement save logic here
             this.uploadDialog = false;
             // If error
@@ -307,6 +309,9 @@ export default {
         },
         getStatusName(status) {
             return this.statuses.find((s) => s.id === status)?.name || "unknown";
+        },
+        getStatusColor(status) {
+            return this.statuses.find((s) => s.id === status)?.color || "unknown";
         },
     },
     created() {
