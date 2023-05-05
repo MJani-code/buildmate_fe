@@ -1,38 +1,42 @@
 <template>
     <v-dialog :value="uploadDialog" @click:outside="closeDialog" class="dialog-width" width="auto">
         <v-card class="p-20">
-            <v-text-field label="Dokumentum címe" class="input-group" color="#359756"></v-text-field>
-            <div class="block items-center justify-center text-center">
-                <div class="p-50 bg-gray-100 border border-gray-300" @dragover="dragover" @dragleave="dragleave"
-                    @drop="drop">
-                    <input type="file" multiple name="fields[assetsFieldHandle][]" id="assetsFieldHandle"
-                        class="w-px h-px opacity-0 overflow-hidden absolute" @change="onChange" ref="file"
-                        accept=".pdf,.jpg,.jpeg,.png" />
-                    <div>
-                        Húzd ide a feltölteni kívánt dokumentumot vagy kattints
-                        <label for="assetsFieldHandle" class="block cursor-pointer">
-                            <span class="underline"><a>ide</a></span>
-                        </label>
-                    </div>
-                    <v-row class="mt-4" v-if="this.filelist.length">
-                        <div v-for="file in filelist">
-                            <v-icon size="30" color="#359756">
-                                mdi-file
-                            </v-icon>
-                            <v-card-text>
-                                {{ file.name }}
-                                <v-icon class="ml-2" size="20" @click="remove(filelist.indexOf(file))">
-                                    mdi-close
-                                </v-icon>
-                            </v-card-text>
+            <v-form ref="form" @submit.prevent="onSubmit">
+                <v-text-field v-model="item.name" label="Dokumentum címe" class="input-group" color="#359756" required
+                    :rules="titleRule"></v-text-field>
+                <div class="block items-center justify-center text-center">
+                    <div class="p-50 bg-gray-100 border border-gray-300" @dragover="dragover" @dragleave="dragleave"
+                        @drop="drop">
+                        <v-input type="file" multiple name="fields[assetsFieldHandle][]" id="assetsFieldHandle"
+                            class="w-px h-px opacity-0 overflow-hidden absolute" @change="onChange" ref="file"
+                            accept=".pdf,.jpg,.jpeg,.png"
+                            :rules="fileRule" required />
+                        <div>
+                            Húzd ide a feltölteni kívánt dokumentumot vagy kattints
+                            <label for="assetsFieldHandle" class="block cursor-pointer">
+                                <span class="underline"><a>ide</a></span>
+                            </label>
                         </div>
-                    </v-row>
+                        <v-row class="mt-4" v-if="this.filelist.length">
+                            <div v-for="file in filelist">
+                                <v-icon size="30" color="#359756">
+                                    mdi-file
+                                </v-icon>
+                                <v-card-text>
+                                    {{ file.name }}
+                                    <v-icon class="ml-2" size="20" @click="remove(filelist.indexOf(file))">
+                                        mdi-close
+                                    </v-icon>
+                                </v-card-text>
+                            </div>
+                        </v-row>
+                    </div>
                 </div>
-            </div>
-            <v-card-actions class="mt-10">
-                <v-btn @click="closeDialog()">Mégsem</v-btn>
-                <v-btn color="#359756" @click="saveUploadedItem()">Mentés</v-btn>
-            </v-card-actions>
+                <v-card-actions class="mt-10">
+                    <v-btn @click="closeDialog()">Mégsem</v-btn>
+                    <v-btn type="submit" color="#359756">Mentés</v-btn>
+                </v-card-actions>
+            </v-form>
         </v-card>
     </v-dialog>
 </template>
@@ -42,12 +46,18 @@ export default {
     name: "UploadField",
     props: {
         uploadDialog: Boolean,
+        item: {
+            type: Object,
+            default: () => ({ name: "" }),
+        },
     },
     data() {
         return {
             delimiters: ['${', '}'], // Avoid Twig conflicts
             filelist: [], // Store our uploaded files
-        }
+            titleRule: [v => !!v || 'Kötelező kitölteni'],
+            fileRule: [v => !!v || 'Dokumentumot csatolni kötelező'],
+        };
     },
     methods: {
         onChange() {
@@ -77,8 +87,12 @@ export default {
             event.currentTarget.classList.add('bg-gray-100');
             event.currentTarget.classList.remove('bg-success');
         },
-        saveUploadedItem() {
-            this.$emit('save');
+        async onSubmit() {
+            const isValid = await this.$refs.form.validate();
+            if (!isValid) {
+                return;
+            }
+            this.$emit("save", this.item);
         },
         closeDialog() {
             this.$emit('close');
@@ -110,5 +124,4 @@ export default {
     background-color: #359756 !important;
     display: inline-block !important;
 }
-
 </style>
