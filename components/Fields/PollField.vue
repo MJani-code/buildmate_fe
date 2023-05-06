@@ -12,9 +12,12 @@
                             :value="choice" :label="poll.choices[choiceIndex].label" :disabled="!choice.enabled"
                             @click="handleClick(poll, choice)" color="#359756"></v-checkbox>
                     </v-form>
+                    <v-btn type="submit" color="#359756">Szavazok</v-btn>
                 </v-expansion-panel-content>
             </v-expansion-panel>
         </v-expansion-panels>
+        <div style="display: block; margin: 20px 20px;">
+        </div>
     </v-card>
 </template>
 
