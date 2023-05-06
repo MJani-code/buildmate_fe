@@ -2,8 +2,8 @@
     <v-menu :close-on-content-click="false" transition="scale-transition" offset-y min-width="auto">
         <template v-slot:activator="{ on, attrs }">
             <div>
-                <v-text-field v-model="startTime" label="Start Time" type="datetime-local" />
-                <v-text-field v-model="endTime" label="End Time" type="datetime-local" />
+                <v-text-field v-model="startTime" label="Start Time" type="datetime-local" color="#359756" />
+                <v-text-field v-model="endTime" label="End Time" type="datetime-local" color="#359756" />
                 <ul>
                 </ul>
             </div>
