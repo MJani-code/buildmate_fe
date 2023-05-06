@@ -7,10 +7,9 @@
                 <div class="block items-center justify-center text-center">
                     <div class="p-50 bg-gray-100 border border-gray-300" @dragover="dragover" @dragleave="dragleave"
                         @drop="drop">
-                        <v-input type="file" multiple name="fields[assetsFieldHandle][]" id="assetsFieldHandle"
+                        <v-input type="file" v-model="filelist" name="fields[assetsFieldHandle][]" id="assetsFieldHandle"
                             class="w-px h-px opacity-0 overflow-hidden absolute" @change="onChange" ref="file"
-                            accept=".pdf,.jpg,.jpeg,.png"
-                            :rules="fileRule" required />
+                            accept=".pdf,.jpg,.jpeg,.png" :rules="fileRule" required />
                         <div>
                             Húzd ide a feltölteni kívánt dokumentumot vagy kattints
                             <label for="assetsFieldHandle" class="block cursor-pointer">
@@ -56,8 +55,11 @@ export default {
             delimiters: ['${', '}'], // Avoid Twig conflicts
             filelist: [], // Store our uploaded files
             titleRule: [v => !!v || 'Kötelező kitölteni'],
-            fileRule: [v => !!v || 'Dokumentumot csatolni kötelező'],
+            fileRule: [(v) => v.length > 0 || 'Dokumentumot csatolni kötelező',]
         };
+    },
+    computed: {
+        //
     },
     methods: {
         onChange() {
