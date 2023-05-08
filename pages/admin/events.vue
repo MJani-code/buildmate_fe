@@ -1,5 +1,6 @@
 <template>
     <v-row class="fill-height">
+        <Alert :show="showAlert" :message="alertMessage" :type="alertType"></Alert>
         <v-col>
             <div class="selects">
                 <v-sheet tile height="54" color="#359756" class="d-flex white-text">
@@ -33,16 +34,19 @@
                 </v-calendar>
                 <v-dialog v-model="dialogOpen" width="400">
                     <v-card>
-                        <v-card-title>{{ eventToEdit.name }} esemény szerkesztése</v-card-title>
+                        <v-card-title>{{ eventToEdit.name }} szerkesztése</v-card-title>
                         <v-card-text>
                             <v-form>
-                                <v-text-field v-model="eventName" label="Esemény neve" />
+                                <v-text-field color="#359756" v-model="eventToEdit.name" label="Esemény neve" />
+                                <datePicker :starttime="eventToEdit.start" :endtime="eventToEdit.end"></datePicker>
+                                <v-select color="#359756" v-model="eventName" :items="eventCategories" item-text="name"
+                                    item-value="id" label="Kategória">
+                                </v-select>
                             </v-form>
-                            <datePicker :starttime="eventToEdit.start" :endtime="eventToEdit.end"></datePicker>
                         </v-card-text>
                         <v-card-actions>
-                            <v-btn @click="closeDialog">Cancel</v-btn>
-                            <v-btn color="#359756">Save</v-btn>
+                            <v-btn @click="closeDialog">Mégsem</v-btn>
+                            <v-btn @click="saveUploadedItem" color="#359756">Mentés</v-btn>
                         </v-card-actions>
                     </v-card>
                 </v-dialog>
@@ -54,12 +58,24 @@
 <script>
 
 import datePicker from "../../components/Fields/datepicker.vue";
+import Alert from '../../components/Alert.vue';
 
 export default {
     data: () => ({
         dialogOpen: false,
+        showAlert: false,
+        alertMessage: '',
+        alertType: '',
         eventToEdit: [],
         eventName: '',
+        eventCategories: [
+            { name: 'Kerti esemény', color: '#b5f556' },
+            { name: 'Kuka-kommunális', color: '#19542b' },
+            { name: 'Kuka-szelektív', color: '#c7c420' },
+            { name: 'Fűnyírás', color: '#359756' },
+            { name: 'Közgyűlés', color: '#c29844' },
+            { name: 'Egyéb', color: '#56f5e8' },
+        ],
         type: 'week',
         types: ['month', 'week', 'day', '4day'],
         mode: 'stack',
@@ -73,8 +89,6 @@ export default {
         ],
         value: '',
         events: [],
-        colors: ['#2196F3', '#3F51B5', '#673AB7', '#00BCD4', '#4CAF50', '#FF9800', '#757575'],
-        names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
         dragEvent: null,
         dragStart: null,
         createEvent: null,
@@ -83,6 +97,7 @@ export default {
     }),
     components: {
         datePicker,
+        Alert
     },
     methods: {
         startDrag({ event, timed }) {
@@ -197,14 +212,19 @@ export default {
                 const secondTimestamp = this.rnd(2, timed ? 8 : 288) * 900000
                 const start = firstTimestamp - (firstTimestamp % 900000)
                 const end = start + secondTimestamp
+                const eventCategoryIndex = Math.floor(Math.random()* 6);
 
-                events.push({
-                    name: this.rndElement(this.names),
-                    color: this.rndElement(this.colors),
-                    start,
-                    end,
-                    timed,
-                })
+                    events.push({
+                        // name: this.rndElement(this.names),
+                        // color: this.rndElement(this.colors),
+                        name: 'Esemény '+i ,
+                        color: this.eventCategories[eventCategoryIndex].color,
+                        category: this.eventCategories[eventCategoryIndex].name,
+                        start,
+                        end,
+                        timed,
+                    })
+
             }
             this.events = events
         },
@@ -218,8 +238,23 @@ export default {
             nativeEvent.stopPropagation();
             // save the event to edit and open the dialog
             this.eventToEdit = event;
-            this.eventName = event.name;
+            this.eventName = event.category;
             this.dialogOpen = true;
+        },
+        saveUploadedItem() {
+            // implement save logic here
+            this.dialogOpen = false;
+            // If error
+
+            //If succes
+            this.alertMessage = 'A mentés sikeres volt!'
+            this.alertType = 'success';
+            this.showAlert = true
+            if (this.showAlert = true) {
+                setTimeout(() => {
+                    this.showAlert = false; // Az értesítés elrejtése
+                }, 3000);
+            }
         },
         closeDialog() {
             this.dialogOpen = false;
