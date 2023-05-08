@@ -9,6 +9,14 @@
                 <!-- Új bejelentés -->
                 <template>
                     <v-card class="sticky-top">
+                        <v-banner two-line>
+                            <v-avatar slot="icon" color="yellow" size="40">
+                                <v-icon icon="mdi-alert-outline" color="black">
+                                    mdi-alert-outline
+                                </v-icon>
+                            </v-avatar>
+                            Társasházat érintő hiba, felújítási vagy karbantartási igény bejelentése a társasházat kezelő felé.
+                        </v-banner>
                         <v-card-title>Új bejelentés</v-card-title>
                         <v-card-text>
                             <div>
