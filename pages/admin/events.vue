@@ -115,9 +115,10 @@ export default {
                 this.dragTime = mouse - start
             } else {
                 this.createStart = this.roundTime(mouse)
+                const randomIndex = Math.floor(Math.random() * this.eventCategories.length);
                 this.createEvent = {
                     name: `Event #${this.events.length}`,
-                    color: this.rndElement(this.colors),
+                    color: this.eventCategories[randomIndex].color,
                     start: this.createStart,
                     end: this.createStart,
                     timed: true,
