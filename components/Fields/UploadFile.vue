@@ -7,7 +7,7 @@
                 <div class="block items-center justify-center text-center">
                     <div class="p-50 bg-gray-100 border border-gray-300" @dragover="dragover" @dragleave="dragleave"
                         @drop="drop">
-                        <v-input type="file" v-model="filelist" name="fields[assetsFieldHandle][]" id="assetsFieldHandle"
+                        <input type="file" model="filelist" name="fields[assetsFieldHandle][]" id="assetsFieldHandle"
                             class="w-px h-px opacity-0 overflow-hidden absolute" @change="onChange" ref="file"
                             accept=".pdf,.jpg,.jpeg,.png" :rules="fileRule" required />
                         <div>
