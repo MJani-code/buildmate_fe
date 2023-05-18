@@ -34,7 +34,7 @@
                   </span>
                 </template>
               </v-text-field>
-              <v-btn type="submit" block class="mt-2" @click="logIn">
+              <v-btn type="submit" block class="mt-2" @click="login">
                 Bejelentkezés
               </v-btn>
             </v-form>
@@ -90,8 +90,9 @@ export default {
     formatDate(date) {
       return moment(date.trim(), 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD');
     },
-    async logIn() {
-      //
+    login(){
+      const user = {};
+      this.$store.dispatch('login', user);
     },
   }
 }

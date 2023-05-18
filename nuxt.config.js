@@ -22,11 +22,17 @@ export default {
     ]
   },
 
+  router: {
+    middleware: ['auth'], // Itt adj hozzá middleware-t, például az 'auth' middleware-t
+  },
+
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: [
+    '~/store/index.js'
+  ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
