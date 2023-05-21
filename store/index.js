@@ -23,7 +23,7 @@ export const createStore = () => {
         },
         actions: {
             login({ commit }, user) {
-                // Beléptetési logika, például API hívás vagy adatbázis ellenőrzés
+                //TODO Beléptetési logika, például API hívás vagy adatbázis ellenőrzés. Értékek változóba mentése.
                 const userRole = "admin";
 
                 commit('SET_LOGGED_IN', true)
@@ -32,7 +32,8 @@ export const createStore = () => {
                 localStorage.setItem('loggedIn', 'true')
                 localStorage.setItem('userRole', userRole)
 
-                this.$router.push('/admin/home') // Módosítsd a célútvonalat a saját alkalmazásodhoz igazítva
+                //TODO: userRole kapott értéke alapján elirányítani
+                this.$router.push('/'+userRole+'/home') // Módosítsd a célútvonalat a saját alkalmazásodhoz igazítva
 
             },
             logout({ commit }) {

@@ -1,22 +1,25 @@
-// middleware/auth.js
-
 export default function ({ store, redirect, route }) {
-    const loggedIn = localStorage.getItem('loggedIn') === 'true';
+    const loggedIn = localStorage.getItem('loggedIn');
     const userRole = localStorage.getItem('userRole');
-    console.log(loggedIn);
+
     // Ellenőrizd, hogy a felhasználó be van-e jelentkezve
-    if (route.path.startsWith('/admin') && !loggedIn) {
-        redirect('/') // Átirányítás a bejelentkezési oldalra, ha nincs bejelentkezve
-        console.log('admin kezdetű oldalra navigáltunk és nem vagyunk bejelentkezve');
-    } else if (route.path.startsWith('/ccr') && !loggedIn) {
-        redirect('/') // Átirányítás a bejelentkezési oldalra, ha nincs bejelentkezve
-        console.log('ccr kezdetű oldalra navigáltunk és nem vagyunk bejelentkezve');
+    if (route.path.startsWith('/admin') && loggedIn == null) {
+        redirect('/')
+    } else if (route.path.startsWith('/ccr') && loggedIn == null) {
+        redirect('/')
+    }
+
+    //Ellenőrizzük, hogy a felhasználónak van-e megfelelő jogosultsága az utvonal megtekintéséhez
+    else if (route.path.startsWith('/ccr') && userRole !== 'ccr') {
+        redirect('/')
+    }else if (route.path.startsWith('/admin') && userRole !== 'admin') {
+        redirect('/')
     }
 
     // Ellenőrizd a felhasználó jogosultságát csak a bizonyos útvonalon
     if (route.path.startsWith('/ccr')) {
         if (userRole !== 'ccr') {
-            return redirect('/') // Átirányítás a kezdőoldalra, ha a felhasználó nem rendelkezik megfelelő jogosultsággal
+            return redirect('/')
         }
     }
 }
