@@ -8,31 +8,39 @@
                         <v-container>
                             <v-row>
                                 <v-col cols="12" sm="6" md="6" lg="6" xl="6">
-                                    <v-text-field color="#359756" v-model="user.firstName" :readonly="!editMode"
+                                    <v-text-field :clearable="editMode" color="#359756" v-model="user.firstName" :readonly="!editMode"
                                         :filled="!editMode" label="Vezetéknév"></v-text-field>
                                 </v-col>
                                 <v-col cols="12" sm="6" md="6" lg="6" xl="6">
-                                    <v-text-field color="#359756" v-model="user.lastName" :readonly="!editMode"
+                                    <v-text-field :clearable="editMode" color="#359756" v-model="user.lastName" :readonly="!editMode"
                                         :filled="!editMode" label="Keresztnév"></v-text-field>
                                 </v-col>
                             </v-row>
                             <v-row>
                                 <v-col cols="12">
-                                    <v-text-field color="#359756" v-model="user.email" :readonly="!editMode"
+                                    <v-text-field :clearable="editMode" color="#359756" v-model="user.email" :readonly="!editMode"
                                         :filled="!editMode" label="E-mail"></v-text-field>
+                                </v-col>
+                                <v-col cols="12">
+                                    <v-text-field :clearable="editMode" type="password" color="#359756" v-model="user.password" :readonly="!editMode"
+                                        :filled="!editMode" label="Jelszó"></v-text-field>
+                                </v-col>
+                                <v-col cols="12" v-if="editMode">
+                                    <v-text-field :clearable="editMode" type="password" color="#359756" v-model="user.passwordConfirm" :readonly="!editMode"
+                                        :filled="!editMode" label="Jelszó ismét"></v-text-field>
                                 </v-col>
                             </v-row>
                             <v-row>
                                 <v-col cols="12" sm="6" md="6" lg="5" xl="6">
-                                    <v-text-field color="#359756" v-model="user.phoneNumber" :readonly="!editMode"
+                                    <v-text-field :clearable="editMode" color="#359756" v-model="user.phoneNumber" :readonly="!editMode"
                                         :filled="!editMode" label="Telefonszám"></v-text-field>
                                 </v-col>
                                 <v-col cols="12" sm="6" md="6" lg="4" xl="6">
-                                    <v-text-field color="#359756" v-model="user.stairCase" :readonly="!editMode"
+                                    <v-text-field :clearable="editMode" color="#359756" v-model="user.stairCase" :readonly="!editMode"
                                         :filled="!editMode" label="Lépcsőház"></v-text-field>
                                 </v-col>
                                 <v-col cols="12" sm="6" md="6" lg="3" xl="6">
-                                    <v-text-field color="#359756" v-model="user.flat" :readonly="!editMode"
+                                    <v-text-field :clearable="editMode" color="#359756" v-model="user.flat" :readonly="!editMode"
                                         :filled="!editMode" label="Lakás"></v-text-field>
                                 </v-col>
                             </v-row>
@@ -61,6 +69,8 @@ export default {
                 lastName: '',
                 email: '',
                 phoneNumber: '',
+                password: '',
+                passwordConfirm: '',
                 stairCase: '',
                 flat: '',
             },
@@ -74,7 +84,7 @@ export default {
     methods: {
         saveProfile() {
             // Felhasználói profil mentése
-            //TODO implementálni a mentési logikát a profil mentésére (pl. API hívás)
+            //TODO implementálni a validálási és mentési logikát a profil mentésére (pl. API hívás)
             console.log('Profil mentve:', this.user);
             this.editMode = false;
         },
@@ -85,11 +95,13 @@ export default {
                 firstName: 'John',
                 lastName: 'Doe',
                 email: 'john.doe@example.com',
+                password: '12345678',
                 phoneNumber: '1212444',
                 stairCase: 'A',
                 flat: '3',
             };
         }
+        //TODO mégse gombra kattintva vissza kell állítani az eredeti bevitt adatokat
     }
 };
 </script>
