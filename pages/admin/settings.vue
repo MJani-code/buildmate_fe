@@ -1,63 +1,64 @@
 <template>
-    <v-row>
-        <v-col cols="12" md="6" lg="6" xl="6">
-            <v-card class="profile">
-                <v-card-title class="profile-title">Felhasználói profil</v-card-title>
-                <v-card-text>
-                    <v-form>
-                        <v-container>
-                            <v-row>
-                                <v-col cols="12" sm="6" md="6" lg="6" xl="6">
-                                    <v-text-field :clearable="editMode" color="#359756" v-model="user.firstName" :readonly="!editMode"
-                                        :filled="!editMode" label="Vezetéknév"></v-text-field>
-                                </v-col>
-                                <v-col cols="12" sm="6" md="6" lg="6" xl="6">
-                                    <v-text-field :clearable="editMode" color="#359756" v-model="user.lastName" :readonly="!editMode"
-                                        :filled="!editMode" label="Keresztnév"></v-text-field>
-                                </v-col>
-                            </v-row>
-                            <v-row>
-                                <v-col cols="12">
-                                    <v-text-field :clearable="editMode" color="#359756" v-model="user.email" :readonly="!editMode"
-                                        :filled="!editMode" label="E-mail"></v-text-field>
-                                </v-col>
-                                <v-col cols="12">
-                                    <v-text-field :clearable="editMode" type="password" color="#359756" v-model="user.password" :readonly="!editMode"
-                                        :filled="!editMode" label="Jelszó"></v-text-field>
-                                </v-col>
-                                <v-col cols="12" v-if="editMode">
-                                    <v-text-field :clearable="editMode" type="password" color="#359756" v-model="user.passwordConfirm" :readonly="!editMode"
-                                        :filled="!editMode" label="Jelszó ismét"></v-text-field>
-                                </v-col>
-                            </v-row>
-                            <v-row>
-                                <v-col cols="12" sm="6" md="6" lg="5" xl="6">
-                                    <v-text-field :clearable="editMode" color="#359756" v-model="user.phoneNumber" :readonly="!editMode"
-                                        :filled="!editMode" label="Telefonszám"></v-text-field>
-                                </v-col>
-                                <v-col cols="12" sm="6" md="6" lg="4" xl="6">
-                                    <v-text-field :clearable="editMode" color="#359756" v-model="user.stairCase" :readonly="!editMode"
-                                        :filled="!editMode" label="Lépcsőház"></v-text-field>
-                                </v-col>
-                                <v-col cols="12" sm="6" md="6" lg="3" xl="6">
-                                    <v-text-field :clearable="editMode" color="#359756" v-model="user.flat" :readonly="!editMode"
-                                        :filled="!editMode" label="Lakás"></v-text-field>
-                                </v-col>
-                            </v-row>
-                            <v-row>
-
-                            </v-row>
-                        </v-container>
-                    </v-form>
-                </v-card-text>
-                <v-card-actions>
-                    <v-btn v-if="editMode" @click="editMode = false">Mégsem</v-btn>
-                    <v-btn v-if="!editMode" @click="editMode = true">Szerkesztés</v-btn>
-                    <v-btn v-else color="#359756" @click="saveProfile">Profil mentése</v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-col>
-    </v-row>
+    <v-container fluid>
+        <v-row>
+            <v-col cols="12" md="6" lg="6" xl="4">
+                <template>
+                    <v-card class="">
+                        <v-card-title class="profile-title">Felhasználói profil</v-card-title>
+                        <v-card-text>
+                            <v-form>
+                                <v-row>
+                                    <v-col cols="12"  sm="6" md="6" lg="6" xl="6">
+                                        <v-text-field :clearable="editMode" color="#359756" v-model="user.firstName"
+                                            :readonly="!editMode" :filled="!editMode" label="Vezetéknév"></v-text-field>
+                                    </v-col>
+                                    <v-col cols="12"  sm="6" md="6" lg="6" xl="6">
+                                        <v-text-field :clearable="editMode" color="#359756" v-model="user.lastName"
+                                            :readonly="!editMode" :filled="!editMode" label="Keresztnév"></v-text-field>
+                                    </v-col>
+                                </v-row>
+                                <v-row>
+                                    <v-col cols="12">
+                                        <v-text-field :clearable="editMode" color="#359756" v-model="user.email"
+                                            :readonly="!editMode" :filled="!editMode" label="E-mail"></v-text-field>
+                                    </v-col>
+                                    <v-col cols="12">
+                                        <v-text-field :clearable="editMode" type="password" color="#359756"
+                                            v-model="user.password" :readonly="!editMode" :filled="!editMode"
+                                            label="Jelszó"></v-text-field>
+                                    </v-col>
+                                    <v-col cols="12" v-if="editMode">
+                                        <v-text-field :clearable="editMode" type="password" color="#359756"
+                                            v-model="user.passwordConfirm" :readonly="!editMode" :filled="!editMode"
+                                            label="Jelszó ismét"></v-text-field>
+                                    </v-col>
+                                </v-row>
+                                <v-row>
+                                    <v-col cols="12" sm="6" md="6" lg="5" xl="6" class="col-xs-8">
+                                        <v-text-field :clearable="editMode" color="#359756" v-model="user.phoneNumber"
+                                            :readonly="!editMode" :filled="!editMode" label="Telefonszám"></v-text-field>
+                                    </v-col>
+                                    <v-col cols="6" sm="3" md="6" lg="4" xl="3">
+                                        <v-text-field :clearable="editMode" color="#359756" v-model="user.stairCase"
+                                            :readonly="!editMode" :filled="!editMode" label="Lépcsőház"></v-text-field>
+                                    </v-col>
+                                    <v-col cols="6" sm="3" md="6" lg="3" xl="3">
+                                        <v-text-field :clearable="editMode" color="#359756" v-model="user.flat"
+                                            :readonly="!editMode" :filled="!editMode" label="Lakás"></v-text-field>
+                                    </v-col>
+                                </v-row>
+                            </v-form>
+                        </v-card-text>
+                        <v-card-actions>
+                            <v-btn v-if="editMode" @click="editMode = false" class="ma-3">Mégsem</v-btn>
+                            <v-btn v-if="!editMode" @click="editMode = true" class="ma-3">Szerkesztés</v-btn>
+                            <v-btn v-else color="#359756" @click="saveProfile" class="ma-3">Profil mentése</v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </template>
+            </v-col>
+        </v-row>
+    </v-container>
 </template>
 
 <script>

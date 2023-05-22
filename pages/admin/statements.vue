@@ -42,7 +42,8 @@
                             <v-btn type="submit" color="#359756">Küldés</v-btn>
                         </v-card-text>
                     </v-card>
-                </template> </v-col>
+                </template>
+            </v-col>
             <v-col class="col-12 col-md-6 col-lg-6 col-xl-6">
                 <!-- Filter -->
                 <template>

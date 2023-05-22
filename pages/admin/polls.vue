@@ -26,14 +26,16 @@
                                             </template>
                                         </v-text-field>
                                     </div>
-                                    <v-checkbox color="#359756" label="Több válasz lehetséges"
-                                        :id="'multiple-choice' + index" v-model="query.multiple"></v-checkbox>
+                                    <v-text-field label="Határidő" type="datetime-local" color="#359756" />
+                                    <v-checkbox style="width: fit-content;" label="Több válasz engedélyezése"
+                                        color="#359756">
+                                    </v-checkbox>
                                     <div style="display: block; margin-bottom: 20px;">
                                         <v-btn style="width: 100%;" :color="'error'" class="danger" v-if="index > 0"
                                             @click="removequery(index)">Kérdés eltávolítása</v-btn>
                                     </div>
-                                    <v-divider class="my-divider"></v-divider>
                                 </div>
+                                <v-divider class="my-divider"></v-divider>
                                 <div style="display: block; margin: 20px 20px;">
                                     <v-btn style="width: 100%;" @click="addquery">Új kérdés hozzáadása</v-btn>
                                 </div>

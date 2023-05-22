@@ -3,16 +3,19 @@
         <Alert :show="showAlert" :message="alertMessage" :type="alertType"></Alert>
         <UploadFile :uploadDialog="uploadDialog" @save="saveUploadedItem" @close="closeDialog"></UploadFile>
         <v-btn class="ma-10" @click="openUploadDialog">Új dokumentum</v-btn>
-        <v-card-title>
-            <v-text-field v-model="search" append-icon="mdi-magnify" label="Keresés" single-line hide-details
-                color="#359756"></v-text-field>
-        </v-card-title>
-        <v-data-table :headers="headers" :items="documents" :search="search" class="my-table">
+        <v-col lg="3" xl="3">
+            <v-card-title>
+                <v-text-field v-model="search" append-icon="mdi-magnify" label="Keresés" single-line hide-details
+                    color="#359756"></v-text-field>
+            </v-card-title>
+        </v-col>
+        <v-data-table :headers="headers" :items="documents" :search="search">
             <template v-slot:item.actions="{ item, index }">
                 <div>
                     <v-btn icon><v-icon size="20">mdi-eye</v-icon></v-btn>
                     <v-btn @click="openDialog('edit', index)" icon><v-icon size="20">mdi-pencil-outline</v-icon></v-btn>
-                    <v-btn @click="openDialog('download', index)" icon><v-icon size="20">mdi-download-outline</v-icon></v-btn>
+                    <v-btn @click="openDialog('download', index)" icon><v-icon
+                            size="20">mdi-download-outline</v-icon></v-btn>
                     <v-btn @click="openDialog('delete', index)" icon><v-icon size="20">mdi-delete-outline</v-icon></v-btn>
                 </div>
                 <div>
@@ -135,7 +138,7 @@ export default {
     methods: {
         openDialog(dialogType, index) {
             this.dialogType = dialogType;
-            if(dialogType !== 'download'){
+            if (dialogType !== 'download') {
                 this.itemDialog = true;
                 this.editedItem = Object.assign({}, this.documents[index]);
             }
