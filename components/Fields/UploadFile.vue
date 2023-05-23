@@ -3,7 +3,9 @@
         <v-card class="p-20">
             <v-form ref="form" @submit.prevent="onSubmit">
                 <v-text-field v-model="item.name" label="Dokumentum címe" class="input-group" color="#359756" required
-                    :rules="titleRule"></v-text-field>
+                    :rules="titleRule">
+                </v-text-field>
+                <!-- TODO: dokumentum típusait itt fel kell venni egy legördülőbe -->
                 <div class="block items-center justify-center text-center">
                     <div class="p-50 bg-gray-100 border border-gray-300" @dragover="dragover" @dragleave="dragleave"
                         @drop="drop">

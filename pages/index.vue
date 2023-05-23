@@ -4,7 +4,7 @@
       <ProcessLoading :is-loading="isLoading" />
     </v-col>
     <v-col cols="12">
-      <h1>Füstike utcai társasház - ADMIN</h1>
+      <h1>BuildMate</h1>
     </v-col>
     <v-col cols="12" class="text-center">
       <button v-if="!show" v-on:click="show = !show">

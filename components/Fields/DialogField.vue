@@ -2,19 +2,18 @@
     <v-dialog :value="itemDialog" max-width="500px" persistent>
         <v-card>
             <v-card-title>
-                {{ dialogType === 'edit' ? 'Szerkesztés' : 'Törlés' }}
+                {{ getCardTitle() }}
             </v-card-title>
             <v-card-text>
-                {{ dialogType === 'edit' ? '' : 'Biztosan törölni szeretnéd?' }}
                 <v-text-field v-if="dialogType === 'edit'" v-model="editedItem.name" label="Dokumentum neve"
                     color="#359756"></v-text-field>
-                <v-card-text v-else v-model="editedItem.name">{{ editedItem.name }} </v-card-text>
+                <v-card-text v-else v-model="editedItem.name">{{ getCardText() }} </v-card-text>
             </v-card-text>
             <v-card-actions>
                 <v-btn @click="closeDialog">Mégsem</v-btn>
-                <v-btn :color="dialogType === 'edit' ? '#359756' : 'error'"
-                    @click="dialogType === 'edit' ? saveItem() : deleteItem()">
-                    {{ dialogType === 'edit' ? 'Mentés' : 'Törlés' }}
+                <v-btn :color="dialogType === 'delete' ? 'error' : '#359756'"
+                    @click="dialogType === 'delete' ? deleteItem() : saveItem()">
+                    {{ dialogType === 'delete' ? 'Törlés' : 'Mentés' }}
                 </v-btn>
             </v-card-actions>
         </v-card>
@@ -29,8 +28,30 @@ export default {
         editedItem: Object,
     },
     methods: {
+        getCardTitle(){
+            if (this.dialogType === 'edit'){
+                return 'Szerkesztés';
+            } else if(this.dialogType === 'delete'){
+                return 'Törlés';
+            } else if (this.dialogType === 'confirm'){
+                return 'Megerősítés';
+            }
+        },
+        getCardText(){
+            if (this.dialogType === 'edit'){
+                return 'Szerkesztés';
+            } else if(this.dialogType === 'delete'){
+                return 'Biztosan törölni szeretnéd?';
+            } else if (this.dialogType === 'confirm'){
+                return 'Biztosan végrehajtja a műveletet?';
+            }
+        },
         saveItem() {
-            this.$emit('save');
+            if (this.dialogType === 'edit'){
+                this.$emit('save');
+            } else if (this.dialogType === 'confirm'){
+                this.$emit('confirm');
+            }
         },
         deleteItem() {
             this.$emit('delete');

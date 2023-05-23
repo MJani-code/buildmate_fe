@@ -12,6 +12,16 @@
         <v-data-table :headers="headers" :items="documents" :search="search">
             <template v-slot:item.actions="{ item, index }">
                 <div>
+                    <!-- Első státusz, nyitott státusz. Utalásra vár. Csak akkor van státusz léptetési funkciója, ha a belépett userRole = admin -->
+                    <v-btn v-if="item.typeId == 2 && item.statusId == 1" icon @click="openDialog('confirm', index)"><v-icon
+                            size="20">mdi-cash-clock</v-icon></v-btn>
+                    <!-- Második státusz, elutalva. Jóváhagyásra vár. Csak akkor van státusz léptetési funkciója, ha a belépett userRole = admin -->
+                    <v-btn v-if="item.typeId == 2 && item.statusId == 2" icon @click="openDialog('confirm', index)"><v-icon
+                            size="20">mdi-cash-sync</v-icon></v-btn>
+                    <!-- Harmadik státusz, a pénz beérkezett az igénylő számlájára. Csak akkor van státusz léptetési funkciója, ha a belépett user megegyezik a számlát feltöltő userrel. -->
+                    <v-btn v-if="item.typeId == 2 && item.statusId == 3" icon @click="openDialog('confirm', index)"><v-icon
+                            size="20">mdi-cash-check</v-icon></v-btn>
+
                     <v-btn icon><v-icon size="20">mdi-eye</v-icon></v-btn>
                     <v-btn @click="openDialog('edit', index)" icon><v-icon size="20">mdi-pencil-outline</v-icon></v-btn>
                     <v-btn @click="openDialog('download', index)" icon><v-icon
@@ -23,7 +33,7 @@
             </template>
         </v-data-table>
         <DialogFieldVue :itemDialog="itemDialog" :dialogType="dialogType" :editedItem="editedItem" @save="saveItem"
-            @delete="deleteItem" @close="closeDialog" />
+            @delete="deleteItem" @close="closeDialog" @confirm="updateInvoice" />
     </v-card>
 </template>
 
@@ -42,15 +52,23 @@ export default {
     },
     data() {
         return {
+            showAlert: false,
+            alertMessage: '',
+            alertType: '',
             itemDialog: false,
             uploadDialog: false,
             showAlert: false,
             alertMessage: '',
-            alertType: '',
-            dialogType: '',
+            typeId: 1,
+            alertType: 'Dokumentum',
+            statusId: 5,
+            typeId: 1,
+            dialogType: 'Dokumentum',
+            statusId: 5,
             editedItem: {},
             deletedItem: {
                 index: '',
+                id: 1,
                 name: ''
             },
             editedIndex: -1,
@@ -66,71 +84,118 @@ export default {
                 },
                 { text: 'Feltöltés dátuma', value: 'uploadingdate' },
                 { text: 'Feltöltötte', value: 'uploadedby' },
+                { text: 'Státusz', value: 'status' },
+                { text: 'Típus', value: 'type' },
                 { text: 'Műveletek', align: 'center', value: 'actions' },
 
             ],
             documents: [
                 {
+                    id: 1,
                     name: 'Dokumentum1',
                     uploadingdate: '2023-01-01',
                     uploadedby: 'John Doe',
+                    uploadedby: 'John Doe',
                     path: '',
-                    actions: '',
+                    typeId: 2,
+                    type: 'Számla',
+                    statusId: 1,
+                    status: 'Nyitott'
                 },
                 {
+                    id: 2,
                     name: 'Dokumentum2',
                     uploadingdate: '2023-01-01',
                     uploadedby: 'Jane Doe',
-                    actions: '',
+                    uploadedby: 'Jane Doe',
+                    path: '',
+                    typeId: 2,
+                    type: 'Számla',
+                    statusId: 2,
+                    status: 'Jóváhagyásra vár'
                 },
                 {
+                    id: 3,
                     name: 'Dokumentum3',
                     uploadingdate: '2023-01-01',
                     uploadedby: 'John Doe',
+                    uploadedby: 'John Doe',
                     path: '',
-                    actions: '',
+                    typeId: 2,
+                    type: 'Számla',
+                    statusId: 3,
+                    status: 'Visszaigazolásra vár'
                 },
                 {
+                    id: 4,
                     name: 'Dokumentum4',
                     uploadingdate: '2023-01-01',
                     uploadedby: 'John Doe',
+                    uploadedby: 'John Doe',
                     path: '',
-                    actions: '',
+                    typeId: 1,
+                    type: 'Dokumentum',
+                    statusId: 5,
+                    status: 'Lezárt'
                 },
                 {
+                    id: 5,
                     name: 'Dokumentum5',
                     uploadingdate: '2023-01-01',
                     uploadedby: 'John Doe',
+                    uploadedby: 'John Doe',
                     path: '',
-                    actions: '',
+                    typeId: 1,
+                    type: 'Dokumentum',
+                    statusId: 5,
+                    status: 'Lezárt'
                 },
                 {
+                    id: 6,
                     name: 'Dokumentum6',
                     uploadingdate: '2023-01-01',
                     uploadedby: 'John Doe',
+                    uploadedby: 'John Doe',
                     path: '',
-                    actions: '',
+                    typeId: 1,
+                    type: 'Dokumentum',
+                    statusId: 5,
+                    status: 'Lezárt'
                 },
                 {
+                    id: 7,
                     name: 'Dokumentum7',
                     uploadingdate: '2023-01-01',
                     uploadedby: 'John Doe',
+                    uploadedby: 'John Doe',
                     path: '',
-                    actions: '',
+                    typeId: 1,
+                    type: 'Dokumentum',
+                    statusId: 5,
+                    status: 'Lezárt'
                 },
                 {
+                    id: 8,
                     name: 'Dokumentum8',
                     uploadingdate: '2023-01-01',
                     uploadedby: 'John Doe',
+                    uploadedby: 'John Doe',
                     path: '',
-                    actions: '',
+                    typeId: 1,
+                    type: 'Dokumentum',
+                    statusId: 5,
+                    status: 'Lezárt'
                 },
                 {
+                    id: 9,
                     name: 'Dokumentum9',
                     uploadingdate: '2023-01-01',
                     uploadedby: 'John Doe',
                     path: '',
-                    actions: '',
+                    typeId: 1,
+                    type: 'Dokumentum',
+                    statusId: 5,
+                    status: 'Lezárt'
                 },
             ],
         };
@@ -149,14 +214,51 @@ export default {
         saveItem() {
             // implement save logic here
             this.itemDialog = false;
+            // If error
+
+            //If succes
+            this.alertMessage = 'A mentés sikeres volt!'
+            this.alertType = 'success';
+            this.showAlert = true
+            if (this.showAlert = true) {
+                setTimeout(() => {
+                    this.showAlert = false; // Az értesítés elrejtése
+                }, 3000);
+            }
         },
         deleteItem() {
             // implement delete logic here
             this.itemDialog = false;
+            // If error
+
+            //If succes
+            this.alertMessage = 'A törlés sikeres volt!'
+            this.alertType = 'success';
+            this.showAlert = true
+            if (this.showAlert = true) {
+                setTimeout(() => {
+                    this.showAlert = false; // Az értesítés elrejtése
+                }, 3000);
+            }
         },
         closeDialog() {
             this.itemDialog = false;
             this.uploadDialog = false;
+        },
+        updateInvoice() {
+            //implement update logic here on the id of invoice to be updated onto the next status id. this.editedItem-el azonosítható
+            this.itemDialog = false;
+            // If error
+
+            //If succes
+            this.alertMessage = 'A mentés sikeres volt!'
+            this.alertType = 'success';
+            this.showAlert = true
+            if (this.showAlert = true) {
+                setTimeout(() => {
+                    this.showAlert = false; // Az értesítés elrejtése
+                }, 3000);
+            }
         },
         saveUploadedItem() {
             // implement save logic here
