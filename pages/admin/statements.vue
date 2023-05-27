@@ -173,10 +173,10 @@ export default {
         selectedFilePath: null,
         search: '',
         statuses: [
-            { id: 0, name: "mind" },
-            { id: 1, name: "nyitott", color: 'red' },
-            { id: 2, name: "folyamatban", color: 'yellow' },
-            { id: 3, name: "lezárt", color: 'green' },
+            { id: 1, name: "mind" },
+            { id: 2, name: "nyitott", color: 'red' },
+            { id: 3, name: "folyamatban", color: 'yellow' },
+            { id: 4, name: "lezárt", color: 'green' },
         ],
         filterStatus: '',
         statements: [

@@ -5,6 +5,9 @@
                 <v-text-field v-model="item.name" label="Dokumentum címe" class="input-group" color="#359756" required
                     :rules="titleRule">
                 </v-text-field>
+                <v-select color="#359756" :items="doctypes" item-text="typeHun" item-value="id"
+                    label="Típus">
+                </v-select>
                 <!-- TODO: dokumentum típusait itt fel kell venni egy legördülőbe -->
                 <div class="block items-center justify-center text-center">
                     <div class="p-50 bg-gray-100 border border-gray-300" @dragover="dragover" @dragleave="dragleave"
@@ -54,6 +57,10 @@ export default {
     },
     data() {
         return {
+            doctypes: [
+                {id:1, typeEng: 'invoice', typeHun: 'számla'},
+                {id:2, typeEng: 'document', typeHun: 'dokumentum'},
+            ],
             delimiters: ['${', '}'], // Avoid Twig conflicts
             filelist: [], // Store our uploaded files
             titleRule: [v => !!v || 'Kötelező kitölteni'],
