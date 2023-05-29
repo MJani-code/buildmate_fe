@@ -260,8 +260,9 @@ export default {
                 }, 3000);
             }
         },
-        saveUploadedItem() {
+        saveUploadedItem(data) {
             // implement save logic here
+
             this.uploadDialog = false;
             // If error
 

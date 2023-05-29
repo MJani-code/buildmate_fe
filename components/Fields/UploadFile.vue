@@ -9,11 +9,18 @@
                         </v-text-field>
                     </v-col>
                     <v-col class="pa-2 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                        <v-select color="#359756" :items="doctypes" item-text="typeHun" item-value="id" label="Típus">
+                        <v-select color="#359756" v-model="item.doctype" :items="doctypes" item-text="typeHun"
+                            item-value="id" label="Típus">
                         </v-select>
                     </v-col>
                 </v-row>
-                <!-- TODO: dokumentum típusait itt fel kell venni egy legördülőbe -->
+                <v-row v-if="item.doctype === 1">
+                    <v-col class="pa-2 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                        <v-checkbox label="Számlakifizetést kérek" color="#359756" @click.stop="bankDataField = !bankDataField">
+                        </v-checkbox>
+                    </v-col>
+                </v-row>
+                <BankDataField :bankDataField="bankDataField" ></BankDataField>
                 <v-row>
                     <div class="block items-center justify-center text-center">
                         <div class="p-50 bg-gray-100 border border-gray-300" @dragover="dragover" @dragleave="dragleave"
@@ -27,14 +34,14 @@
                                     <span class="underline"><a>ide</a></span>
                                 </label>
                             </div>
-                            <v-row class="mt-4" v-if="this.filelist.length">
-                                <div v-for="file in filelist">
+                            <v-row class="mt-4" v-if="item.filelist">
+                                <div v-for="file in item.filelist">
                                     <v-icon size="30" color="#359756">
                                         mdi-file
                                     </v-icon>
                                     <v-card-text>
                                         {{ file.name }}
-                                        <v-icon class="ml-2" size="20" @click="remove(filelist.indexOf(file))">
+                                        <v-icon class="ml-2" size="20" @click="remove(item.filelist.indexOf(file))">
                                             mdi-close
                                         </v-icon>
                                     </v-card-text>
@@ -53,14 +60,16 @@
 </template>
 
 <script>
+import BankDataField from '../../components/Fields/BankDataField.vue';
+
+
 export default {
     name: "UploadField",
+    components: {
+      BankDataField
+    },
     props: {
         uploadDialog: Boolean,
-        item: {
-            type: Object,
-            default: () => ({ name: "" }),
-        },
     },
     data() {
         return {
@@ -69,21 +78,33 @@ export default {
                 { id: 2, typeEng: 'document', typeHun: 'dokumentum' },
                 { id: 3, typeEng: 'other', typeHun: 'egyéb' },
             ],
+            item: {
+                doctype: '',
+                name: '',
+                filelist: [],
+            },
             delimiters: ['${', '}'], // Avoid Twig conflicts
-            filelist: [], // Store our uploaded files
+            //filelist: [], // Store our uploaded files
             titleRule: [v => !!v || 'Kötelező kitölteni'],
-            fileRule: [(v) => v.length > 0 || 'Dokumentumot csatolni kötelező',]
+            fileRule: [(v) => v.length > 0 || 'Dokumentumot csatolni kötelező',],
+            bankDataField: false,
         };
     },
     computed: {
         //
     },
     methods: {
-        onChange() {
-            this.filelist = [...this.$refs.file.files];
+        onChange(event) {
+            const files = event.target.files;
+            // Iterate through selected files
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                // Add the file to the filelist array
+                this.item.filelist.push(file);
+            }
         },
         remove(i) {
-            this.filelist.splice(i, 1);
+            this.item.filelist.splice(i, 1);
         },
         dragover(event) {
             event.preventDefault();
@@ -111,7 +132,8 @@ export default {
             if (!isValid) {
                 return;
             }
-            this.$emit("save", this.item);
+            const data = this.item;
+            this.$emit("save", data);
         },
         closeDialog() {
             this.$emit('close');
