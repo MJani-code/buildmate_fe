@@ -86,7 +86,7 @@ export default {
             delimiters: ['${', '}'], // Avoid Twig conflicts
             //filelist: [], // Store our uploaded files
             titleRule: [v => !!v || 'Kötelező kitölteni'],
-            fileRule: [(v) => v.length > 0 || 'Dokumentumot csatolni kötelező',],
+            fileRule: [(v) => v.length > 0 || 'Dokumentumot csatolni kötelező'],
             bankDataField: false,
         };
     },
