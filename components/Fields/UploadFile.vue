@@ -16,13 +16,14 @@
                 </v-row>
                 <v-row v-if="item.doctype === 1">
                     <v-col class="pa-2 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                        <v-checkbox label="Számlakifizetést kérek" color="#359756" @click.stop="bankDataField = !bankDataField">
+                        <v-checkbox label="Számlakifizetést kérek" color="#359756"
+                            @click.stop="bankDataField = !bankDataField">
                         </v-checkbox>
                     </v-col>
                 </v-row>
-                <BankDataField :bankDataField="bankDataField" ></BankDataField>
+                    <BankDataField :bankDataField="bankDataField"></BankDataField>
                 <v-row>
-                    <div class="block items-center justify-center text-center">
+                    <div class="block items-center justify-center text-center" style="width: 100%;">
                         <div class="p-50 bg-gray-100 border border-gray-300" @dragover="dragover" @dragleave="dragleave"
                             @drop="drop">
                             <input type="file" model="filelist" name="fields[assetsFieldHandle][]" id="assetsFieldHandle"
@@ -66,7 +67,7 @@ import BankDataField from '../../components/Fields/BankDataField.vue';
 export default {
     name: "UploadField",
     components: {
-      BankDataField
+        BankDataField
     },
     props: {
         uploadDialog: Boolean,
