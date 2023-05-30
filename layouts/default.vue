@@ -30,6 +30,7 @@
     <v-main>
       <v-container>
         <Nuxt />
+        <ResponseHandlerModal />
       </v-container>
     </v-main>
     <v-navigation-drawer

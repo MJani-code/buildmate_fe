@@ -9,11 +9,21 @@
 </template>
 
 <script>
+import { APIGET } from '@/api/apiHelper.js'
 export default {
   name: 'Login',
   layout: 'login',
   props: {
     //
+  },
+  async beforeMount() {
+    await APIGET('http://build_mate_be/public/index.php/filestorage', null, true)
+      .then((res) => {
+        console.log(res)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
   },
   data () {
     return {
