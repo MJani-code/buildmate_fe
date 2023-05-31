@@ -32,7 +32,7 @@
                             <router-link to="events" class="routerLink">5</router-link>
                         </v-list-item-title>
                         <v-list-item-subtitle class="text-truncate">
-                                esemény a következő 7 napban
+                                közeli esemény
                         </v-list-item-subtitle>
                     </v-list-item-content>
                 </v-list-item>
@@ -97,6 +97,21 @@
         </v-col>
     </v-row>
 </template>
+
+<style >
+.custom>div {
+    border-bottom: unset !important;
+}
+
+.routerLink {
+    text-decoration: none;
+    color: initial !important;
+}
+.v-application .text-truncate{
+    text-overflow: unset !important;
+    white-space: normal !important;
+}
+</style>
 
 <style >
 .custom>div {
