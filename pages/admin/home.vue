@@ -112,3 +112,18 @@
     white-space: normal !important;
 }
 </style>
+
+<style >
+.custom>div {
+    border-bottom: unset !important;
+}
+
+.routerLink {
+    text-decoration: none;
+    color: initial !important;
+}
+.v-application .text-truncate{
+    text-overflow: unset !important;
+    white-space: normal !important;
+}
+</style>
