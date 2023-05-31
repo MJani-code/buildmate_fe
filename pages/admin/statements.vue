@@ -194,7 +194,7 @@ export default {
                         url: "https://picsum.photos/200?random=2"
                     }
                 ],
-                status: 1,
+                status: 3,
                 documents: [
                     {
                         id: 1,
@@ -259,7 +259,7 @@ export default {
                     const title = statement.title.toLowerCase();
                     const description = statement.description.toLowerCase();
                     const search = this.search.toLowerCase();
-                    if (filterStatus === 0 && (title.includes(search) || description.includes(search))) {
+                    if (filterStatus === 1 && (title.includes(search) || description.includes(search))) {
                         return true;
                     }
                     else if ((title.includes(search) || description.includes(search)) && status === filterStatus) {
