@@ -5,11 +5,6 @@ export const routers = [
     to: '/admin/home'
   },
   {
-    icon: 'mdi-receipt-text',
-    title: 'Számlák',
-    to: '/admin/invoices'
-  },
-  {
     icon: 'mdi-file-document',
     title: 'Dokumentumok',
     to: '/admin/documents'
