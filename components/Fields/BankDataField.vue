@@ -11,7 +11,7 @@
             </v-text-field>
         </v-col>
         <v-col class="pa-2 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
-            <v-text-field v-model="bankData.accountNumber" :rules="[letterRule, cardNumberRule]" @input="formatCardNumber"
+            <v-text-field :maxlength="26" v-model="bankData.accountNumber" :rules="[letterRule, cardNumberRule]" @input="formatCardNumber"
                 label="Bankszámlaszám" class="input-group" color="#359756" required>
             </v-text-field>
         </v-col>
