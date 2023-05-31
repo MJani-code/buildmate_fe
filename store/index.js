@@ -8,7 +8,14 @@ export const createStore = () => {
                 loggedIn: false,
                 user: null,
                 userRole: null
-            }
+            },
+          responseHandler: {
+            show: false,
+            title: 'Teszt title',
+            message: 'Teszt message',
+            options: [],
+            type: 'success'
+          }
         },
         mutations: {
             SET_LOGGED_IN(state, value) {
@@ -19,7 +26,22 @@ export const createStore = () => {
             },
             SET_USERROLE(state, value) {
                 state.auth.userRole = value
+            },
+          SET_RESPONSEHANDLER(state, value) {
+            state.responseHandler = value
+          },
+          TOGGLE_RESPONSEHANDLER(state) {
+            state.responseHandler.show = !state.responseHandler.show
+          },
+          SET_DEFAULT_RESPONSEHANDLER(state) {
+            state.responseHandler = {
+              show: false,
+              title: 'Teszt title',
+              message: 'Teszt message',
+              options: [],
+              type: 'success'
             }
+          }
         },
         actions: {
             login({ commit }, user) {
@@ -40,7 +62,13 @@ export const createStore = () => {
                 // Kijelentkeztetési logika, például API hívás vagy adatbázis művelet
                 commit('SET_LOGGED_IN', false)
                 commit('SET_USER', null)
-            }
+            },
+          setResponseHandler({ commit }, value) {
+            commit('SET_RESPONSEHANDLER', value)
+          },
+          setDefaultResponseHandler({ commit }) {
+            commit('SET_DEFAULT_RESPONSEHANDLER')
+          }
         },
         getters: {
             isAuthenticated: state => {
@@ -52,4 +80,5 @@ export const createStore = () => {
         }
     })
 }
+
 export default createStore
