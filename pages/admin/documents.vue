@@ -3,6 +3,7 @@
         <Alert :show="showAlert" :message="alertMessage" :type="alertType"></Alert>
         <UploadFile :uploadDialog="uploadDialog" @save="saveUploadedItem" @close="closeDialog"></UploadFile>
         <v-btn class="ma-10" @click="openUploadDialog">Új dokumentum</v-btn>
+        <v-btn class="ma-10" @click="getData">Get data</v-btn>
         <v-col lg="3" xl="3">
             <v-card-title>
                 <v-text-field v-model="search" append-icon="mdi-magnify" label="Keresés" single-line hide-details
@@ -43,6 +44,7 @@
 import DialogFieldVue from '../../components/Fields/DialogField.vue';
 import UploadFile from '../../components/Fields/UploadFile.vue';
 import Alert from '../../components/Alert.vue';
+import axios from 'axios';
 
 export default {
     components: {
@@ -201,6 +203,26 @@ export default {
         };
     },
     methods: {
+        getData() {
+            const axios = require('axios');
+
+            let config = {
+                method: 'get',
+                maxBodyLength: Infinity,
+                url: 'http://zmakra.com:4002/public/index.php/filestorage',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            };
+
+            axios.request(config)
+                .then((response) => {
+                    console.log(JSON.stringify(response.data));
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
         openDialog(dialogType, index) {
             this.dialogType = dialogType;
             if (dialogType !== 'download') {
