@@ -1,5 +1,5 @@
 <template>
-    <v-dialog :value="uploadDialog" @click:outside="closeDialog" class="dialog-width" width="auto">
+    <v-dialog :value="uploadDialog" @click:outside="closeDialog" class="dialog-width" width="auto" max-width="530">
         <v-card class="p-20">
             <v-form ref="form" @submit.prevent="onSubmit">
                 <v-row>
