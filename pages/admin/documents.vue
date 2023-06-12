@@ -84,8 +84,8 @@ export default {
                     filterable: true,
                     value: 'name',
                 },
-                { text: 'Feltöltés dátuma', value: 'uploadingdate' },
-                { text: 'Feltöltötte', value: 'uploadedby' },
+                { text: 'Feltöltés dátuma', value: 'createdAt' },
+                { text: 'Feltöltötte', value: 'createdBy' },
                 { text: 'Státusz', value: 'status' },
                 { text: 'Típus', value: 'type' },
                 { text: 'Műveletek', align: 'center', value: 'actions' },
@@ -95,8 +95,8 @@ export default {
                 {
                     id: 1,
                     name: 'Dokumentum1',
-                    uploadingdate: '2023-01-01',
-                    uploadedby: 'John Doe',
+                    createdAt: '2023-01-01',
+                    createdBy: 'John Doe',
                     path: '',
                     typeId: 2,
                     type: 'Számla',
@@ -106,8 +106,8 @@ export default {
                 {
                     id: 2,
                     name: 'Dokumentum2',
-                    uploadingdate: '2023-01-01',
-                    uploadedby: 'Jane Doe',
+                    createdAt: '2023-01-01',
+                    createdBy: 'Jane Doe',
                     path: '',
                     typeId: 2,
                     type: 'Számla',
@@ -117,8 +117,8 @@ export default {
                 {
                     id: 3,
                     name: 'Dokumentum3',
-                    uploadingdate: '2023-01-01',
-                    uploadedby: 'John Doe',
+                    createdAt: '2023-01-01',
+                    createdBy: 'John Doe',
                     path: '',
                     typeId: 2,
                     type: 'Számla',
@@ -128,8 +128,8 @@ export default {
                 {
                     id: 4,
                     name: 'Dokumentum4',
-                    uploadingdate: '2023-01-01',
-                    uploadedby: 'John Doe',
+                    createdAt: '2023-01-01',
+                    createdBy: 'John Doe',
                     path: '',
                     typeId: 1,
                     type: 'Dokumentum',
@@ -139,8 +139,8 @@ export default {
                 {
                     id: 5,
                     name: 'Dokumentum5',
-                    uploadingdate: '2023-01-01',
-                    uploadedby: 'John Doe',
+                    createdAt: '2023-01-01',
+                    createdBy: 'John Doe',
                     path: '',
                     typeId: 1,
                     type: 'Dokumentum',
@@ -150,8 +150,8 @@ export default {
                 {
                     id: 6,
                     name: 'Dokumentum6',
-                    uploadingdate: '2023-01-01',
-                    uploadedby: 'John Doe',
+                    createdAt: '2023-01-01',
+                    createdBy: 'John Doe',
                     path: '',
                     typeId: 1,
                     type: 'Dokumentum',
@@ -161,8 +161,8 @@ export default {
                 {
                     id: 7,
                     name: 'Dokumentum7',
-                    uploadingdate: '2023-01-01',
-                    uploadedby: 'John Doe',
+                    createdAt: '2023-01-01',
+                    createdBy: 'John Doe',
                     path: '',
                     typeId: 1,
                     type: 'Dokumentum',
@@ -172,8 +172,8 @@ export default {
                 {
                     id: 8,
                     name: 'Dokumentum8',
-                    uploadingdate: '2023-01-01',
-                    uploadedby: 'John Doe',
+                    createdAt: '2023-01-01',
+                    createdBy: 'John Doe',
                     path: '',
                     typeId: 1,
                     type: 'Dokumentum',
@@ -183,8 +183,8 @@ export default {
                 {
                     id: 9,
                     name: 'Dokumentum9',
-                    uploadingdate: '2023-01-01',
-                    uploadedby: 'John Doe',
+                    createdAt: '2023-01-01',
+                    createdBy: 'John Doe',
                     path: '',
                     typeId: 1,
                     type: 'Dokumentum',
@@ -201,7 +201,7 @@ export default {
             let config = {
                 method: 'get',
                 maxBodyLength: Infinity,
-                url: 'http://zmakra.com:4002/public/index.php/filestorage',
+                url: 'http://zmakra.com/public/index.php/filestorage',
                 headers: {
                     'Content-Type': 'application/json'
                 }
