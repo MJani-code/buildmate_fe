@@ -45,6 +45,7 @@ import DialogFieldVue from '../../components/Fields/DialogField.vue';
 import UploadFile from '../../components/Fields/UploadFile.vue';
 import Alert from '../../components/Alert.vue';
 import axios from 'axios';
+import {APIGET} from "~/api/apiHelper";
 
 export default {
     components: {
@@ -52,7 +53,10 @@ export default {
         UploadFile,
         Alert
     },
-    data() {
+  beforeMount() {
+    //console.log('isMobileView',this.isMobileView)
+  },
+  data() {
         return {
             showAlert: false,
             alertMessage: '',
@@ -195,25 +199,40 @@ export default {
         };
     },
     methods: {
-        getData() {
-            const axios = require('axios');
+        async getData() {
+          const response = await APIGET('http://zmakra.com/public/index.php/filestorage');
+          this.checkError(response,{
+            show: true,
+            title: 'Sikeres felvitel!',
+            message: '',
+            options: [],
+            type: 'success'
+          });
 
-            let config = {
-                method: 'get',
-                maxBodyLength: Infinity,
-                url: 'http://zmakra.com/public/index.php/filestorage',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            };
+          response.data.forEach((item, index) => {
+            this.documents.push({...this.documents[index], ...item, id: index+10})
+          })
+          /*const axios = require('axios');
 
-            axios.request(config)
-                .then((response) => {
-                    console.log(JSON.stringify(response.data));
+          let config = {
+              method: 'get',
+              maxBodyLength: Infinity,
+              url: 'http://zmakra.com/public/index.php/filestorage',
+              headers: {
+                  'Content-Type': 'application/json'
+              }
+          };
+
+          axios.request(config)
+              .then((response) => {
+                console.log(response.data.data);
+                response.data.forEach((item) => {
+                  console.log({...item, ...this.documents[0]})
                 })
-                .catch((error) => {
-                    console.log(error);
-                });
+              })
+              .catch((error) => {
+                  console.log(error);
+              });*/
         },
         openDialog(dialogType, index) {
             this.dialogType = dialogType;

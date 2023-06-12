@@ -8,18 +8,26 @@ const API = axios.create({
     // headers: {'X-Custom-Header': 'foobar'}
 });
 
-export const APIPOST = (url, data, isExternal = false) => {
-    return API.post(url, data);
+export const APIPOST = async (url, data) => {
+    return await API.post(url, data);
 }
 
-export const APIGET = (url,params, isExternal = false) => {
-  return API.get(url, params);
+export const APIGET = async (url) => {
+  return await API.get(url);
 }
 
-export const APIPUT = (url, data, isExternal = false) => {
-  return API.put(url, data);
+export const APIPUT = async (url, data) => {
+  return await API.put(url, data);
 }
 
-export const APIDELETE = (url, isExternal = false) => {
-  return API.delete(url);
+export const APIDELETE = async (url) => {
+  return await API.delete(url);
+}
+
+export const APIUPLOAD = async (url, data) => {
+  return await API.post(url, data, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  });
 }

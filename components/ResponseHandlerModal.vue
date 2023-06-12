@@ -1,11 +1,11 @@
 <!-- use responsHandler store to set data of dialog -->
 <template>
   <v-dialog :value="show" width="500">
-    <v-card>
+    <v-card :color="colorByType.bg">
       <v-card-title>
-        <span class="headline">{{ title }}</span>
+        <span class="headline" :style="`color: ${colorByType.text}`">{{ title }}</span>
       </v-card-title>
-      <v-card-text>
+      <v-card-text :style="`color: ${colorByType.text}`">
         {{ message }}
       </v-card-text>
       <v-card-actions>
@@ -13,6 +13,7 @@
         <v-btn
           color="blue darken-1"
           @click="close"
+          :style="`color: ${colorByType.text}`"
         >
           Bezár
         </v-btn>
@@ -36,6 +37,19 @@ export default {
     },
     message(){
       return this.$store.state.responseHandler.message
+    },
+    type(){
+      return this.$store.state.responseHandler.type
+    },
+    colorByType(){
+      switch(this.$store.state.responseHandler.type) {
+        case 'success':
+          return {bg: 'success', text: 'white'};
+        case 'warning':
+          return {bg: 'warning', text: 'white'};
+        case 'error':
+          return {bg: 'error', text: 'white'};
+      }
     }
   },
   methods: {
