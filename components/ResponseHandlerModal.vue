@@ -1,7 +1,7 @@
 <!-- use responsHandler store to set data of dialog -->
 <template>
   <v-dialog :value="show" width="500">
-    <v-card :color="colorByType.bg">
+    <v-card>
       <v-card-title>
         <span class="headline" :style="`color: ${colorByType.text}`">{{ title }}</span>
       </v-card-title>
@@ -11,7 +11,7 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
-          color="blue darken-1"
+          :color=colorByType.bg
           @click="close"
           :style="`color: ${colorByType.text}`"
         >
@@ -44,7 +44,7 @@ export default {
     colorByType(){
       switch(this.$store.state.responseHandler.type) {
         case 'success':
-          return {bg: 'success', text: 'white'};
+          return {bg: '#359756', text: 'black'};
         case 'warning':
           return {bg: 'warning', text: 'white'};
         case 'error':

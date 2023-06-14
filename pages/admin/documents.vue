@@ -1,6 +1,7 @@
 <template>
     <v-card>
         <Alert :show="showAlert" :message="alertMessage" :type="alertType"></Alert>
+        <response-handler-modal></response-handler-modal>
         <UploadFile :uploadDialog="uploadDialog" @save="saveUploadedItem" @close="closeDialog"></UploadFile>
         <v-btn class="ma-10" @click="openUploadDialog">Új dokumentum</v-btn>
         <v-btn class="ma-10" @click="getData">Get data</v-btn>
@@ -44,6 +45,7 @@
 import DialogFieldVue from '../../components/Fields/DialogField.vue';
 import UploadFile from '../../components/Fields/UploadFile.vue';
 import Alert from '../../components/Alert.vue';
+import ResponseHandlerModal from '../../components/ResponseHandlerModal';
 import axios from 'axios';
 import {APIGET} from "~/api/apiHelper";
 
@@ -51,7 +53,8 @@ export default {
     components: {
         DialogFieldVue,
         UploadFile,
-        Alert
+        Alert,
+        ResponseHandlerModal
     },
   beforeMount() {
     //console.log('isMobileView',this.isMobileView)
@@ -200,6 +203,8 @@ export default {
     },
     methods: {
         async getData() {
+            this.$store.state.responseHandler.show = true;
+            this.$store.state.responseHandler.type = "error";
           const response = await APIGET('http://zmakra.com/public/index.php/filestorage');
           this.checkError(response,{
             show: true,
@@ -212,27 +217,6 @@ export default {
           response.data.forEach((item, index) => {
             this.documents.push({...this.documents[index], ...item, id: index+10})
           })
-          /*const axios = require('axios');
-
-          let config = {
-              method: 'get',
-              maxBodyLength: Infinity,
-              url: 'http://zmakra.com/public/index.php/filestorage',
-              headers: {
-                  'Content-Type': 'application/json'
-              }
-          };
-
-          axios.request(config)
-              .then((response) => {
-                console.log(response.data.data);
-                response.data.forEach((item) => {
-                  console.log({...item, ...this.documents[0]})
-                })
-              })
-              .catch((error) => {
-                  console.log(error);
-              });*/
         },
         openDialog(dialogType, index) {
             this.dialogType = dialogType;
