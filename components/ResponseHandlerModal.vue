@@ -26,7 +26,7 @@
 export default {
   name: 'ResponseHandlerModal',
   beforeMount() {
-    console.log(this.$store.state)
+
   },
   computed: {
     show(){
@@ -46,9 +46,9 @@ export default {
         case 'success':
           return {bg: '#359756', text: 'black'};
         case 'warning':
-          return {bg: 'warning', text: 'white'};
+          return {bg: 'warning', text: 'black'};
         case 'error':
-          return {bg: 'error', text: 'white'};
+          return {bg: 'error', text: 'black'};
       }
     }
   },

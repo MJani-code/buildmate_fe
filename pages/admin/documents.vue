@@ -57,7 +57,7 @@ export default {
         ResponseHandlerModal
     },
   beforeMount() {
-    //console.log('isMobileView',this.isMobileView)
+
   },
   data() {
         return {
@@ -203,15 +203,13 @@ export default {
     },
     methods: {
         async getData() {
-            this.$store.state.responseHandler.show = true;
-            this.$store.state.responseHandler.type = "error";
           const response = await APIGET('http://zmakra.com/public/index.php/filestorage');
           this.checkError(response,{
             show: true,
-            title: 'Sikeres felvitel!',
+            title: 'Sikeres felvitel!!!',
             message: '',
             options: [],
-            type: 'success'
+            type: 'error',
           });
 
           response.data.forEach((item, index) => {

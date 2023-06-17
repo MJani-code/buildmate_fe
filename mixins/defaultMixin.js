@@ -1,5 +1,5 @@
 import Vue from 'vue'
-const mixin ={
+const mixin = {
   name: 'defaultMixin',
   beforeMount() {
     //
@@ -16,7 +16,9 @@ const mixin ={
       message: 'Hiba történt a kérés során.',
       options: [],
       type: 'error'
-    }) {
+    })
+    {
+      this.$store.state.responseHandler = config;
       if (response.status !== 200) {
         this.$store.dispatch('setDefaultResponseHandler')
         this.$store.dispatch('setResponseHandler', config)
