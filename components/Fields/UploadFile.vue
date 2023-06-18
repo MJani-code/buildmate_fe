@@ -21,14 +21,14 @@
                         </v-checkbox>
                     </v-col>
                 </v-row>
-                    <BankDataField :bankDataField="bankDataField"></BankDataField>
+                <BankDataField :bankDataField="bankDataField"></BankDataField>
                 <v-row>
                     <div class="block items-center justify-center text-center" style="width: 100%;">
                         <div class="p-50 bg-gray-100 border border-gray-300" @dragover="dragover" @dragleave="dragleave"
                             @drop="drop">
                             <input type="file" model="filelist" name="fields[assetsFieldHandle][]" id="assetsFieldHandle"
                                 class="w-px h-px opacity-0 overflow-hidden absolute" @change="onChange" ref="file"
-                                accept=".pdf,.jpg,.jpeg,.png" :rules="fileRule" required />
+                                accept=".pdf,.jpg,.jpeg,.png" :rules="fileRule" required multiple />
                             <div>
                                 Húzd ide a feltölteni kívánt dokumentumot vagy kattints
                                 <label for="assetsFieldHandle" class="block cursor-pointer">
@@ -95,14 +95,13 @@ export default {
         //
     },
     methods: {
-        onChange(event) {
-            const files = event.target.files;
-            // Iterate through selected files
+        onChange() {
+            const files = this.$refs.file.files;
             for (let i = 0; i < files.length; i++) {
                 const file = files[i];
-                // Add the file to the filelist array
                 this.item.filelist.push(file);
             }
+
         },
         remove(i) {
             this.item.filelist.splice(i, 1);

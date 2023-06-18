@@ -2,9 +2,10 @@
     <v-card>
         <Alert :show="showAlert" :message="alertMessage" :type="alertType"></Alert>
         <response-handler-modal></response-handler-modal>
-        <UploadFile :uploadDialog="uploadDialog" @save="saveUploadedItem" @close="closeDialog"></UploadFile>
+        <UploadFile :uploadDialog="uploadDialog" @save="postData" @close="closeDialog"></UploadFile>
         <v-btn class="ma-10" @click="openUploadDialog">Új dokumentum</v-btn>
         <v-btn class="ma-10" @click="getData">Get data</v-btn>
+        <v-btn class="ma-10" @click="postData">Post data</v-btn>
         <v-col lg="3" xl="3">
             <v-card-title>
                 <v-text-field v-model="search" append-icon="mdi-magnify" label="Keresés" single-line hide-details
@@ -47,7 +48,7 @@ import UploadFile from '../../components/Fields/UploadFile.vue';
 import Alert from '../../components/Alert.vue';
 import ResponseHandlerModal from '../../components/ResponseHandlerModal';
 import axios from 'axios';
-import {APIGET} from "~/api/apiHelper";
+import { APIGET, APIUPLOAD } from "~/api/apiHelper";
 
 export default {
     components: {
@@ -56,10 +57,10 @@ export default {
         Alert,
         ResponseHandlerModal
     },
-  beforeMount() {
+    beforeMount() {
 
-  },
-  data() {
+    },
+    data() {
         return {
             showAlert: false,
             alertMessage: '',
@@ -203,19 +204,47 @@ export default {
     },
     methods: {
         async getData() {
-          const response = await APIGET('http://zmakra.com/public/index.php/filestorage');
-          this.checkError(response,{
-            show: true,
-            title: 'Sikeres felvitel!!!',
-            message: '',
-            options: [],
-            type: 'error',
-          });
-
-          response.data.forEach((item, index) => {
-            this.documents.push({...this.documents[index], ...item, id: index+10})
-          })
+            try {
+                const response = await APIGET('http://zmakra.com/public/index.php/filestorage');
+                console.log(response);
+                response.data.forEach((item, index) => {
+                    this.documents.push({ ...this.documents[index], ...item, id: index + 10 })
+                })
+            }
+            catch (error) {
+                this.checkError(error, {
+                    show: true,
+                    title: 'Hiba',
+                    message: `Hiba történt az adatok lekérése közben: ${error.code} - ${error.name} - ${error.message}`,
+                    options: [],
+                    type: 'error',
+                });
+            }
         },
+
+        async postData(data) {
+            console.log(data);
+            try {
+                const response = await APIUPLOAD('http://zmakra.com/public/index.php/filestorage/upload', data);
+                console.log(data);
+
+                response.data.forEach((item, index) => {
+                    this.documents.push({ ...this.documents[index], ...item, id: index + 10 })
+                })
+            }
+            catch (error) {
+                console.log(error);
+                this.checkError(error, {
+                    show: true,
+                    title: 'Hiba',
+                    message: `Hiba történt az adatok lekérése közben: ${error.code} - ${error.name} - ${error.message}`,
+                    options: [],
+                    type: 'error',
+                });
+            }
+        },
+
+
         openDialog(dialogType, index) {
             this.dialogType = dialogType;
             if (dialogType !== 'download') {
@@ -275,22 +304,24 @@ export default {
                 }, 3000);
             }
         },
-        saveUploadedItem(data) {
-            // implement save logic here
+        // saveUploadedItem(data) {
 
-            this.uploadDialog = false;
-            // If error
 
-            //If succes
-            this.alertMessage = 'A mentés sikeres volt!'
-            this.alertType = 'success';
-            this.showAlert = true
-            if (this.showAlert = true) {
-                setTimeout(() => {
-                    this.showAlert = false; // Az értesítés elrejtése
-                }, 3000);
-            }
-        },
+        //     //implement save logic here
+
+        //     this.uploadDialog = false;
+        //     // If error
+
+        //     //If succes
+        //     this.alertMessage = 'A mentés sikeres volt!'
+        //     this.alertType = 'success';
+        //     this.showAlert = true
+        //     if (this.showAlert = true) {
+        //         setTimeout(() => {
+        //             this.showAlert = false; // Az értesítés elrejtése
+        //         }, 3000);
+        //     }
+        // },
     },
 };
 </script>
