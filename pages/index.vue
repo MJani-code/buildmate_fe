@@ -75,9 +75,7 @@ export default {
       show: false,
       email: '',
       password: '',
-      response: [
-
-      ],
+      response: [],
     };
   },
   computed: {

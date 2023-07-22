@@ -1,6 +1,7 @@
 export default function ({ store, redirect, route }) {
-    const loggedIn = localStorage.getItem('loggedIn');
-    const userRole = localStorage.getItem('userRole');
+
+    const loggedIn = store.state.auth.loggedIn;
+    const userRole = store.state.auth.userRole;
 
     // Ellenőrizd, hogy a felhasználó be van-e jelentkezve
     if (route.path.startsWith('/admin') && loggedIn == null) {
