@@ -2,6 +2,7 @@
   <v-row class="mt-2">
     <v-col cols="12" class="justify-center">
       <ProcessLoading :is-loading="isLoading" />
+      <response-handler-modal></response-handler-modal>
     </v-col>
     <v-col cols="12">
       <h1>BuildMate</h1>
@@ -52,11 +53,12 @@ import { checkOnlyNumber, checkRequired } from '@/utils/validationRules'
 import { IS_OPTIONAL, IS_REQUIRED } from '@/utils/constans'
 import moment from "moment/moment";
 import ProcessLoading from "~/components/Process/Loading.vue";
-import axios from "axios";
+import ResponseHandlerModal from "~/components/ResponseHandlerModal";
+
 
 export default {
   name: "index",
-  components: { ProcessLoading },
+  components: { ProcessLoading, ResponseHandlerModal },
   layout: 'login',
   setup() {
     return {

@@ -51,8 +51,8 @@ export const createStore = () => {
         //TODO Beléptetési logika, például API hívás vagy adatbázis ellenőrzés. Értékek változóba mentése.
         const domain = window.location.hostname;
         try {
-          const response = await APIPOST('http://localhost:3000/build_mate_be/login.php', user);
-          console.log(response);
+          const response = await APIPOST('http://localhost:5000/THFustike3/build_mate_be/login.php', user);
+
           if (!response.data.error && response.data.loggedIn == true) {
             const userRole = response.data.userRole;
 
@@ -61,21 +61,25 @@ export const createStore = () => {
             commit('SET_USERROLE', userRole)
 
             this.$router.push('/' + userRole + '/home') // Módosítsd a célútvonalat a saját alkalmazásodhoz igazítva
+          }else{
+            this.dispatch('setResponseHandler', {
+              show: true,
+              title: 'Hiba',
+              message: response.data.error,
+              options: [],
+              type: 'error'
+            });
           }
-          // response.data.forEach((item, index) => {
-          //   this.documents.push({ ...this.documents[index], ...item, id: index + 10 })
-          // })
         }
         catch (error) {
-          this.checkError(error, {
+          this.dispatch('setResponseHandler', {
             show: true,
             title: 'Hiba',
-            message: `Hiba történt az adatok lekérése közben: ${error.code} - ${error.name} - ${error.message}`,
+            message: response.data.error,
             options: [],
-            type: 'error',
+            type: 'error'
           });
         }
-
 
       },
       logout({ commit }) {
