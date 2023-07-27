@@ -89,7 +89,10 @@ export default {
       return moment(date.trim(), 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD');
     },
     login(){
-      const user = {};
+      const user = {
+        email: this.email,
+        password: this.password
+      };
       this.$store.dispatch('login', user);
     },
   }
