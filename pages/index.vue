@@ -20,22 +20,22 @@
             <v-img src="https://cdn4.iconfinder.com/data/icons/miu/22/circle_close_delete_-128.png" />
           </span>
           <v-sheet width="300" class="mx-auto">
-            <v-form @submit.prevent>
-              <v-text-field :style="{ '--v-background-base': 'white' }" type="email" v-model="email">
+            <v-form ref="form" @submit.prevent="onSubmit">
+              <v-text-field :style="{ '--v-background-base': 'white' }" type="email" v-model="email" :rules = emailRule>
                 <template v-slot:label>
                   <span style="color: white">
                     Email
                   </span>
                 </template>
               </v-text-field>
-              <v-text-field :style="{ '--v-background-base': 'white' }" type="password" v-model="password">
+              <v-text-field :style="{ '--v-background-base': 'white' }" type="password" v-model="password" :rules = passwordRule>
                 <template v-slot:label>
                   <span style="color: white">
                     Jelszó
                   </span>
                 </template>
               </v-text-field>
-              <v-btn type="submit" block class="mt-2" @click="login">
+              <v-btn type="submit" block class="mt-2">
                 Bejelentkezés
               </v-btn>
             </v-form>
@@ -78,6 +78,13 @@ export default {
       email: '',
       password: '',
       response: [],
+      emailRule: [
+        v => !!v || 'Kötelező kitölteni',
+        v => /.+@.+\..+/.test(v) || 'Érvénytelen email formátum'
+      ],
+      passwordRule: [
+        v => !!v || 'Kötelező kitölteni'
+      ],
     };
   },
   computed: {
@@ -90,7 +97,15 @@ export default {
     formatDate(date) {
       return moment(date.trim(), 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD');
     },
-    login(){
+    async onSubmit() {
+      const isValid = await this.$refs.form.validate();
+      if (!isValid) {
+        return;
+      }else{
+        this.login();
+      }
+    },
+    login() {
       const user = {
         email: this.email,
         password: this.password

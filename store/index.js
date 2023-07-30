@@ -51,7 +51,10 @@ export const createStore = () => {
         //TODO Beléptetési logika, például API hívás vagy adatbázis ellenőrzés. Értékek változóba mentése.
         const domain = window.location.hostname;
         try {
-          const response = await APIPOST('http://localhost:5000/THFustike3/build_mate_be/login.php', user);
+          const response = await APIPOST('login', user);
+          console.log(response);
+          const jsonData = JSON.stringify(response.data);
+          localStorage.setItem('apiLogin', jsonData);
 
           if (!response.data.error && response.data.loggedIn == true) {
             const userRole = response.data.userRole;
