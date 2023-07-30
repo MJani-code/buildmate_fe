@@ -47,13 +47,13 @@
                                             :readonly="!editMode" :filled="!editMode" label="Lakás"></v-text-field>
                                     </v-col>
                                 </v-row>
+                                <v-card-actions>
+                                    <v-btn v-if="editMode" @click="editMode = false" class="ma-3">Mégsem</v-btn>
+                                    <v-btn v-if="!editMode" @click="editMode = true" class="ma-3">Szerkesztés</v-btn>
+                                    <v-btn v-else color="#359756" @click="saveProfile" class="ma-3">Profil mentése</v-btn>
+                                </v-card-actions>
                             </v-form>
                         </v-card-text>
-                        <v-card-actions>
-                            <v-btn v-if="editMode" @click="editMode = false" class="ma-3">Mégsem</v-btn>
-                            <v-btn v-if="!editMode" @click="editMode = true" class="ma-3">Szerkesztés</v-btn>
-                            <v-btn v-else color="#359756" @click="saveProfile" class="ma-3">Profil mentése</v-btn>
-                        </v-card-actions>
                     </v-card>
                 </template>
             </v-col>

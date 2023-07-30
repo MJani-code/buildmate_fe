@@ -3,7 +3,7 @@
     <v-navigation-drawer v-model="drawer" :mini-variant="miniVariant" :clipped="clipped" fixed app>
       <v-list>
         <v-list-item>
-          <v-list-item-title><b>Szia,</b> Admin</v-list-item-title>
+          <v-list-item-title><b>Szia,</b> {{firstName}}</v-list-item-title>
         </v-list-item>
         <v-list-item v-for="(item, index) in routers" :key="index" router :to="item.to">
           <v-list-item-action>
@@ -71,10 +71,12 @@ export default {
       miniVariant: false,
       right: true,
       rightDrawer: false,
+      firstName: "",
     };
   },
-  mounted() {
-    // this.getTitleFromRouters();
+  created() {
+      const dataFromLocalStorage = localStorage.getItem('apiLogin');
+      this.firstName = JSON.parse(dataFromLocalStorage).firstName;
   },
   methods: {
     // getTitleFromRouters() {
