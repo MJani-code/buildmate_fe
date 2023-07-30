@@ -1,9 +1,6 @@
 import { APIPOST } from "~/api/apiHelper";
 
 export default async function ({ store, redirect, route }) {
-    //const loggedIn = store.state.auth.loggedIn;
-    //const userRole = store.state.auth.userRole;
-
     // Adatok lekérése a localstorage-ból
     const dataFromLocalStorage = localStorage.getItem('apiLogin');
     const parsedData = JSON.parse(dataFromLocalStorage);
