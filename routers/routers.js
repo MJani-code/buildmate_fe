@@ -34,9 +34,4 @@ export const routers = [
     title: 'Beállítások',
     to: '/admin/settings'
   },
-  {
-    icon: 'mdi-logout',
-    title: 'Kijelentkezés',
-    to: '/admin/logout'
-  },
 ]

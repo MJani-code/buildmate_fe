@@ -1,5 +1,6 @@
 import axios from 'axios';
-import Vuex from 'vuex'
+import Vuex from 'vuex';
+import { mapState } from 'vuex';
 import { APIGET, APIUPLOAD, APIPOST } from "~/api/apiHelper";
 
 
@@ -17,7 +18,10 @@ export const createStore = () => {
         title: 'Teszt title',
         message: 'Teszt message',
         options: [],
-        type: 'success'
+        clickedButton: null,
+        type: {
+          action: '',
+        }
       }
     },
     mutations: {
@@ -42,8 +46,13 @@ export const createStore = () => {
           title: 'Teszt title',
           message: 'Teszt message',
           options: [],
-          type: 'success'
+          type: {
+            action: ''
+          }
         }
+      },
+      SET_CLICKED_BUTTON(state, value) {
+        state.responseHandler.clickedButton = value;
       }
     },
     actions: {
@@ -85,10 +94,24 @@ export const createStore = () => {
         }
 
       },
-      logout({ commit }) {
-        // Kijelentkeztetési logika, például API hívás vagy adatbázis művelet
-        commit('SET_LOGGED_IN', false)
-        commit('SET_USER', null)
+      logout({ commit, dispatch }) {
+        this.dispatch('setResponseHandler', {
+          show: true,
+          title: 'Kijelentkezés megerősítése',
+          message: 'Biztosan ki szeretnél jelentkezni?',
+          options: ['Mégsem', 'Igen'],
+          type: {
+            action: 'confirm',
+          }
+        })
+      },
+      confirmLogout({commit}){
+        console.log("üzenet a confirmLogoutból");
+        commit('SET_LOGGED_IN', false);
+        commit('SET_USER', null);
+        localStorage.removeItem('apiLogin');
+        this.$router.push('/');
+        //TODO: API hívás a token adatbázisból történő törlésére
       },
       setResponseHandler({ commit }, value) {
         commit('SET_RESPONSEHANDLER', value)
@@ -97,12 +120,16 @@ export const createStore = () => {
         commit('SET_DEFAULT_RESPONSEHANDLER')
       }
     },
+
     getters: {
       isAuthenticated: state => {
         return state.auth.loggedIn
       },
       currentUser: state => {
         return state.auth.user
+      },
+      getClickedButton: state => {
+        return state.responseHandler.clickedButton;
       }
     }
   })
