@@ -5,6 +5,7 @@ import axios from 'axios';
 const config = {
   apiUrl: {
     login: 'http://localhost:5000/THFustike3/build_mate_be/login.php',
+    logout: 'http://localhost:5000/THFustike3/build_mate_be/logout.php',
     auth: 'http://localhost:5000/THFustike3/build_mate_be/auth.php',
     user: 'http://localhost:5000/THFustike3/build_mate_be/user.php',
     posts: 'http://localhost:5000/THFustike3/build_mate_be/posts.php',

@@ -61,7 +61,6 @@ export const createStore = () => {
         const domain = window.location.hostname;
         try {
           const response = await APIPOST('login', user);
-          console.log(response);
           const jsonData = JSON.stringify(response.data);
           localStorage.setItem('apiLogin', jsonData);
 
@@ -73,7 +72,7 @@ export const createStore = () => {
             commit('SET_USERROLE', userRole)
 
             this.$router.push('/' + userRole + '/home') // Módosítsd a célútvonalat a saját alkalmazásodhoz igazítva
-          }else{
+          } else {
             this.dispatch('setResponseHandler', {
               show: true,
               title: 'Hiba',
@@ -92,7 +91,6 @@ export const createStore = () => {
             type: 'error'
           });
         }
-
       },
       logout({ commit, dispatch }) {
         this.dispatch('setResponseHandler', {
@@ -105,13 +103,31 @@ export const createStore = () => {
           }
         })
       },
-      confirmLogout({commit}){
-        console.log("üzenet a confirmLogoutból");
-        commit('SET_LOGGED_IN', false);
-        commit('SET_USER', null);
-        localStorage.removeItem('apiLogin');
-        this.$router.push('/');
-        //TODO: API hívás a token adatbázisból történő törlésére
+      confirmLogout({ commit }) {
+        const dataFromLocalStorage = localStorage.getItem('apiLogin');
+        const parsedData = JSON.parse(dataFromLocalStorage);
+        const token = parsedData['token'];
+
+        const deleteTokenFromDatabase = async () => {
+          try {
+            const response = await APIPOST('logout', token);
+            const jsonData = JSON.stringify(response.data);
+
+            if (response.data.confirmLogout) {
+              commit('SET_LOGGED_IN', false);
+              commit('SET_USER', null);
+              localStorage.removeItem('apiLogin');
+              this.$router.push('/');
+            }
+
+          } catch (error) {
+            console.error('Hiba történt a token törlésekor az adatbázisból:', error);
+          }
+        }
+
+        if (token) {
+          deleteTokenFromDatabase()
+        }
       },
       setResponseHandler({ commit }, value) {
         commit('SET_RESPONSEHANDLER', value)
@@ -120,7 +136,6 @@ export const createStore = () => {
         commit('SET_DEFAULT_RESPONSEHANDLER')
       }
     },
-
     getters: {
       isAuthenticated: state => {
         return state.auth.loggedIn
