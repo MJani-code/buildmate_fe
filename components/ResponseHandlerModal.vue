@@ -50,6 +50,7 @@ export default {
         case 'confirm':
           return { bg: '#359756', text: 'black' };
       }
+      console.log(this.$store.state.responseHandler.type.action);
     },
     buttons() {
       switch (this.$store.state.responseHandler.type.action) {

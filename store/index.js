@@ -78,7 +78,9 @@ export const createStore = () => {
               title: 'Hiba',
               message: response.data.error,
               options: [],
-              type: 'error'
+              type: {
+                action: 'error'
+              }
             });
           }
         }
@@ -88,7 +90,9 @@ export const createStore = () => {
             title: 'Hiba',
             message: response.data.error,
             options: [],
-            type: 'error'
+            type: {
+              action: 'error'
+            }
           });
         }
       },
