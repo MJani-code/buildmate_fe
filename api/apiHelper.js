@@ -7,7 +7,8 @@ const config = {
     login: 'http://localhost:5000/THFustike3/build_mate_be/login.php',
     logout: 'http://localhost:5000/THFustike3/build_mate_be/logout.php',
     auth: 'http://localhost:5000/THFustike3/build_mate_be/auth.php',
-    user: 'http://localhost:5000/THFustike3/build_mate_be/user.php',
+    getUserData: 'http://localhost:5000/THFustike3/build_mate_be/getuserdata.php',
+    updateUserData: 'http://localhost:5000/THFustike3/build_mate_be/updateuserdata.php',
     posts: 'http://localhost:5000/THFustike3/build_mate_be/posts.php',
     // Itt további végpontokat adhatsz meg
   },
