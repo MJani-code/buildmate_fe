@@ -9,6 +9,9 @@ const config = {
     auth: 'http://localhost:5000/THFustike3/build_mate_be/auth.php',
     getUserData: 'http://localhost:5000/THFustike3/build_mate_be/getuserdata.php',
     updateUserData: 'http://localhost:5000/THFustike3/build_mate_be/updateuserdata.php',
+    getTodo: 'http://localhost:5000/THFustike3/build_mate_be/gettodo.php',
+    updateTodo: 'http://localhost:5000/THFustike3/build_mate_be/updatetodo.php',
+    addTodo: 'http://localhost:5000/THFustike3/build_mate_be/addtodo.php',
     posts: 'http://localhost:5000/THFustike3/build_mate_be/posts.php',
     // Itt további végpontokat adhatsz meg
   },
