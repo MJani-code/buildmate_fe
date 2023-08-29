@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const config = {
   apiUrl: {
-
+    getLandingData: 'http://localhost:5000/LastMinute_BE/scripts/getlandingdata.php',
     // Itt további végpontokat adhatsz meg
   },
 };

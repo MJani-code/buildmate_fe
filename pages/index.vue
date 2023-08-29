@@ -314,10 +314,53 @@
 </template>
 
 <script>
-import aosMixin from '@/mixins/aos'
+import aosMixin from '@/mixins/aos';
+import { APIGET, APIPOST, APIUPLOAD } from "~/api/apiHelper";
+
+
 export default {
   name: 'IndexPage',
   mixins: [aosMixin],
+  async fetch() {
+        // Itt végezheted az adatlekérdezést
+        try {
+            const response = await APIGET('getLandingData');
+            var error = '';
+            if (!response.data.error) {
+                // response.data.forEach((item, index) => {
+                //     this.todos.push({ ...this.todos[index], id: item.id, title: item.title, createdAt: item.created_at, createdBy: item.created_by })
+                // })
+                console.log(response.data);
+            } else {
+                error += response.data.error;
+
+                // this.checkError(error, {
+                //     show: true,
+                //     title: 'Hiba',
+                //     message: 'Hiba történt az adatok lekérése közben: ' + error,
+                //     options: [],
+                //     type: {
+                //         action: 'error'
+                //     }
+                // });
+            }
+            //console.log(response);
+        } catch (error) {
+            error += error.message;
+            // this.checkError(error, {
+            //     show: true,
+            //     title: 'Hiba',
+            //     message: 'Hiba történt az adatok lekérése közben: ' + error,
+            //     options: [],
+            //     type: {
+            //         action: 'error'
+            //     }
+            // });
+            console.log(error);
+        }
+        // Az itt visszaadott adatokat elmentjük a komponens adattagjában
+        //this.responseData = data;
+    },
   data() {
     return {
       selected: 0,
