@@ -5,6 +5,9 @@
   "NavLink": {
     "description": "Auto imported from components/NavLink.vue"
   },
+  "ResponseHandlerModal": {
+    "description": "Auto imported from components/ResponseHandlerModal.vue"
+  },
   "AdminNavbar": {
     "description": "Auto imported from components/admin/Navbar.vue"
   },

@@ -1,3 +1,5 @@
+import colors from 'vuetify/es5/util/colors';
+
 export default {
   head: {
     title: 'NEFA',
@@ -18,11 +20,28 @@ export default {
       },
     ],
   },
-  css: ['@/assets/css/main.css', 'aos/dist/aos.css'],
-  plugins: ['~/plugins/smooth-scroll.js', '~/plugins/mdi.js'],
+  css: ['@/assets/css/main.css', 'aos/dist/aos.css', 'vuetify/dist/vuetify.css'],
+  plugins: ['~/plugins/smooth-scroll.js', '~/plugins/mdi.js', '~/mixins/defaultMixin.js', '~/store/index.js'],
   components: true,
-  buildModules: ['@nuxt/postcss8'],
+  buildModules: ['@nuxt/postcss8', '@nuxtjs/vuetify'],
   modules: [],
+  vuetify: {
+    customVariables: ['~/assets/variables.scss'],
+    theme: {
+      dark: false,
+      themes: {
+        dark: {
+          primary: colors.blue.darken2,
+          accent: colors.grey.darken3,
+          secondary: colors.amber.darken3,
+          info: colors.teal.lighten1,
+          warning: colors.amber.base,
+          error: colors.deepOrange.accent4,
+          success: colors.green.accent3
+        }
+      }
+    }
+  },
   build: {
     postcss: {
       plugins: {

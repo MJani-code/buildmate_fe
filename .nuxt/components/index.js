@@ -1,5 +1,6 @@
 export { default as LineChart } from '../../components/LineChart.vue'
 export { default as NavLink } from '../../components/NavLink.vue'
+export { default as ResponseHandlerModal } from '../../components/ResponseHandlerModal.vue'
 export { default as AdminNavbar } from '../../components/admin/Navbar.vue'
 export { default as BaseAccordion } from '../../components/base/Accordion.vue'
 export { default as BaseButton } from '../../components/base/Button.vue'

@@ -4,33 +4,23 @@
     <section id="hero" class="w-full pb-24">
       <BaseSection>
         <div class="col-span-12 lg:col-span-6 mt-12 xl:mt-10 space-y-4 sm:space-y-6 px-6 text-center sm:text-left">
-          <span data-aos="fade-right" data-aos-once="true" class="text-base text-gradient font-semibold uppercase"
-            >Sign Up Today</span
-          >
-          <h1
-            data-aos="fade-right"
-            data-aos-once="true"
-            class="text-[2.5rem] sm:text-5xl xl:text-6xl font-bold leading-tight capitalize sm:pr-8 xl:pr-10"
-          >
+          <span data-aos="fade-right" data-aos-once="true" class="text-base text-gradient font-semibold uppercase">Sign Up
+            Today</span>
+          <h1 data-aos="fade-right" data-aos-once="true"
+            class="text-[2.5rem] sm:text-5xl xl:text-6xl font-bold leading-tight capitalize sm:pr-8 xl:pr-10">
             The World's <span class="text-header-gradient">Fastest Growing</span> Crypto Web App
           </h1>
           <p data-aos="fade-down" data-aos-once="true" data-aos-delay="300" class="paragraph hidden sm:block">
             Buy and sell 200+ cryptocurrencies with 20+ flat currencies using bank transfers or your credit/debit card.
           </p>
-          <div
-            data-aos="fade-up"
-            data-aos-once="true"
-            data-aos-delay="700"
-            class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mt-2"
-          >
+          <div data-aos="fade-up" data-aos-once="true" data-aos-delay="700"
+            class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mt-2">
             <BaseButton
-              class="max-w-full px-8 py-4 bg-gradient-to-r from-[#468ef9] to-[#0c66ee] border border-[#0c66ee] text-white"
-            >
+              class="max-w-full px-8 py-4 bg-gradient-to-r from-[#468ef9] to-[#0c66ee] border border-[#0c66ee] text-white">
               Get Started
             </BaseButton>
             <BaseButton
-              class="max-w-full px-6 py-4 bg-inherit text-gradient border border-[#0c66ee] flex items-center justify-center"
-            >
+              class="max-w-full px-6 py-4 bg-inherit text-gradient border border-[#0c66ee] flex items-center justify-center">
               <span>Download App</span>
               <ChevronDownIcon :size="20" class="mt-1 text-[#0c66ee]" />
             </BaseButton>
@@ -38,67 +28,31 @@
         </div>
         <div class="hidden sm:block col-span-12 lg:col-span-6">
           <div class="w-full">
-            <img
-              data-aos="fade-up"
-              data-aos-once="true"
-              :src="require('~/assets/img/hero-image.webp')"
-              class="-mt-4"
-              alt=""
-            />
+            <img data-aos="fade-up" data-aos-once="true" :src="require('~/assets/img/hero-image.webp')" class="-mt-4"
+              alt="" />
           </div>
         </div>
-        <img
-          data-aos="fade-up"
-          data-aos-delay="300"
-          :src="require('~/assets/img/pattern/ellipse-1.png')"
-          class="hidden sm:block absolute bottom-12 xl:bottom-16 left-4 xl:left-0 w-6"
-        />
-        <img
-          data-aos="fade-up"
-          data-aos-delay="300"
-          :src="require('~/assets/img/pattern/ellipse-2.png')"
-          class="hidden sm:block absolute top-4 sm:top-10 right-64 sm:right-96 xl:right-[32rem] w-6"
-        />
-        <img
-          data-aos="fade-up"
-          data-aos-delay="300"
-          :src="require('~/assets/img/pattern/ellipse-3.png')"
-          class="hidden sm:block absolute bottom-56 right-24 w-6"
-        />
-        <img
-          data-aos="fade-up"
-          data-aos-delay="300"
-          :src="require('~/assets/img/pattern/star.png')"
-          class="hidden sm:block absolute top-20 sm:top-28 right-16 lg:right-0 lg:left-[30rem] w-8"
-        />
+        <img data-aos="fade-up" data-aos-delay="300" :src="require('~/assets/img/pattern/ellipse-1.png')"
+          class="hidden sm:block absolute bottom-12 xl:bottom-16 left-4 xl:left-0 w-6" />
+        <img data-aos="fade-up" data-aos-delay="300" :src="require('~/assets/img/pattern/ellipse-2.png')"
+          class="hidden sm:block absolute top-4 sm:top-10 right-64 sm:right-96 xl:right-[32rem] w-6" />
+        <img data-aos="fade-up" data-aos-delay="300" :src="require('~/assets/img/pattern/ellipse-3.png')"
+          class="hidden sm:block absolute bottom-56 right-24 w-6" />
+        <img data-aos="fade-up" data-aos-delay="300" :src="require('~/assets/img/pattern/star.png')"
+          class="hidden sm:block absolute top-20 sm:top-28 right-16 lg:right-0 lg:left-[30rem] w-8" />
       </BaseSection>
     </section>
 
     <!-- Crypto statistic section -->
     <section
-      class="max-w-screen-xl mx-2 sm:mx-auto px-4 sm:px-6 lg:px-0 py-6 pb-20 sm:py-8 rounded-[2.25rem] sm:rounded-xl bg-white shadow-lg sm:shadow-md transform lg:-translate-y-12"
-    >
+      class="max-w-screen-xl mx-2 sm:mx-auto px-4 sm:px-6 lg:px-0 py-6 pb-20 sm:py-8 rounded-[2.25rem] sm:rounded-xl bg-white shadow-lg sm:shadow-md transform lg:-translate-y-12">
       <div class="w-full flex flex-col lg:flex-row items-center justify-center">
-        <LandingCryptoStatistic
-          data-aos="fade-up"
-          title="🔥 Trending"
-          :datasets="trendings"
-          class="xl:border-r border-gray-200 lg:px-8"
-        />
-        <LandingCryptoStatistic
-          data-aos="fade-up"
-          data-aos-delay="150"
-          title="🚀 Top Gainers"
-          :datasets="topGainers"
-          class="xl:border-r border-gray-200 lg:px-8"
-        />
-        <LandingCryptoStatistic
-          data-aos="fade-up"
-          data-aos-delay="300"
-          title="💎 Recently Added"
-          :datasets="recents"
-          class="lg:px-8"
-        />
+        <LandingCryptoStatistic data-aos="fade-up" title="🔥 Trending" :datasets="trendings"
+          class="xl:border-r border-gray-200 lg:px-8" />
+        <LandingCryptoStatistic data-aos="fade-up" data-aos-delay="150" title="🚀 Top Gainers" :datasets="topGainers"
+          class="xl:border-r border-gray-200 lg:px-8" />
+        <LandingCryptoStatistic data-aos="fade-up" data-aos-delay="300" title="💎 Recently Added" :datasets="recents"
+          class="lg:px-8" />
       </div>
     </section>
 
@@ -115,22 +69,10 @@
             Buy now and get 40% extra bonus Minimum pre-sale amount 25 Crypto Coin. We accept BTC crypto-currency
           </p>
           <div class="space-y-6 lg:pr-12">
-            <LandingExchange
-              title="Amount"
-              name="amount"
-              type="number"
-              default-value="5.000"
-              :exchange-selected="currencySelected"
-              :exchanges="currencies"
-            />
-            <LandingExchange
-              title="Get"
-              name="get"
-              type="number"
-              default-value="0.10901"
-              :exchange-selected="cryptoSelected"
-              :exchanges="cryptocurrencies"
-            />
+            <LandingExchange title="Amount" name="amount" type="number" default-value="5.000"
+              :exchange-selected="currencySelected" :exchanges="currencies" />
+            <LandingExchange title="Get" name="get" type="number" default-value="0.10901"
+              :exchange-selected="cryptoSelected" :exchanges="cryptocurrencies" />
             <BaseButton class="w-full px-5 py-4 bg-blue-gradient text-white text-base font-medium">Buy Now</BaseButton>
           </div>
         </div>
@@ -144,11 +86,8 @@
         <h3 data-aos="flip-down" class="text-2xl text-neutral-800 font-semibold">Trusted Partners Worldwide</h3>
         <p data-aos="flip-down" class="paragraph">We're partners with countless major organisations around the globe</p>
         <div data-aos="fade-up" class="flex flex-wrap items-center justify-center">
-          <LandingPartnerImage
-            v-for="img in ['clever.png', 'diamon-cutts.png', 'swiss-finance.png', 'gambio.png']"
-            :key="img"
-            :img="img"
-          />
+          <LandingPartnerImage v-for="img in ['clever.png', 'diamon-cutts.png', 'swiss-finance.png', 'gambio.png']"
+            :key="img" :img="img" />
         </div>
       </div>
     </section>
@@ -172,9 +111,8 @@
             <LandingListItem title="No annual fee" />
           </ul>
           <BaseButton
-            class="w-full sm:max-w-[240px] px-10 py-4 bg-inherit text-gradient border border-[#0c66ee] text-base"
-            >Join the waitlist</BaseButton
-          >
+            class="w-full sm:max-w-[240px] px-10 py-4 bg-inherit text-gradient border border-[#0c66ee] text-base">Join the
+            waitlist</BaseButton>
         </div>
       </BaseSection>
     </section>
@@ -260,21 +198,13 @@
         <h2 data-aos="flip-down" class="text-3xl sm:text-4xl font-semibold text-center">
           Get started in just a few minutes
         </h2>
-        <div
-          data-aos="fade-up"
-          class="relative w-full flex flex-col lg:flex-row items-center justify-between space-y-12 lg:space-y-0 px-4 xl:px-10 mt-16 sm:mt-8"
-        >
+        <div data-aos="fade-up"
+          class="relative w-full flex flex-col lg:flex-row items-center justify-between space-y-12 lg:space-y-0 px-4 xl:px-10 mt-16 sm:mt-8">
           <LandingStep v-for="step in steps" :key="step.title" :step="step" />
-          <img
-            :src="require('~/assets/img/getting-started/arrow.png')"
-            class="hidden lg:inline-block absolute top-32 left-64 xl:left-[22rem] w-24 xl:w-[9.5rem]"
-            alt=""
-          />
-          <img
-            :src="require('~/assets/img/getting-started/arrow.png')"
-            class="hidden lg:inline-block absolute top-32 right-64 xl:right-[22rem] w-24 xl:w-[9.5rem]"
-            alt=""
-          />
+          <img :src="require('~/assets/img/getting-started/arrow.png')"
+            class="hidden lg:inline-block absolute top-32 left-64 xl:left-[22rem] w-24 xl:w-[9.5rem]" alt="" />
+          <img :src="require('~/assets/img/getting-started/arrow.png')"
+            class="hidden lg:inline-block absolute top-32 right-64 xl:right-[22rem] w-24 xl:w-[9.5rem]" alt="" />
         </div>
       </div>
     </section>
@@ -299,17 +229,13 @@
     </section>
 
     <div class="w-full my-10 flex justify-center">
-      <a
-        v-smooth-scroll
-        data-aos="flip-down"
-        data-aos-delay="150"
-        href="#navbar"
-        class="px-6 py-3 flex items-center space-x-2 bg-[#FAFAFA] hover:bg-gray-100 hover:shadow-md border border-[#DDDDDD] rounded-md text-gray-700"
-      >
+      <a v-smooth-scroll data-aos="flip-down" data-aos-delay="150" href="#navbar"
+        class="px-6 py-3 flex items-center space-x-2 bg-[#FAFAFA] hover:bg-gray-100 hover:shadow-md border border-[#DDDDDD] rounded-md text-gray-700">
         <span>Back to top</span>
         <ArrowUpIcon :size="20" />
       </a>
     </div>
+
   </div>
 </template>
 
@@ -322,45 +248,43 @@ export default {
   name: 'IndexPage',
   mixins: [aosMixin],
   async fetch() {
-        // Itt végezheted az adatlekérdezést
-        try {
-            const response = await APIGET('getLandingData');
-            var error = '';
-            if (!response.data.error) {
-                // response.data.forEach((item, index) => {
-                //     this.todos.push({ ...this.todos[index], id: item.id, title: item.title, createdAt: item.created_at, createdBy: item.created_by })
-                // })
-                console.log(response.data);
-            } else {
-                error += response.data.error;
+    // Itt végezheted az adatlekérdezést
+    try {
+      const response = await APIGET('getLandingData');
+      var error = '';
+      if (!response.data.error) {
+        // response.data.forEach((item, index) => {
+        //     this.todos.push({ ...this.todos[index], id: item.id, title: item.title, createdAt: item.created_at, createdBy: item.created_by })
+        // })
+        console.log(this.$store.state.responseHandler);
+      } else {
+        error += response.data.error;
+        this.checkError(error, {
+          show: true,
+          title: 'Hiba',
+          message: 'Hiba történt az adatok lekérése közben: ' + error,
+          options: [],
+          type: 'error'
+        });
+      }
+      //console.log(response);
+    } catch (error) {
+      error += error.message;
+      this.checkError(error, {
+        show: true,
+        title: 'Hiba',
+        message: 'Hiba történt az adatok lekérése közben: ' + error,
+        options: [],
+        type: 'error'
+      });
+    }
+    // Az itt visszaadott adatokat elmentjük a komponens adattagjában
+    //this.responseData = data;
+  },
+  methods: {
 
-                // this.checkError(error, {
-                //     show: true,
-                //     title: 'Hiba',
-                //     message: 'Hiba történt az adatok lekérése közben: ' + error,
-                //     options: [],
-                //     type: {
-                //         action: 'error'
-                //     }
-                // });
-            }
-            //console.log(response);
-        } catch (error) {
-            error += error.message;
-            // this.checkError(error, {
-            //     show: true,
-            //     title: 'Hiba',
-            //     message: 'Hiba történt az adatok lekérése közben: ' + error,
-            //     options: [],
-            //     type: {
-            //         action: 'error'
-            //     }
-            // });
-            console.log(error);
-        }
-        // Az itt visszaadott adatokat elmentjük a komponens adattagjában
-        //this.responseData = data;
-    },
+  },
+
   data() {
     return {
       selected: 0,
@@ -533,6 +457,7 @@ export default {
     }
   },
 }
+
 </script>
 <style scoped>
 .text-header-gradient {
@@ -541,16 +466,19 @@ export default {
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
 .bg-partner {
   background: url('../assets/img/partner/background.png');
   background-size: cover;
   background-position: center;
 }
+
 .bg-trading-tools {
   background: url('../assets/img/bg-trading-tools.webp');
   background-size: cover;
   background-position: center;
 }
+
 .max-h-0 {
   max-height: 0;
 }

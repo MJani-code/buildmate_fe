@@ -8,6 +8,7 @@
 
       <main class="text-neutral-800">
         <Nuxt />
+        <ResponseHandlerModal></ResponseHandlerModal>
       </main>
 
       <BaseFooter />
@@ -15,8 +16,14 @@
   </div>
 </template>
 <script>
+import ResponseHandlerModal from '../components/ResponseHandlerModal.vue';
+
+
 export default {
   name: 'DefaultLayout',
+  components: {
+    ResponseHandlerModal
+}
 }
 </script>
 

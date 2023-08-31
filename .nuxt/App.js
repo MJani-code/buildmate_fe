@@ -10,6 +10,10 @@ import '../assets/css/main.css'
 
 import '../node_modules/aos/dist/aos.css'
 
+import '../node_modules/vuetify/dist/vuetify.css'
+
+import '../node_modules/vuetify/dist/vuetify.css'
+
 import _6f6c098b from '../layouts/default.vue'
 import _bb2d8eb8 from '../layouts/defaultadmin.vue'
 

@@ -8,6 +8,7 @@ You can directly use them in pages and other components without the need to impo
 
 - `<LineChart>` | `<line-chart>` (components/LineChart.vue)
 - `<NavLink>` | `<nav-link>` (components/NavLink.vue)
+- `<ResponseHandlerModal>` | `<response-handler-modal>` (components/ResponseHandlerModal.vue)
 - `<AdminNavbar>` | `<admin-navbar>` (components/admin/Navbar.vue)
 - `<BaseAccordion>` | `<base-accordion>` (components/base/Accordion.vue)
 - `<BaseButton>` | `<base-button>` (components/base/Button.vue)
