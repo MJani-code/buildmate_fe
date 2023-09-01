@@ -8,24 +8,6 @@
   "ResponseHandlerModal": {
     "description": "Auto imported from components/ResponseHandlerModal.vue"
   },
-  "AdminNavbar": {
-    "description": "Auto imported from components/admin/Navbar.vue"
-  },
-  "BaseAccordion": {
-    "description": "Auto imported from components/base/Accordion.vue"
-  },
-  "BaseButton": {
-    "description": "Auto imported from components/base/Button.vue"
-  },
-  "BaseFooter": {
-    "description": "Auto imported from components/base/Footer.vue"
-  },
-  "BaseNavbar": {
-    "description": "Auto imported from components/base/Navbar.vue"
-  },
-  "BaseSection": {
-    "description": "Auto imported from components/base/Section.vue"
-  },
   "LandingBuyTradeImage": {
     "description": "Auto imported from components/landing/BuyTradeImage.vue"
   },
@@ -46,5 +28,23 @@
   },
   "LandingTradingToolImage": {
     "description": "Auto imported from components/landing/TradingToolImage.vue"
+  },
+  "AdminNavbar": {
+    "description": "Auto imported from components/admin/Navbar.vue"
+  },
+  "BaseAccordion": {
+    "description": "Auto imported from components/base/Accordion.vue"
+  },
+  "BaseButton": {
+    "description": "Auto imported from components/base/Button.vue"
+  },
+  "BaseFooter": {
+    "description": "Auto imported from components/base/Footer.vue"
+  },
+  "BaseNavbar": {
+    "description": "Auto imported from components/base/Navbar.vue"
+  },
+  "BaseSection": {
+    "description": "Auto imported from components/base/Section.vue"
   }
 }

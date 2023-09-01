@@ -44,9 +44,7 @@ export const createStore = () => {
           title: 'Teszt title',
           message: 'Teszt message',
           options: [],
-          type: {
-            action: ''
-          }
+          type: ''
         }
       },
       SET_CLICKED_BUTTON(state, value) {

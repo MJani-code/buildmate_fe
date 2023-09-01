@@ -47,11 +47,11 @@
     <section
       class="max-w-screen-xl mx-2 sm:mx-auto px-4 sm:px-6 lg:px-0 py-6 pb-20 sm:py-8 rounded-[2.25rem] sm:rounded-xl bg-white shadow-lg sm:shadow-md transform lg:-translate-y-12">
       <div class="w-full flex flex-col lg:flex-row items-center justify-center">
-        <LandingCryptoStatistic data-aos="fade-up" title="🔥 Trending" :datasets="trendings"
+        <LandingCryptoStatistic data-aos="fade-up" :datasets="trendings"
           class="xl:border-r border-gray-200 lg:px-8" />
-        <LandingCryptoStatistic data-aos="fade-up" data-aos-delay="150" title="🚀 Top Gainers" :datasets="topGainers"
+        <LandingCryptoStatistic data-aos="fade-up" data-aos-delay="150" :datasets="topGainers"
           class="xl:border-r border-gray-200 lg:px-8" />
-        <LandingCryptoStatistic data-aos="fade-up" data-aos-delay="300" title="💎 Recently Added" :datasets="recents"
+        <LandingCryptoStatistic data-aos="fade-up" data-aos-delay="300" :datasets="recents"
           class="lg:px-8" />
       </div>
     </section>
@@ -256,7 +256,7 @@ export default {
         // response.data.forEach((item, index) => {
         //     this.todos.push({ ...this.todos[index], id: item.id, title: item.title, createdAt: item.created_at, createdBy: item.created_by })
         // })
-        console.log(this.$store.state.responseHandler);
+
       } else {
         error += response.data.error;
         this.checkError(error, {
@@ -267,7 +267,7 @@ export default {
           type: 'error'
         });
       }
-      //console.log(response);
+
     } catch (error) {
       error += error.message;
       this.checkError(error, {

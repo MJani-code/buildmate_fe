@@ -1,7 +1,7 @@
 <template>
-  <div data-app>
+  <div data-app v-if="show" :value="show">
     <v-app>
-  <v-dialog v-if="show" :value="show" width="500" persistent>
+      <v-dialog v-if="show" :value="show" width="500" persistent>
         <v-card>
           <v-card-title>
             <span class="headline" :style="`color: ${colorByType.text}`">{{ title }}</span>
