@@ -1,4 +1,7 @@
 {
+  "Countdown": {
+    "description": "Auto imported from components/Countdown.vue"
+  },
   "LineChart": {
     "description": "Auto imported from components/LineChart.vue"
   },

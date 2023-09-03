@@ -1,6 +1,6 @@
 <template>
     <v-app>
-        <v-card :loading="loading" class="mx-auto my-12" max-width="374">
+        <v-card :loading="loading" class="mx-auto my-12" max-width="300">
             <template slot="progress">
                 <v-progress-linear color="blue darken-2" height="10" indeterminate></v-progress-linear>
             </template>
@@ -9,11 +9,11 @@
 
             <v-card-title class="d-flex">
                 <span class="align-self-start">Product Name</span>
-                <v-span>
+                <span>
                     <v-icon class="align-self-end text-subtitle-1 mdi mdi-tag" color="blue darken-2">
                         1000 Ft
                     </v-icon>
-                </v-span>
+                </span>
             </v-card-title>
 
             <v-divider class="mx-4"></v-divider>
@@ -28,9 +28,10 @@
             </v-card-text>
 
             <div class="d-flex align-center">
-                <v-card-title id="countdown" class="align-self-start">
-                    <span id="days">0 </span>nap <span id="hours">00</span>:<span id="minutes">00</span>:<span
-                        id="seconds">60</span>
+                <v-card-title class="align-self-start subtitle-1">
+                    <Countdown :expirationDate = "expirationDate"></Countdown>
+                    <!-- <span id="days">0 </span>nap <span id="hours">00</span>:<span id="minutes">00</span>:<span
+                        id="seconds">60</span> -->
                 </v-card-title>
                 <v-card-title class="align-self-end">
                     <v-btn color="blue darken-2" text @click="reserve">
@@ -44,6 +45,7 @@
 
 <script>
 export default {
+    props: ['expirationDate'],
     data: () => ({
         loading: false,
         selection: 1,
@@ -56,54 +58,6 @@ export default {
             setTimeout(() => (this.loading = false), 2000)
         },
     },
-    mounted() {
-        // Az elemek kiválasztása
-        const daysElement = document.getElementById("days");
-        const hoursElement = document.getElementById("hours");
-        const minutesElement = document.getElementById("minutes");
-        const secondsElement = document.getElementById("seconds");
-
-        // Visszaszámlálás kezdeti értéke (1 nap = 24 óra)
-        let days = 1;
-        let hours = 0;
-        let minutes = 0;
-        let seconds = 0;
-
-        // Az időzítő beállítása (1000 ms = 1 másodperc)
-        const countdown = setInterval(function () {
-            // Másodpercek csökkentése
-            seconds--;
-
-            // Ha a másodpercek negatívra váltanak, akkor percek és órák frissítése
-            if (seconds < 0) {
-                minutes--;
-                seconds = 59;
-
-                if (minutes < 0) {
-                    hours--;
-                    minutes = 59;
-
-                    if (hours < 0) {
-                        days--;
-                        hours = 23;
-                    }
-                }
-            }
-
-            // Az értékek megjelenítése az elemeken
-            daysElement.textContent = days.toString().padStart(1, "0");
-            hoursElement.textContent = hours.toString().padStart(2, "0");
-            minutesElement.textContent = minutes.toString().padStart(2, "0");
-            secondsElement.textContent = seconds.toString().padStart(2, "0");
-
-            // Ha elérjük a 0 nap 0 óra 0 perc 0 másodperc értéket, leállítjuk a visszaszámlálást
-            if (days === 0 && hours === 0 && minutes === 0 && seconds === 0) {
-                clearInterval(countdown);
-                alert("Vége a visszaszámlálásnak!");
-            }
-        }, 1000);
-
-    }
 
 }
 </script>
@@ -123,5 +77,11 @@ export default {
 
 .align-self-end {
     align-self: flex-end;
+}
+</style>
+
+<style scoped>
+.subtitle-1{
+    margin: auto 0;
 }
 </style>

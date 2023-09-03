@@ -6,6 +6,7 @@ You can directly use them in pages and other components without the need to impo
 
 **Tip:** If a component is conditionally rendered with `v-if` and is big, it is better to use `Lazy` or `lazy-` prefix to lazy load.
 
+- `<Countdown>` | `<countdown>` (components/Countdown.vue)
 - `<LineChart>` | `<line-chart>` (components/LineChart.vue)
 - `<NavLink>` | `<nav-link>` (components/NavLink.vue)
 - `<ResponseHandlerModal>` | `<response-handler-modal>` (components/ResponseHandlerModal.vue)

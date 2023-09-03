@@ -1,3 +1,4 @@
+export { default as Countdown } from '../../components/Countdown.vue'
 export { default as LineChart } from '../../components/LineChart.vue'
 export { default as NavLink } from '../../components/NavLink.vue'
 export { default as ResponseHandlerModal } from '../../components/ResponseHandlerModal.vue'
