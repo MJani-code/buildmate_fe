@@ -8,30 +8,6 @@
   "ResponseHandlerModal": {
     "description": "Auto imported from components/ResponseHandlerModal.vue"
   },
-  "LandingBuyTradeImage": {
-    "description": "Auto imported from components/landing/BuyTradeImage.vue"
-  },
-  "LandingCryptoStatistic": {
-    "description": "Auto imported from components/landing/CryptoStatistic.vue"
-  },
-  "LandingExchange": {
-    "description": "Auto imported from components/landing/Exchange.vue"
-  },
-  "LandingListItem": {
-    "description": "Auto imported from components/landing/ListItem.vue"
-  },
-  "LandingPartnerImage": {
-    "description": "Auto imported from components/landing/PartnerImage.vue"
-  },
-  "LandingStep": {
-    "description": "Auto imported from components/landing/Step.vue"
-  },
-  "LandingTradingToolImage": {
-    "description": "Auto imported from components/landing/TradingToolImage.vue"
-  },
-  "AdminNavbar": {
-    "description": "Auto imported from components/admin/Navbar.vue"
-  },
   "BaseAccordion": {
     "description": "Auto imported from components/base/Accordion.vue"
   },
@@ -46,5 +22,32 @@
   },
   "BaseSection": {
     "description": "Auto imported from components/base/Section.vue"
+  },
+  "AdminNavbar": {
+    "description": "Auto imported from components/admin/Navbar.vue"
+  },
+  "LandingBuyTradeImage": {
+    "description": "Auto imported from components/landing/BuyTradeImage.vue"
+  },
+  "LandingCryptoStatistic": {
+    "description": "Auto imported from components/landing/CryptoStatistic.vue"
+  },
+  "LandingExchange": {
+    "description": "Auto imported from components/landing/Exchange.vue"
+  },
+  "LandingListItem": {
+    "description": "Auto imported from components/landing/ListItem.vue"
+  },
+  "LandingNewProducts": {
+    "description": "Auto imported from components/landing/NewProducts.vue"
+  },
+  "LandingPartnerImage": {
+    "description": "Auto imported from components/landing/PartnerImage.vue"
+  },
+  "LandingStep": {
+    "description": "Auto imported from components/landing/Step.vue"
+  },
+  "LandingTradingToolImage": {
+    "description": "Auto imported from components/landing/TradingToolImage.vue"
   }
 }

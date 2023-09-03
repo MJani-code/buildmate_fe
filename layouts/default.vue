@@ -28,6 +28,7 @@ export default {
 </script>
 
 <style>
+
 .cover-gradient {
   background: linear-gradient(
     169.4deg,
