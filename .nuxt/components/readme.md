@@ -15,7 +15,6 @@ You can directly use them in pages and other components without the need to impo
 - `<BaseFooter>` | `<base-footer>` (components/base/Footer.vue)
 - `<BaseNavbar>` | `<base-navbar>` (components/base/Navbar.vue)
 - `<BaseSection>` | `<base-section>` (components/base/Section.vue)
-- `<AdminNavbar>` | `<admin-navbar>` (components/admin/Navbar.vue)
 - `<LandingBuyTradeImage>` | `<landing-buy-trade-image>` (components/landing/BuyTradeImage.vue)
 - `<LandingCryptoStatistic>` | `<landing-crypto-statistic>` (components/landing/CryptoStatistic.vue)
 - `<LandingExchange>` | `<landing-exchange>` (components/landing/Exchange.vue)
@@ -24,3 +23,4 @@ You can directly use them in pages and other components without the need to impo
 - `<LandingPartnerImage>` | `<landing-partner-image>` (components/landing/PartnerImage.vue)
 - `<LandingStep>` | `<landing-step>` (components/landing/Step.vue)
 - `<LandingTradingToolImage>` | `<landing-trading-tool-image>` (components/landing/TradingToolImage.vue)
+- `<AdminNavbar>` | `<admin-navbar>` (components/admin/Navbar.vue)

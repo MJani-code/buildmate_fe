@@ -44,18 +44,26 @@
     </section>
 
     <!-- New products section -->
+
     <section
       class="max-w-screen-xl mx-2 sm:mx-auto px-4 sm:px-6 lg:px-0 py-6 pb-20 sm:py-8 rounded-[2.25rem] sm:rounded-xl bg-white shadow-lg sm:shadow-md transform lg:-translate-y-12">
+      <div class="w-full pb-6 items-center">
+        <h2 data-aos="flip-down" class="text-3xl sm:text-4xl font-semibold text-center">
+          Legújabb termékek
+        </h2>
+      </div>
       <div class="w-full flex flex-col lg:flex-row items-center justify-center">
-        <LandingNewProducts data-aos="fade-up" expirationDate="2023-09-04 17:00:00"
-        class="xl:border-r border-gray-200 lg:px-8" />
-        <LandingNewProducts data-aos="fade-up" data-aos-delay="150" expirationDate="2023-09-04 18:00:00"
+        <LandingNewProducts data-aos="fade-up" expirationDate="2023-09-04 17:00:00" productPrice="1000 Ft"
+          productTitle="Product1 Name" productLocation="Location1" productImage="https://picsum.photos/200/300"
           class="xl:border-r border-gray-200 lg:px-8" />
+        <LandingNewProducts data-aos="fade-up" data-aos-delay="150" expirationDate="2023-09-04 18:00:00"
+          productPrice="1200 Ft" productTitle="Product2 Name" productLocation="Location2"
+          productImage="https://picsum.photos/200/300" class="xl:border-r border-gray-200 lg:px-8" />
         <LandingNewProducts data-aos="fade-up" data-aos-delay="300" expirationDate="2023-09-04 19:00:00"
-          class="lg:px-8" />
+          productPrice="1400 Ft" productTitle="Product3 Name" productLocation="Location3"
+          productImage="https://picsum.photos/200/300" class="lg:px-8" />
       </div>
     </section>
-
 
     <!-- Buy and trade section -->
     <section class="w-full my-24">
@@ -79,6 +87,23 @@
         </div>
         <LandingBuyTradeImage data-aos="fade-left" class="hidden sm:block" />
       </BaseSection>
+    </section>
+
+    <!-- Getting started section -->
+    <section class="bg-trading-tools relative max-w-full sm:mx-4 xl:mx-10 my-24 shadow sm:rounded-2xl overflow-hidden">
+      <div class="w-full py-16 flex flex-col items-center">
+        <h2 data-aos="flip-down" class="text-3xl sm:text-4xl font-semibold text-center">
+          Hogyan működik?
+        </h2>
+        <div data-aos="fade-up"
+          class="relative w-full flex flex-col lg:flex-row items-center justify-between space-y-12 lg:space-y-0 px-4 xl:px-10 mt-16 sm:mt-8">
+          <LandingStep v-for="step in steps" :key="step.title" :step="step" />
+          <img :src="require('~/assets/img/getting-started/arrow.png')"
+            class="hidden lg:inline-block absolute top-32 left-64 xl:left-[22rem] w-24 xl:w-[9.5rem]" alt="" />
+          <img :src="require('~/assets/img/getting-started/arrow.png')"
+            class="hidden lg:inline-block absolute top-32 right-64 xl:right-[22rem] w-24 xl:w-[9.5rem]" alt="" />
+        </div>
+      </div>
     </section>
 
     <!-- Partners section -->
@@ -189,23 +214,6 @@
               </p>
             </LandingListItem>
           </ul>
-        </div>
-      </div>
-    </section>
-
-    <!-- Getting started section -->
-    <section class="bg-trading-tools relative max-w-full sm:mx-4 xl:mx-10 my-24 shadow sm:rounded-2xl overflow-hidden">
-      <div class="w-full py-16 flex flex-col items-center">
-        <h2 data-aos="flip-down" class="text-3xl sm:text-4xl font-semibold text-center">
-          Get started in just a few minutes
-        </h2>
-        <div data-aos="fade-up"
-          class="relative w-full flex flex-col lg:flex-row items-center justify-between space-y-12 lg:space-y-0 px-4 xl:px-10 mt-16 sm:mt-8">
-          <LandingStep v-for="step in steps" :key="step.title" :step="step" />
-          <img :src="require('~/assets/img/getting-started/arrow.png')"
-            class="hidden lg:inline-block absolute top-32 left-64 xl:left-[22rem] w-24 xl:w-[9.5rem]" alt="" />
-          <img :src="require('~/assets/img/getting-started/arrow.png')"
-            class="hidden lg:inline-block absolute top-32 right-64 xl:right-[22rem] w-24 xl:w-[9.5rem]" alt="" />
         </div>
       </div>
     </section>

@@ -26,9 +26,6 @@
   "BaseSection": {
     "description": "Auto imported from components/base/Section.vue"
   },
-  "AdminNavbar": {
-    "description": "Auto imported from components/admin/Navbar.vue"
-  },
   "LandingBuyTradeImage": {
     "description": "Auto imported from components/landing/BuyTradeImage.vue"
   },
@@ -52,5 +49,8 @@
   },
   "LandingTradingToolImage": {
     "description": "Auto imported from components/landing/TradingToolImage.vue"
+  },
+  "AdminNavbar": {
+    "description": "Auto imported from components/admin/Navbar.vue"
   }
 }

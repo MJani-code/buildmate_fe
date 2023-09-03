@@ -5,24 +5,24 @@
                 <v-progress-linear color="blue darken-2" height="10" indeterminate></v-progress-linear>
             </template>
 
-            <v-img height="250" src="https://cdn.vuetifyjs.com/images/cards/cooking.png"></v-img>
+            <v-img height="250" :productImage="productImage" :src="productImage"></v-img>
 
-            <v-card-title class="d-flex">
-                <span class="align-self-start">Product Name</span>
+            <v-card-title class="d-flex" :productPrice="productPrice" :productTitle="productTitle">
+                <span class="align-self-start">{{ productTitle }}</span>
                 <span>
                     <v-icon class="align-self-end text-subtitle-1 mdi mdi-tag" color="blue darken-2">
-                        1000 Ft
+                        {{ productPrice }}
                     </v-icon>
                 </span>
             </v-card-title>
 
             <v-divider class="mx-4"></v-divider>
-            <v-card-text>
+            <v-card-text :productLocation="productLocation">
                 <v-row align="center" class="mb-1">
                 </v-row>
                 <div class="pb-1">
                     <v-icon class="mt-2 text-subtitle-1 mdi mdi-map-marker">
-                        Location
+                        {{ productLocation }}
                     </v-icon>
                 </div>
             </v-card-text>
@@ -30,8 +30,6 @@
             <div class="d-flex align-center">
                 <v-card-title class="align-self-start subtitle-1">
                     <Countdown :expirationDate = "expirationDate"></Countdown>
-                    <!-- <span id="days">0 </span>nap <span id="hours">00</span>:<span id="minutes">00</span>:<span
-                        id="seconds">60</span> -->
                 </v-card-title>
                 <v-card-title class="align-self-end">
                     <v-btn color="blue darken-2" text @click="reserve">
@@ -45,7 +43,7 @@
 
 <script>
 export default {
-    props: ['expirationDate'],
+    props: ['expirationDate', 'productPrice', 'productTitle', 'productLocation', 'productImage'],
     data: () => ({
         loading: false,
         selection: 1,

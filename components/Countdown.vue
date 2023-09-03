@@ -39,8 +39,13 @@ export default {
                     const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
                     const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
 
+                    const formattedSeconds = String(seconds).padStart(2, '0');
+                    const formattedMinutes = String(minutes).padStart(2, '0');
+                    const formattedHours = String(hours).padStart(2, '0');
+
+
                     // Frissítsük a visszaszámlálót a kiszámított értékekkel
-                    this.countdown = `${days} nap ${hours}:${minutes}:${seconds}`;
+                    this.countdown = `${days} nap ${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
                 }
             }, 1000);
         }
