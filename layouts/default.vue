@@ -17,8 +17,7 @@
 <script>
 export default {
   name: "DefaultLayout",
-  components: {
-  },
+  components: {},
 };
 </script>
 

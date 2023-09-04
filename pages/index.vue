@@ -8,20 +8,14 @@
         <div
           class="col-span-12 lg:col-span-6 mt-12 xl:mt-10 space-y-4 sm:space-y-6 px-6 text-center sm:text-left"
         >
-          <span
-            data-aos="fade-right"
-            data-aos-once="true"
-            class="text-base text-gradient font-semibold uppercase"
-            >Sign Up Today</span
-          >
           <h1
             data-aos="fade-right"
             data-aos-once="true"
-            class="text-[2.5rem] sm:text-5xl xl:text-6xl font-bold leading-tight capitalize sm:pr-8 xl:pr-10"
+            class="text-[2.5rem] sm:text-4xl xl:text-5xl font-bold leading-tight sm:pr-8 xl:pr-10"
           >
-            The World's
-            <span class="text-header-gradient">Fastest Growing</span> Crypto Web
-            App
+            Adj második esélyt a
+            <span class="text-header-gradient">termékednek</span>
+            Vásárold vagy add el nálunk!
           </h1>
           <p
             data-aos="fade-down"
@@ -29,8 +23,9 @@
             data-aos-delay="300"
             class="paragraph hidden sm:block"
           >
-            Buy and sell 200+ cryptocurrencies with 20+ flat currencies using
-            bank transfers or your credit/debit card.
+            Célunk, hogy a fenntartható vásárlás és az értékek megőrzése révén
+            pozitív változást hozzunk a környezetünkben és az ügyfeleink
+            életében.
           </p>
           <div
             data-aos="fade-up"
@@ -41,13 +36,7 @@
             <BaseButton
               class="max-w-full px-8 py-4 bg-gradient-to-r from-[#468ef9] to-[#0c66ee] border border-[#0c66ee] text-white"
             >
-              Get Started
-            </BaseButton>
-            <BaseButton
-              class="max-w-full px-6 py-4 bg-inherit text-gradient border border-[#0c66ee] flex items-center justify-center"
-            >
-              <span>Download App</span>
-              <ChevronDownIcon :size="20" class="mt-1 text-[#0c66ee]" />
+              Ugrás a termékekhez
             </BaseButton>
           </div>
         </div>
@@ -56,7 +45,7 @@
             <img
               data-aos="fade-up"
               data-aos-once="true"
-              :src="require('~/assets/img/hero-image.webp')"
+              :src="require('~/assets/img/save-planet-8429926-6723330.png')"
               class="-mt-4"
               alt=""
             />
@@ -92,6 +81,7 @@
     <!-- New products section -->
     <section
       class="max-w-screen-xl mx-2 sm:mx-auto px-4 sm:px-6 lg:px-0 py-6 pb-20 sm:py-8 rounded-[2.25rem] sm:rounded-xl bg-white shadow-lg sm:shadow-md transform lg:-translate-y-12"
+      v-if="newProducts"
     >
       <div class="w-full pb-6 items-center">
         <h2
@@ -110,9 +100,15 @@
           :expirationDate="product.validityEndDate"
           :productPrice="product.netPrice"
           :productTitle="product.title"
-          :productLocation="product.reedemPostalCode+' '+product.reedemCity+' '+product.reedemAddress"
+          :productLocation="
+            product.reedemPostalCode +
+            ' ' +
+            product.reedemCity +
+            ' ' +
+            product.reedemAddress
+          "
           :productImage="product.url"
-          :productShopName = "product.shopName"
+          :productShopName="product.shopName"
           class="xl:border-r border-gray-200 lg:px-8"
         />
       </div>
@@ -435,27 +431,54 @@ export default {
     ResponseHandlerModal,
   },
   mixins: [aosMixin],
-  async fetch() {
-    // Itt végezheted az adatlekérdezést
+  async asyncData() {
     try {
       const response = await APIGET("getLandingData");
       var error = "";
       if (!response.data.error) {
-        this.newProducts = response.data.map((item) => ({ ...item }));
+        const newProducts = response.data.map((item) => ({ ...item }));
+        return { newProducts };
+      } else {
+        const error = response.data.error;
+        return {error};
       }
     } catch (error) {
-      this.checkError(error, {
-        show: true,
-        title: "Hiba",
-        message: "Hiba történt az adatok lekérése közben: " + error,
-        options: [],
-        type: "error",
-      });
+      return {error: error.message};
     }
-    // Az itt visszaadott adatokat elmentjük a komponens adattagjában
-    //this.responseData = data;
   },
-  methods: {},
+  mounted() {
+  if (this.error) {
+    this.checkError(this.error, {
+      show: true,
+      title: "Hiba",
+      message: "Hiba történt az adatok lekérése közben: " + this.error,
+      options: [],
+      type: "error",
+    });
+  }
+},
+
+  // async fetch() {
+  //   // Itt végezheted az adatlekérdezést
+  //   try {
+  //     const response = await APIGET("getLandingData");
+  //     var error = "";
+  //     if (!response.data.error) {
+  //       this.newProducts = response.data.map((item) => ({ ...item }));
+  //       console.log(this.newProducts);
+  //     }
+  //   } catch (error) {
+  //     this.checkError(error, {
+  //       show: true,
+  //       title: "Hiba",
+  //       message: "Hiba történt az adatok lekérése közben: " + error,
+  //       options: [],
+  //       type: "error",
+  //     });
+  //   }
+  //   // Az itt visszaadott adatokat elmentjük a komponens adattagjában
+  //   //this.responseData = data;
+  // },
 
   data() {
     return {
