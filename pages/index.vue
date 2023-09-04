@@ -442,7 +442,6 @@ export default {
       var error = "";
       if (!response.data.error) {
         this.newProducts = response.data.map((item) => ({ ...item }));
-        console.log(this.newProducts);
       }
     } catch (error) {
       this.checkError(error, {

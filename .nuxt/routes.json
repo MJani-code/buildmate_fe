@@ -7,6 +7,13 @@
     "_name": "_65d006e2"
   },
   {
+    "name": "products",
+    "path": "/products",
+    "component": "/Users/air/Documents/Progs/Projects/LastMinute/LastMinute_FE/pages/products.vue",
+    "chunkName": "pages/products",
+    "_name": "_ebd5ec78"
+  },
+  {
     "name": "index",
     "path": "/",
     "component": "/Users/air/Documents/Progs/Projects/LastMinute/LastMinute_FE/pages/index.vue",
