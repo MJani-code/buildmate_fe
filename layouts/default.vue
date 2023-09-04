@@ -16,8 +16,10 @@
 </template>
 <script>
 export default {
-  name: 'DefaultLayout',
-}
+  name: "DefaultLayout",
+  components: {
+  },
+};
 </script>
 
 <style>
