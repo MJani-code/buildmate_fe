@@ -5,9 +5,6 @@
   "NavLink": {
     "description": "Auto imported from components/NavLink.vue"
   },
-  "AdminNavbar": {
-    "description": "Auto imported from components/admin/Navbar.vue"
-  },
   "BaseAccordion": {
     "description": "Auto imported from components/base/Accordion.vue"
   },
@@ -22,6 +19,9 @@
   },
   "BaseSection": {
     "description": "Auto imported from components/base/Section.vue"
+  },
+  "AdminNavbar": {
+    "description": "Auto imported from components/admin/Navbar.vue"
   },
   "LandingBuyTradeImage": {
     "description": "Auto imported from components/landing/BuyTradeImage.vue"
