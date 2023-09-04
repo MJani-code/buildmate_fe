@@ -11,6 +11,9 @@
   "ResponseHandlerModal": {
     "description": "Auto imported from components/ResponseHandlerModal.vue"
   },
+  "AdminNavbar": {
+    "description": "Auto imported from components/admin/Navbar.vue"
+  },
   "BaseAccordion": {
     "description": "Auto imported from components/base/Accordion.vue"
   },
@@ -49,8 +52,5 @@
   },
   "LandingTradingToolImage": {
     "description": "Auto imported from components/landing/TradingToolImage.vue"
-  },
-  "AdminNavbar": {
-    "description": "Auto imported from components/admin/Navbar.vue"
   }
 }

@@ -8,7 +8,6 @@
 
       <main class="text-neutral-800">
         <Nuxt />
-        <ResponseHandlerModal></ResponseHandlerModal>
       </main>
 
       <BaseFooter />
@@ -16,19 +15,14 @@
   </div>
 </template>
 <script>
-import ResponseHandlerModal from '../components/ResponseHandlerModal.vue';
-
-
 export default {
-  name: 'DefaultLayout',
+  name: "DefaultLayout",
   components: {
-    ResponseHandlerModal
-}
-}
+  },
+};
 </script>
 
 <style>
-
 .cover-gradient {
   background: linear-gradient(
     169.4deg,

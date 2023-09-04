@@ -5,7 +5,7 @@
                 <v-progress-linear color="blue darken-2" height="10" indeterminate></v-progress-linear>
             </template>
 
-            <v-img height="250" :productImage="productImage" :src="productImage"></v-img>
+            <v-img height="200" :productImage="productImage" :src="productImage"></v-img>
 
             <v-card-title class="d-flex" :productPrice="productPrice" :productTitle="productTitle">
                 <span class="align-self-start">{{ productTitle }}</span>
@@ -17,9 +17,14 @@
             </v-card-title>
 
             <v-divider class="mx-4"></v-divider>
-            <v-card-text :productLocation="productLocation">
+            <v-card-text :productLocation="productLocation" :productShopName = "productShopName">
                 <v-row align="center" class="mb-1">
                 </v-row>
+                <div class="pb-1">
+                    <v-icon class="mt-2 text-subtitle-1 mdi mdi-office-building">
+                        {{ productShopName }}
+                    </v-icon>
+                </div>
                 <div class="pb-1">
                     <v-icon class="mt-2 text-subtitle-1 mdi mdi-map-marker">
                         {{ productLocation }}
@@ -43,7 +48,7 @@
 
 <script>
 export default {
-    props: ['expirationDate', 'productPrice', 'productTitle', 'productLocation', 'productImage'],
+    props: ['expirationDate', 'productPrice', 'productTitle', 'productLocation', 'productImage', 'productShopName'],
     data: () => ({
         loading: false,
         selection: 1,

@@ -1,6 +1,6 @@
 <template>
+  <v-app>
   <div data-app v-if="show" :value="show">
-    <v-app>
       <v-dialog v-if="show" :value="show" width="500" persistent>
         <v-card>
           <v-card-title>
@@ -18,8 +18,8 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-    </v-app>
-  </div>
+    </div>
+  </v-app>
 </template>
 
 <script>
