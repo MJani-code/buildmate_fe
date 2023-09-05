@@ -11,15 +11,18 @@ export const createStore = () => {
       auth: {
         loggedIn: false,
         user: null,
-        userRole: null
+        userRole: null,
       },
+      cartItems: [],
       responseHandler: {
         show: false,
         title: 'Teszt title',
         message: 'Teszt message',
         options: [],
         clickedButton: null,
-        type: ''
+        type: {
+          action: '',
+        }
       }
     },
     mutations: {
@@ -44,13 +47,19 @@ export const createStore = () => {
           title: 'Teszt title',
           message: 'Teszt message',
           options: [],
-          type: ''
+          type: {
+            action: ''
+          }
         }
       },
       SET_CLICKED_BUTTON(state, value) {
         state.responseHandler.clickedButton = value;
+      },
+      addToCart(state, product) {
+        state.cartItems.push(product)
       }
     },
+
     actions: {
       async login({ commit }, user) {
         //TODO Beléptetési logika, például API hívás vagy adatbázis ellenőrzés. Értékek változóba mentése.
@@ -134,6 +143,9 @@ export const createStore = () => {
       },
       setDefaultResponseHandler({ commit }) {
         commit('SET_DEFAULT_RESPONSEHANDLER')
+      },
+      addToCart({ commit }, product) {
+        commit('addToCart', product)
       }
     },
     getters: {
@@ -145,7 +157,11 @@ export const createStore = () => {
       },
       getClickedButton: state => {
         return state.responseHandler.clickedButton;
+      },
+      cartItemCount: state => {
+        return state.cartItems.length
       }
+
     }
   })
 }

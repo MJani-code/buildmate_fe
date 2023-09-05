@@ -28,11 +28,24 @@
           :class="[open ? 'flex' : 'hidden lg:flex']"
           class="w-full h-auto flex flex-col flex-grow lg:items-center pb-4 lg:pb-0 lg:justify-end lg:flex-row origin-top duration-300 xl:space-x-2 space-y-3 lg:space-y-0"
         >
-          <NavLink v-for="(item, index) in routers" :key="index" router :to="item.to" :name="item.title" :url="item.to"/>
-
+          <NavLink
+            v-for="(item, index) in routers"
+            :key="index"
+            router
+            :to="item.to"
+            :name="item.title"
+            :url="item.to"
+          />
         </ul>
       </div>
       <div :class="[open ? 'flex' : 'hidden lg:flex']" class="space-x-3">
+        <base-button class="relative">
+          <v-icon
+            class="px-6 xl:px-6 py-3 mt-2 bg-inherit text-gradient border-[#0c66ee] mdi mdi-cart"
+          >
+          </v-icon>
+          <div class="count">{{ cartItemCount }}</div>
+        </base-button>
         <base-button
           class="px-8 xl:px-10 py-3 mt-2 bg-inherit text-gradient border border-[#0c66ee]"
         >
@@ -48,7 +61,7 @@
   </nav>
 </template>
 <script>
-import { routers } from '@/routers/routers.js';
+import { routers } from "@/routers/routers.js";
 
 export default {
   name: "BaseNavbar",
@@ -57,8 +70,13 @@ export default {
     return {
       open: false,
       dropdownNavbar: false,
-      routers
+      routers,
     };
+  },
+  computed: {
+    cartItemCount() {
+      return this.$store.getters.cartItemCount;
+    },
   },
   methods: {
     dropdownToggler() {
@@ -67,3 +85,18 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.count {
+  position: absolute;
+  background-color: #fd9a04;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  padding: 2px;
+  color: #fff;
+  font-weight: 300;
+  top: +20%;
+  right: +10%;
+}
+</style>

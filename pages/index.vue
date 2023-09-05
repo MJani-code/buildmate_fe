@@ -45,7 +45,7 @@
             <img
               data-aos="fade-up"
               data-aos-once="true"
-              :src="require('~/assets/img/save-planet-8429926-6723330.png')"
+              :src="require('~/assets/img/11235588_10814.jpg')"
               class="-mt-4"
               alt=""
             />
@@ -75,6 +75,9 @@
           :src="require('~/assets/img/pattern/star.png')"
           class="hidden sm:block absolute top-20 sm:top-28 right-16 lg:right-0 lg:left-[30rem] w-8"
         />
+        <BaseButton @click="addToCart({ name: 'Product' })"
+          >Termék hozzáadása a kosárhoz</BaseButton
+        >
       </BaseSection>
     </section>
 
@@ -93,7 +96,7 @@
       </div>
       <div class="w-full flex flex-col lg:flex-row items-center justify-center">
         <LandingNewProducts
-          v-for="(product, index) in newProducts.slice(0, 3)"
+          v-for="(product, index) in newProducts"
           :key="index"
           data-aos="fade-up"
           :data-aos-delay="index === 0 ? 0 : index === 1 ? 150 : 300"
@@ -424,6 +427,8 @@
 import aosMixin from "@/mixins/aos";
 import { APIGET, APIPOST, APIUPLOAD } from "~/api/apiHelper";
 import ResponseHandlerModal from "../components/ResponseHandlerModal.vue";
+import { mapState, mapActions } from 'vuex'
+
 
 export default {
   name: "IndexPage",
@@ -440,23 +445,29 @@ export default {
         return { newProducts };
       } else {
         const error = response.data.error;
-        return {error};
+        return { error };
       }
     } catch (error) {
-      return {error: error.message};
+      return { error: error.message };
+    }
+  },
+  methods: {
+    addToCart(product) {
+      this.$store.dispatch('addToCart', product)
+      console.log(this.$store.state);
     }
   },
   mounted() {
-  if (this.error) {
-    this.checkError(this.error, {
-      show: true,
-      title: "Hiba",
-      message: "Hiba történt az adatok lekérése közben: " + this.error,
-      options: [],
-      type: "error",
-    });
-  }
-},
+    if (this.error) {
+      this.checkError(this.error, {
+        show: true,
+        title: "Hiba",
+        message: "Hiba történt az adatok lekérése közben: " + this.error,
+        options: [],
+        type: "error",
+      });
+    }
+  },
 
   // async fetch() {
   //   // Itt végezheted az adatlekérdezést
