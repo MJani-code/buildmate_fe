@@ -34,11 +34,13 @@
             data-aos-delay="700"
             class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mt-2"
           >
-            <BaseButton
-              class="max-w-full px-8 py-4 bg-gradient-to-r from-[#468ef9] to-[#0c66ee] border border-[#0c66ee] text-white"
-            >
-              Ugrás a termékekhez
-            </BaseButton>
+            <router-link to="/products">
+              <BaseButton
+                class="max-w-full px-8 py-4 bg-gradient-to-r from-[#468ef9] to-[#0c66ee] border border-[#0c66ee] text-white"
+              >
+                Ugrás a termékekhez
+              </BaseButton>
+            </router-link>
           </div>
         </div>
         <div class="hidden sm:block col-span-12 lg:col-span-6">
@@ -122,7 +124,7 @@
     <!-- Third section -->
     <section class="w-full my-24">
       <BaseSection>
-        <LandingBuyTradeImage class="sm:hidden mb-8" />
+        <LandingWinWin class="sm:hidden mb-8" />
         <div
           data-aos="fade-right"
           class="col-span-12 lg:col-span-6 mt-4 xl:mt-20 space-y-6 px-4"
@@ -141,17 +143,19 @@
             miközben maximalizáljuk a kihasználtságot és az eredményeket!
           </p>
           <div class="space-y-6 lg:pr-12">
-            <BaseButton
-              class="w-full px-5 py-4 bg-blue-gradient text-white text-base font-medium"
-              >Ugrás a termékekhez</BaseButton
-            >
+            <router-link to="/products">
+              <BaseButton
+                class="w-full px-5 py-4 bg-blue-gradient text-white text-base font-medium"
+                >Ugrás a termékekhez</BaseButton
+              >
+            </router-link>
           </div>
         </div>
         <LandingWinWin data-aos="fade-left" class="hidden sm:block" />
       </BaseSection>
     </section>
 
-    <!-- Getting started section -->
+    <!-- Thourth section - Getting started section -->
     <section
       class="bg-trading-tools relative max-w-full sm:mx-4 xl:mx-10 my-24 shadow sm:rounded-2xl overflow-hidden"
     >
@@ -181,7 +185,7 @@
       </div>
     </section>
 
-    <!-- Partners section -->
+    <!-- Fifth section - Partners section -->
     <section
       class="bg-partner relative max-w-full sm:mx-6 my-24 shadow sm:rounded-2xl overflow-hidden"
     >
@@ -192,31 +196,26 @@
           data-aos="flip-down"
           class="text-2xl text-neutral-800 font-semibold"
         >
-          Trusted Partners Worldwide
+          Partnereink
         </h3>
-        <p data-aos="flip-down" class="paragraph">
+        <!-- <p data-aos="flip-down" class="paragraph">
           We're partners with countless major organisations around the globe
-        </p>
+        </p> -->
         <div
           data-aos="fade-up"
           class="flex flex-wrap items-center justify-center"
         >
           <LandingPartnerImage
-            v-for="img in [
-              'clever.png',
-              'diamon-cutts.png',
-              'swiss-finance.png',
-              'gambio.png',
-            ]"
-            :key="img"
-            :img="img"
+            v-for="img in partners"
+            :key="img.id"
+            :img="img.companyLogoPath"
           />
         </div>
       </div>
     </section>
 
     <!-- Credit card section -->
-    <section class="w-full my-36">
+    <!-- <section class="w-full my-36">
       <BaseSection data-aos="fade-down">
         <div class="col-span-12 lg:col-span-7">
           <div class="w-full">
@@ -249,10 +248,10 @@
           >
         </div>
       </BaseSection>
-    </section>
+    </section> -->
 
     <!-- Advanced trading tools section -->
-    <section
+    <!-- <section
       class="bg-trading-tools relative max-w-full sm:mx-4 my-20 py-16 shadow rounded-2xl overflow-hidden"
     >
       <div
@@ -306,10 +305,10 @@
         </div>
         <LandingTradingToolImage data-aos="fade-left" class="hidden sm:block" />
       </div>
-    </section>
+    </section> -->
 
     <!-- Industry-leading security section -->
-    <section class="w-full my-24">
+    <!-- <section class="w-full my-24">
       <div
         class="relative max-w-screen-xl px-8 mx-auto grid grid-cols-12 gap-x-6"
       >
@@ -356,7 +355,7 @@
           </ul>
         </div>
       </div>
-    </section>
+    </section> -->
 
     <!-- FAQ section -->
     <section class="w-full my-24">
@@ -389,7 +388,7 @@
 
           <ul class="shadow-box">
             <BaseAccordion
-              v-for="(accordion, index) in accordions"
+              v-for="(accordion, index) in faq"
               :key="index"
               :accordion="accordion"
             />
@@ -429,12 +428,16 @@ export default {
   async asyncData() {
     try {
       const response = await APIGET("getLandingNewProductsData");
+      const response2 = await APIGET("getLandingPartnersData");
       var error = "";
-      if (!response.data.error) {
+      if (!response.data.error && !response2.data.error) {
         const newProducts = response.data.map((item) => ({ ...item }));
-        return { newProducts };
+        const partners = response2.data.map((item) => ({ ...item }));
+
+        console.log(response2);
+        return { newProducts, partners };
       } else {
-        const error = response.data.error;
+        const error = newProducts.data.error;
         return { error };
       }
     } catch (error) {
@@ -464,129 +467,8 @@ export default {
       dropdownConcurency: false,
       dropdownCrypto: false,
       newProducts: [{}],
-      currencySelected: {
-        img: "country-icon/eng.png",
-        name: "USD",
-      },
-      currencies: [
-        {
-          img: "country-icon/eng.png",
-          name: "USD",
-        },
-      ],
-      cryptoSelected: {
-        img: "crypto-icon/bitcoin.png",
-        name: "BTC",
-      },
-      cryptocurrencies: [
-        {
-          img: "crypto-icon/bitcoin.png",
-          name: "BTC",
-        },
-      ],
-      trendings: [
-        {
-          id: 1,
-          name: "Bitcoin",
-          price: 43180.13,
-          logo: "bitcoin.png",
-          increase: true,
-          data: [40, 35, 60, 75, 60, 75, 50],
-        },
-        {
-          id: 2,
-          name: "Ethereum",
-          price: 3480.65,
-          logo: "ethereum.png",
-          increase: false,
-          data: [25, 30, 60, 50, 80, 55, 80],
-        },
-        {
-          id: 3,
-          name: "Solana",
-          price: 150.2,
-          logo: "solana.png",
-          increase: true,
-          data: [40, 45, 40, 80, 50, 60, 35],
-        },
-        {
-          id: 4,
-          name: "Dogecoin",
-          price: 0.1572,
-          logo: "dogecoin.png",
-          increase: true,
-          data: [35, 70, 60, 80, 50, 60, 40],
-        },
-      ],
-      topGainers: [
-        {
-          id: 1,
-          name: "PAPPAY",
-          price: 0.00374,
-          logo: "pappay.png",
-          increase: true,
-          data: [30, 50, 45, 60, 70, 40, 45],
-        },
-        {
-          id: 2,
-          name: "Bitcoin Asia",
-          price: 0.02096,
-          logo: "bitcoin-asia.png",
-          increase: true,
-          data: [25, 60, 50, 60, 35, 50, 70],
-        },
-        {
-          id: 3,
-          name: "MoonRock",
-          price: 0.004907,
-          logo: "moonrock.png",
-          increase: true,
-          data: [40, 35, 40, 25, 50, 70, 45],
-        },
-        {
-          id: 4,
-          name: "NinjaFloki",
-          price: 0.000123,
-          logo: "ninjafloki.png",
-          increase: true,
-          data: [45, 35, 40, 30, 25, 45, 35],
-        },
-      ],
-      recents: [
-        {
-          id: 1,
-          name: "MetaCraft",
-          price: 0.0608,
-          logo: "metacraft.png",
-          increase: false,
-          data: [40, 50, 45, 60, 35, 40, 45],
-        },
-        {
-          id: 2,
-          name: "Frog",
-          price: 0.5875,
-          logo: "frog.png",
-          increase: false,
-          data: [25, 50, 45, 48, 40, 60, 45],
-        },
-        {
-          id: 3,
-          name: "Musk Doge",
-          price: 0.04041,
-          logo: "musk-doge.png",
-          increase: true,
-          data: [25, 35, 60, 45, 50, 45, 45],
-        },
-        {
-          id: 4,
-          name: "2SHARE",
-          price: 1366.24,
-          logo: "2share.png",
-          increase: true,
-          data: [35, 30, 60, 50, 35, 45, 40],
-        },
-      ],
-      accordions: [
+      partners: [{}],
+      faq: [
         {
           title: "Why should I choose NEFA?",
           description:
@@ -610,22 +492,22 @@ export default {
       ],
       steps: [
         {
-          img: "sign-up.png",
-          title: "Sign Up",
+          img: "registration.png",
+          title: "Regisztráció",
           description:
-            "Sign up for your free NEFA Wallet on web, iOS or Android and follow our easy process to set up your profile",
+            "Csak terméket meghirdető vállakozásoknak kötelező, vásárlók részére opcionális",
         },
         {
-          img: "fund.png",
-          title: "Fund",
+          img: "findings.png",
+          title: "Vásárlás",
           description:
-            "Choose your preferred payment method such as bank transfer or credit card to top up your NEFA Wallet",
+            "Miután megtaláltad a kiválasztott terméket, nincs más dolgod, mint megvásárolni azt a felületen",
         },
         {
-          img: "buy-crypto.png",
-          title: "Buy Crypto",
+          img: "reedem.png",
+          title: "Érvényesítés",
           description:
-            "Buy Bitcoin or Ethereum, then securely store it in your Wallet or send it on easily to your friends anywhere",
+            "Vásárlás után látogass el a kereskedőhöz és érvényesítsd a kupont a kapott kód alapján",
         },
       ],
     };

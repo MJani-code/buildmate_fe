@@ -3,6 +3,7 @@
     <div class="relative">
       <div
         class="absolute top-0 left-0 w-full h-[125vh] sm:h-[225vh] lg:h-[125vh] cover-gradient-2 sm:cover-gradient"
+        style="z-index: -100;"
       ></div>
       <BaseNavbar />
 
