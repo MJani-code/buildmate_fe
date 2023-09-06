@@ -2,7 +2,7 @@
   <div class="w-full">
     <ResponseHandlerModal></ResponseHandlerModal>
 
-    <!-- Hero section -->
+    <!-- First section -->
     <section id="hero" class="w-full pb-24">
       <BaseSection>
         <div
@@ -15,6 +15,7 @@
           >
             Adj második esélyt a
             <span class="text-header-gradient">termékednek</span>
+            <p class="mt-8"></p>
             Vásárold vagy add el nálunk!
           </h1>
           <p
@@ -75,13 +76,14 @@
           :src="require('~/assets/img/pattern/star.png')"
           class="hidden sm:block absolute top-20 sm:top-28 right-16 lg:right-0 lg:left-[30rem] w-8"
         />
-        <BaseButton @click="addToCart({ name: 'Product' })"
+        <!-- TODO: új termék hozzáadásához gomb és funciot -->
+        <!-- <BaseButton @click="addToCart({ name: 'Product' })"
           >Termék hozzáadása a kosárhoz</BaseButton
-        >
+        >-->
       </BaseSection>
     </section>
 
-    <!-- New products section -->
+    <!-- Second section - New products -->
     <section
       class="max-w-screen-xl mx-2 sm:mx-auto px-4 sm:px-6 lg:px-0 py-6 pb-20 sm:py-8 rounded-[2.25rem] sm:rounded-xl bg-white shadow-lg sm:shadow-md transform lg:-translate-y-12"
       v-if="newProducts"
@@ -117,7 +119,7 @@
       </div>
     </section>
 
-    <!-- Buy and trade section -->
+    <!-- Third section -->
     <section class="w-full my-24">
       <BaseSection>
         <LandingBuyTradeImage class="sm:hidden mb-8" />
@@ -126,37 +128,26 @@
           class="col-span-12 lg:col-span-6 mt-4 xl:mt-20 space-y-6 px-4"
         >
           <h2 class="text-4xl font-semibold sm:pr-8 xl:pr-12">
-            Buy & trade on the <br class="hidden sm:block" />
-            original crypto exchange.
+            Win-win! <br class="hidden sm:block" />
           </h2>
           <p class="paragraph">
-            Buy now and get 40% extra bonus Minimum pre-sale amount 25 Crypto
-            Coin. We accept BTC crypto-currency
+            Ismerd meg új alkalmazásunkat, amely lehetővé teszi vállalkozások
+            számára, hogy gyorsan és hatékonyan értékesítsék megmaradt
+            erőforrásaikat és termékeiket kiemelkedően alacsony áron. Ők cserébe
+            kedvezményesen kínálják termékeiket
+            <br class="hidden sm:block" />
+            <br class="hidden sm:block" />
+            Csatlakozz hozzánk, és segítsünk együtt csökkenteni a veszteséget,
+            miközben maximalizáljuk a kihasználtságot és az eredményeket!
           </p>
           <div class="space-y-6 lg:pr-12">
-            <LandingExchange
-              title="Amount"
-              name="amount"
-              type="number"
-              default-value="5.000"
-              :exchange-selected="currencySelected"
-              :exchanges="currencies"
-            />
-            <LandingExchange
-              title="Get"
-              name="get"
-              type="number"
-              default-value="0.10901"
-              :exchange-selected="cryptoSelected"
-              :exchanges="cryptocurrencies"
-            />
             <BaseButton
               class="w-full px-5 py-4 bg-blue-gradient text-white text-base font-medium"
-              >Buy Now</BaseButton
+              >Ugrás a termékekhez</BaseButton
             >
           </div>
         </div>
-        <LandingBuyTradeImage data-aos="fade-left" class="hidden sm:block" />
+        <LandingWinWin data-aos="fade-left" class="hidden sm:block" />
       </BaseSection>
     </section>
 
@@ -427,8 +418,7 @@
 import aosMixin from "@/mixins/aos";
 import { APIGET, APIPOST, APIUPLOAD } from "~/api/apiHelper";
 import ResponseHandlerModal from "../components/ResponseHandlerModal.vue";
-import { mapState, mapActions } from 'vuex'
-
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "IndexPage",
@@ -438,7 +428,7 @@ export default {
   mixins: [aosMixin],
   async asyncData() {
     try {
-      const response = await APIGET("getLandingData");
+      const response = await APIGET("getLandingNewProductsData");
       var error = "";
       if (!response.data.error) {
         const newProducts = response.data.map((item) => ({ ...item }));
@@ -453,9 +443,9 @@ export default {
   },
   methods: {
     addToCart(product) {
-      this.$store.dispatch('addToCart', product)
+      this.$store.dispatch("addToCart", product);
       console.log(this.$store.state);
-    }
+    },
   },
   mounted() {
     if (this.error) {
@@ -468,29 +458,6 @@ export default {
       });
     }
   },
-
-  // async fetch() {
-  //   // Itt végezheted az adatlekérdezést
-  //   try {
-  //     const response = await APIGET("getLandingData");
-  //     var error = "";
-  //     if (!response.data.error) {
-  //       this.newProducts = response.data.map((item) => ({ ...item }));
-  //       console.log(this.newProducts);
-  //     }
-  //   } catch (error) {
-  //     this.checkError(error, {
-  //       show: true,
-  //       title: "Hiba",
-  //       message: "Hiba történt az adatok lekérése közben: " + error,
-  //       options: [],
-  //       type: "error",
-  //     });
-  //   }
-  //   // Az itt visszaadott adatokat elmentjük a komponens adattagjában
-  //   //this.responseData = data;
-  // },
-
   data() {
     return {
       selected: 0,
