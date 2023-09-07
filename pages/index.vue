@@ -106,6 +106,7 @@
           :data-aos-delay="index === 0 ? 0 : index === 1 ? 150 : 300"
           :expirationDate="product.validityEndDate"
           :productPrice="product.netPrice"
+          :productCurrency="product.currency"
           :productTitle="product.title"
           :productLocation="
             product.reedemPostalCode +

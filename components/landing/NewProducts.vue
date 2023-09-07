@@ -26,7 +26,7 @@
             class="align-self-end text-subtitle-1 mdi mdi-tag"
             color="blue darken-2"
           >
-            {{ productPrice }}
+            {{ productPrice +' '+ productCurrency }}
           </v-icon>
         </span>
       </v-card-title>
@@ -69,6 +69,7 @@ export default {
   props: [
     "expirationDate",
     "productPrice",
+    "productCurrency",
     "productTitle",
     "productLocation",
     "productImage",
