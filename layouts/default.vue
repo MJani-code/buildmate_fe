@@ -3,14 +3,14 @@
     <div class="relative">
       <div
         class="absolute top-0 left-0 w-full h-[125vh] sm:h-[225vh] lg:h-[125vh] cover-gradient-2 sm:cover-gradient"
-        style="z-index: -100;"
+        style="z-index: -100"
       ></div>
       <BaseNavbar />
-
-      <main class="text-neutral-800">
+      <v-main>
         <Nuxt />
-      </main>
-
+      </v-main>
+      <!-- <main class="text-neutral-800">
+      </main> -->
       <BaseFooter />
     </div>
   </div>

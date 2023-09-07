@@ -438,9 +438,9 @@ export default {
         return { newProducts, partners };
       }
       if (response.data.error) {
-        let errorMessage = ''
-        errorMessage += response.data.error ? response.data.error + ';' : '';
-        errorMessage += response2.data.error ? response2.data.error + ';' : '';
+        let errorMessage = "";
+        errorMessage += response.data.error ? response.data.error + ";" : "";
+        errorMessage += response2.data.error ? response2.data.error + ";" : "";
         return { error: errorMessage };
       }
     } catch (err) {
