@@ -188,6 +188,7 @@
     <!-- Fifth section - Partners section -->
     <section
       class="bg-partner relative max-w-full sm:mx-6 my-24 shadow sm:rounded-2xl overflow-hidden"
+      v-if="partners"
     >
       <div
         class="w-full px-6 sm:px-0 py-16 flex flex-col items-center justify-center space-y-4 text-center"
@@ -429,19 +430,20 @@ export default {
     try {
       const response = await APIGET("getLandingNewProductsData");
       const response2 = await APIGET("getLandingPartnersData");
-      var error = "";
+
       if (!response.data.error && !response2.data.error) {
         const newProducts = response.data.map((item) => ({ ...item }));
         const partners = response2.data.map((item) => ({ ...item }));
-
-        console.log(response2);
         return { newProducts, partners };
-      } else {
-        const error = newProducts.data.error;
-        return { error };
       }
-    } catch (error) {
-      return { error: error.message };
+      if (response.data.error) {
+        let errorMessage = ''
+        errorMessage += response.data.error ? response.data.error + ';' : '';
+        errorMessage += response2.data.error ? response2.data.error + ';' : '';
+        return { error: errorMessage };
+      }
+    } catch (err) {
+      return { error: err.message };
     }
   },
   methods: {
