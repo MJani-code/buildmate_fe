@@ -1,310 +1,312 @@
 <template>
   <v-app>
-    <v-container class="lighten-5">
-      <v-row no-gutters>
-        <v-col xs="12" sm="12" md="6" lg="2" xl="2" class="col"> Szűrők </v-col>
-        <v-col xs="12" sm="12" md="6" lg="10" xl="10" class="col">
-          <v-data-table
-            :headers="headers"
-            :items="desserts"
-            :search="search"
-            sort-by="calories"
-            class="elevation-1"
-          >
-            <template v-slot:top>
-              <v-toolbar flat>
-                <v-spacer></v-spacer>
-                <v-text-field
-                  v-model="search"
-                  append-icon="mdi-magnify"
-                  label="Search"
-                ></v-text-field>
-                <v-dialog v-model="dialog" max-width="500px"
-                content-class="custom-dialog-overlay"
-                >
-                  <!-- <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      color="primary"
-                      dark
-                      class="mb-2"
-                      v-bind="attrs"
-                      v-on="on"
+    <v-row>
+      <v-col class="col-12 col-md-3 col-lg-3 col-xl-3">Szűrők</v-col>
+      <v-col class="col-12 col-md-9 col-lg-9 col-xl-9">
+        <div class="container">
+          <!-- Legördülő menü a kártyák számának testreszabásához -->
+          <div class="form-group">
+            <label for="itemsPerPageSelect">Kártyák száma oldalanként:</label>
+            <select v-model="selectedPageSize" @change="updatePageSize">
+              <option :value="null">Összes listázása</option>
+              <option
+                v-for="option in pageSizeOptions"
+                :key="option"
+                :value="option"
+              >
+                {{ option }}
+              </option>
+            </select>
+
+            <!-- <select
+              class="form-control"
+              id="itemsPerPageSelect"
+              v-model="itemsPerPage"
+            >
+              <option
+                v-for="(option, index) in itemsPerPageOptions"
+                :key="index"
+                :value="option"
+              >
+                {{ option }}
+              </option>
+            </select> -->
+          </div>
+
+          <div class="row">
+            <div
+              class="col-md-4"
+              v-for="(product, index) in historyList"
+              :key="index"
+            >
+              <!-- Kártya megjelenítése -->
+              <v-card class="mx-auto my-12" max-width="300" v-if="product">
+                <template slot="progress">
+                  <v-progress-linear
+                    color="blue darken-2"
+                    height="10"
+                    indeterminate
+                  ></v-progress-linear>
+                </template>
+
+                <v-img height="200" :src="product.url"></v-img>
+
+                <v-card-title class="d-flex">
+                  <span class="align-self-start">{{ product.title }}</span>
+                  <span>
+                    <v-icon
+                      class="align-self-end text-subtitle-1 mdi mdi-tag"
+                      color="blue darken-2"
                     >
-                      New Item
-                    </v-btn>
-                  </template> -->
-                  <v-card>
-                    <v-card-title>
-                      <span class="text-h5">{{ formTitle }}</span>
-                      <v-spacer></v-spacer>
-                    </v-card-title>
-                    <v-card-text>
-                      <v-container>
-                        <v-row>
-                          <v-col cols="12" sm="6" md="4">
-                            <v-text-field
-                              v-model="editedItem.name"
-                              label="Dessert name"
-                            ></v-text-field>
-                          </v-col>
-                          <v-col cols="12" sm="6" md="4">
-                            <v-text-field
-                              v-model="editedItem.calories"
-                              label="Calories"
-                            ></v-text-field>
-                          </v-col>
-                          <v-col cols="12" sm="6" md="4">
-                            <v-text-field
-                              v-model="editedItem.fat"
-                              label="Fat (g)"
-                            ></v-text-field>
-                          </v-col>
-                          <v-col cols="12" sm="6" md="4">
-                            <v-text-field
-                              v-model="editedItem.carbs"
-                              label="Carbs (g)"
-                            ></v-text-field>
-                          </v-col>
-                          <v-col cols="12" sm="6" md="4">
-                            <v-text-field
-                              v-model="editedItem.protein"
-                              label="Protein (g)"
-                            ></v-text-field>
-                          </v-col>
-                        </v-row>
-                      </v-container>
-                    </v-card-text>
-                    <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <v-btn color="blue darken-1" text @click="close">
-                        Cancel
-                      </v-btn>
-                      <v-btn color="blue darken-1" text @click="save">
-                        Save
-                      </v-btn>
-                    </v-card-actions>
-                  </v-card>
-                </v-dialog>
-                <v-dialog v-model="dialogDelete" max-width="500px">
-                  <v-card>
-                    <v-card-title class="text-h5"
-                      >Are you sure you want to delete this item?</v-card-title
+                      {{ product.grossPrice + " " + product.currency }}
+                    </v-icon>
+                  </span>
+                </v-card-title>
+
+                <v-divider class="mx-4"></v-divider>
+                <v-card-text>
+                  <v-row align="center" class="mb-1"> </v-row>
+                  <div class="pb-1">
+                    <v-icon
+                      class="mt-2 text-subtitle-1 mdi mdi-office-building"
                     >
-                    <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <v-btn color="blue darken-1" text @click="closeDelete"
-                        >Cancel</v-btn
-                      >
-                      <v-btn
-                        color="blue darken-1"
-                        text
-                        @click="deleteItemConfirm"
-                        >OK</v-btn
-                      >
-                      <v-spacer></v-spacer>
-                    </v-card-actions>
-                  </v-card>
-                </v-dialog>
-              </v-toolbar>
-            </template>
-            <template v-slot:item.actions="{ item }">
-              <v-icon small class="mr-2" @click="editItem(item)">
-                mdi-pencil
-              </v-icon>
-              <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
-            </template>
-            <template v-slot:no-data>
-              <v-btn color="primary" @click="initialize"> Reset </v-btn>
-            </template>
-          </v-data-table>
-        </v-col>
-      </v-row>
-    </v-container>
+                      {{ product.shopName }}
+                    </v-icon>
+                  </div>
+                  <div class="pb-1">
+                    <v-icon class="mt-2 text-subtitle-1 mdi mdi-map-marker">
+                      {{
+                        product.reedemPostalCode +
+                        " " +
+                        product.reedemCity +
+                        " " +
+                        product.reedemAddress
+                      }}
+                    </v-icon>
+                  </div>
+                </v-card-text>
+
+                <div class="d-flex align-center">
+                  <v-card-title class="align-self-start subtitle-1">
+                    <LandingCountdown
+                      :expirationDate="product.validityEndDate"
+                    ></LandingCountdown>
+                  </v-card-title>
+                  <v-card-title class="align-self-end">
+                    <v-btn color="blue darken-2" text> Érdekel </v-btn>
+                  </v-card-title>
+                </div>
+              </v-card>
+            </div>
+          </div>
+
+          <!-- Lapozó
+          <nav aria-label="Page navigation">
+            <ul class="pagination">
+              <li class="page-item" :class="{ disabled: currentPage === 1 }">
+                <a class="page-link" href="#" @click="prevPage">Previous</a>
+              </li>
+              <li
+                class="page-item"
+                v-for="page in totalPages"
+                :key="page"
+                :class="{ active: page === currentPage }"
+              >
+                <a class="page-link" href="#" @click="gotoPage(page)">{{
+                  page
+                }}</a>
+              </li>
+              <li
+                class="page-item"
+                :class="{ disabled: currentPage === totalPages }"
+              >
+                <a class="page-link" href="#" @click="nextPage">Next</a>
+              </li>
+            </ul>
+          </nav>-->
+
+          <!-- Lapozó 2 -->
+          <template>
+            <div class="text-center">
+              <v-container>
+                <v-row justify="center">
+                  <v-col cols="8">
+                    <v-container class="max-width">
+                      <v-pagination
+                        class="pagination mb-2"
+                        v-model="page"
+                        :length="pages"
+                        @input="updatePage"
+                      ></v-pagination>
+                    </v-container>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </div>
+          </template>
+        </div>
+      </v-col>
+    </v-row>
   </v-app>
 </template>
 
 <script>
 export default {
-  data: () => ({
-    dialog: false,
-    dialogDelete: false,
-    search: "",
-    headers: [
-      {
-        text: "Dessert (100g serving)",
-        align: "start",
-        sortable: false,
-        value: "name",
-      },
-      { text: "Calories", value: "calories" },
-      { text: "Fat (g)", value: "fat" },
-      { text: "Carbs (g)", value: "carbs" },
-      { text: "Protein (g)", value: "protein" },
-      { text: "Actions", value: "actions", sortable: false },
-    ],
-    desserts: [],
-    editedIndex: -1,
-    editedItem: {
-      name: "",
-      calories: 0,
-      fat: 0,
-      carbs: 0,
-      protein: 0,
-    },
-    defaultItem: {
-      name: "",
-      calories: 0,
-      fat: 0,
-      carbs: 0,
-      protein: 0,
-    },
-  }),
-
-  computed: {
-    formTitle() {
-      return this.editedIndex === -1 ? "New Item" : "Edit Item";
+  name: "ProductsList",
+  props: {
+    productsData: {
+      type: Array,
+      required: true,
     },
   },
-
-  watch: {
-    dialog(val) {
-      val || this.close();
-    },
-    dialogDelete(val) {
-      val || this.closeDelete();
-    },
+  data() {
+    return {
+      page: 1,
+      selectedPageSize: null, // A kiválasztott pageSize
+      pageSizeOptions: [2, 4, 6, 8], // Az elérhető pageSize lehetőségek
+      products: [{}],
+      listCount: 0,
+      historyList: [],
+    };
   },
-
   created() {
-    this.initialize();
+    this.products = [...this.productsData]; // Másolatot készítünk a props-ról
+
+
+    this.initPage();
+    this.updatePage(this.page);
   },
-
   methods: {
-    initialize() {
-      this.desserts = [
-        {
-          name: "Frozen Yogurt",
-          calories: 159,
-          fat: 6.0,
-          carbs: 24,
-          protein: 4.0,
-        },
-        {
-          name: "Ice cream sandwich",
-          calories: 237,
-          fat: 9.0,
-          carbs: 37,
-          protein: 4.3,
-        },
-        {
-          name: "Eclair",
-          calories: 262,
-          fat: 16.0,
-          carbs: 23,
-          protein: 6.0,
-        },
-        {
-          name: "Cupcake",
-          calories: 305,
-          fat: 3.7,
-          carbs: 67,
-          protein: 4.3,
-        },
-        {
-          name: "Gingerbread",
-          calories: 356,
-          fat: 16.0,
-          carbs: 49,
-          protein: 3.9,
-        },
-        {
-          name: "Jelly bean",
-          calories: 375,
-          fat: 0.0,
-          carbs: 94,
-          protein: 0.0,
-        },
-        {
-          name: "Lollipop",
-          calories: 392,
-          fat: 0.2,
-          carbs: 98,
-          protein: 0,
-        },
-        {
-          name: "Honeycomb",
-          calories: 408,
-          fat: 3.2,
-          carbs: 87,
-          protein: 6.5,
-        },
-        {
-          name: "Donut",
-          calories: 452,
-          fat: 25.0,
-          carbs: 51,
-          protein: 4.9,
-        },
-        {
-          name: "KitKat",
-          calories: 518,
-          fat: 26.0,
-          carbs: 65,
-          protein: 7,
-        },
-      ];
+    initPage() {
+      this.listCount = this.products.length;
+      this.updatePageSize();
     },
-
-    editItem(item) {
-      this.editedIndex = this.desserts.indexOf(item);
-      this.editedItem = Object.assign({}, item);
-      this.dialog = true;
-    },
-
-    deleteItem(item) {
-      this.editedIndex = this.desserts.indexOf(item);
-      this.editedItem = Object.assign({}, item);
-      this.dialogDelete = true;
-    },
-
-    deleteItemConfirm() {
-      this.desserts.splice(this.editedIndex, 1);
-      this.closeDelete();
-    },
-
-    close() {
-      this.dialog = false;
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
-    },
-
-    closeDelete() {
-      this.dialogDelete = false;
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
-    },
-
-    save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.desserts[this.editedIndex], this.editedItem);
+    updatePageSize() {
+      if (this.selectedPageSize === null) {
+        // Ha az "Összes listázása" van kiválasztva, akkor az összes elemet megjelenítjük
+        this.historyList = this.products;
       } else {
-        this.desserts.push(this.editedItem);
+        const startIndex = (this.page - 1) * this.selectedPageSize;
+        const endIndex = startIndex + this.selectedPageSize;
+        this.historyList = this.products.slice(startIndex, endIndex);
       }
-      this.close();
+    },
+    updatePage(pageIndex) {
+      if (this.selectedPageSize === null) {
+        // Ha az "Összes listázása" van kiválasztva, akkor az összes elemet megjelenítjük
+        this.historyList = this.products;
+      } else {
+        const startIndex = (pageIndex - 1) * this.selectedPageSize;
+        const endIndex = pageIndex * this.selectedPageSize;
+        this.historyList = this.products.slice(startIndex, endIndex);
+      }
+      this.page = pageIndex;
+    },
+  },
+  computed: {
+    pages() {
+      if (this.selectedPageSize === null || this.listCount == null) return 0;
+      return Math.ceil(this.listCount / this.selectedPageSize);
     },
   },
 };
+
+// export default {
+//   name: "ProductsList",
+//   props: {
+//     productsData: {
+//       type: Array,
+//       required: true,
+//     },
+//   },
+//   data() {
+//     return {
+//       products: [{}],
+//       itemsPerPageOptions: [4, 8, 12, 16], // A legördülő menü opciói
+//       itemsPerPage: 4, // Az egy oldalon megjelenítendő kártyák száma
+//       currentPage: 1,
+//       page: 1,
+//       pageSize: 2,
+//       listCount: 0,
+//       historyList: [],
+//     };
+//   },
+//   mounted() {
+//     if (this.error) {
+//       this.checkError(this.error, {
+//         show: true,
+//         title: "Hiba",
+//         message: "Hiba történt az adatok lekérése közben: " + this.error,
+//         options: [],
+//         type: "error",
+//       });
+//     }
+//   },
+//   created() {
+//     this.products = [...this.productsData]; // Másolatot készítünk a props-ról
+
+//     // Új módszer
+//     let _this = this;
+//     _this.initPage();
+//     _this.updatePage(_this.page);
+//   },
+//   computed: {
+//     paginatedProducts() {
+//       const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+//       const endIndex = startIndex + this.itemsPerPage;
+//       return this.products.slice(startIndex, endIndex);
+//     },
+//     totalPages() {
+//       return Math.ceil(this.products.length / this.itemsPerPage);
+//     },
+
+//     // Új módszer
+//     pages() {
+//       let _this = this;
+//       if (_this.itemsPerPage == null || _this.listCount == null) return 0;
+//       return Math.ceil(_this.listCount / _this.itemsPerPage);
+//     },
+//   },
+//   methods: {
+//     prevPage() {
+//       if (this.currentPage > 1) {
+//         this.currentPage--;
+//       }
+//     },
+//     nextPage() {
+//       if (this.currentPage < this.totalPages) {
+//         this.currentPage++;
+//       }
+//     },
+//     gotoPage(page) {
+//       this.currentPage = page;
+//     },
+
+//     // Új módszer
+//     initPage: function () {
+//       let _this = this;
+//       _this.listCount = _this.products.length;
+//       if (_this.listCount < _this.itemsPerPage) {
+//         _this.historyList = _this.products;
+
+//       } else {
+//         _this.historyList = _this.products.slice(0, _this.itemsPerPage);
+
+//       }
+//     },
+//     updatePage: function (pageIndex) {
+//       console.log("updatelődik az oldal");
+//       let _this = this;
+//       let _start = (pageIndex - 1) * _this.itemsPerPage;
+//       let _end = pageIndex * _this.itemsPerPage;
+//       _this.historyList = _this.products.slice(_start, _end);
+//       _this.page = pageIndex;
+
+//     },
+//   },
+// };
 </script>
 
 <style>
-input[type='text']:focus{
-  --tw-ring-shadow: unset !important;
-}
-*{
-  --tw-scale-x: unset;
-}
+/* Ezen a helyen stílusozd a kártyákat és a lapozót a Bootstrap segítségével */
 </style>

@@ -3,21 +3,18 @@
     "name": "admin",
     "path": "/admin",
     "component": "/Users/air/Documents/Progs/Projects/LastMinute/LastMinute_FE/pages/admin/index.vue",
-    "chunkName": "pages/admin/index",
-    "_name": "_65d006e2"
+    "chunkName": "pages/admin/index"
   },
   {
     "name": "products",
     "path": "/products",
     "component": "/Users/air/Documents/Progs/Projects/LastMinute/LastMinute_FE/pages/products.vue",
-    "chunkName": "pages/products",
-    "_name": "_ebd5ec78"
+    "chunkName": "pages/products"
   },
   {
     "name": "index",
     "path": "/",
     "component": "/Users/air/Documents/Progs/Projects/LastMinute/LastMinute_FE/pages/index.vue",
-    "chunkName": "pages/index",
-    "_name": "_47d79fa2"
+    "chunkName": "pages/index"
   }
 ]

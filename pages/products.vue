@@ -1,11 +1,12 @@
 <template>
   <div class="w-full">
+    <ResponseHandlerModal></ResponseHandlerModal>
     <section id="products" class="w-full pb-24"></section>
 
     <section
       class="max-w-screen-xl mx-2 sm:mx-auto px-4 sm:px-6 lg:px-0 py-6 pb-20 sm:py-8 rounded-[2.25rem] sm:rounded-xl bg-white shadow-lg sm:shadow-md transform lg:-translate-y-12"
     >
-      <ProductsList></ProductsList>
+      <ProductsList :productsData="products"></ProductsList>
     </section>
 
     <!-- Back to top -->
@@ -25,8 +26,47 @@
 </template>
 
 <script>
+import { APIGET } from "../api/apiHelper";
+import ResponseHandlerModal from "../components/ResponseHandlerModal.vue";
+
 export default {
   name: "ProductsPage",
+  components: {
+    ResponseHandlerModal,
+  },
+  data() {
+    return {
+      products: [{}],
+    };
+  },
+  async asyncData() {
+    try {
+      const response = await APIGET("getProductsData");
+
+      if (!response.data.error) {
+        const products = response.data.map((item) => ({ ...item }));
+        return { products };
+      }
+      if (response.data.error) {
+        let errorMessage = "";
+        errorMessage += response.data.error ? response.data.error + ";" : "";
+        return { error: errorMessage };
+      }
+    } catch (err) {
+      return { error: err.message };
+    }
+  },
+  mounted() {
+    if (this.error) {
+      this.checkError(this.error, {
+        show: true,
+        title: "Hiba",
+        message: "Hiba történt az adatok lekérése közben: " + this.error,
+        options: [],
+        type: "error",
+      });
+    }
+  },
 };
 </script>
 
