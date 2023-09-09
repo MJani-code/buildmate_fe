@@ -11,24 +11,6 @@
   "AdminNavbar": {
     "description": "Auto imported from components/admin/Navbar.vue"
   },
-  "BaseAccordion": {
-    "description": "Auto imported from components/base/Accordion.vue"
-  },
-  "BaseButton": {
-    "description": "Auto imported from components/base/Button.vue"
-  },
-  "BaseDialog": {
-    "description": "Auto imported from components/base/Dialog.vue"
-  },
-  "BaseFooter": {
-    "description": "Auto imported from components/base/Footer.vue"
-  },
-  "BaseNavbar": {
-    "description": "Auto imported from components/base/Navbar.vue"
-  },
-  "BaseSection": {
-    "description": "Auto imported from components/base/Section.vue"
-  },
   "LandingCountdown": {
     "description": "Auto imported from components/landing/Countdown.vue"
   },
@@ -58,5 +40,23 @@
   },
   "ProductsList": {
     "description": "Auto imported from components/products/List.vue"
+  },
+  "BaseAccordion": {
+    "description": "Auto imported from components/base/Accordion.vue"
+  },
+  "BaseButton": {
+    "description": "Auto imported from components/base/Button.vue"
+  },
+  "BaseDialog": {
+    "description": "Auto imported from components/base/Dialog.vue"
+  },
+  "BaseFooter": {
+    "description": "Auto imported from components/base/Footer.vue"
+  },
+  "BaseNavbar": {
+    "description": "Auto imported from components/base/Navbar.vue"
+  },
+  "BaseSection": {
+    "description": "Auto imported from components/base/Section.vue"
   }
 }
