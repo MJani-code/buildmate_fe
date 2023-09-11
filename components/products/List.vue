@@ -2,51 +2,62 @@
   <v-app>
     <v-row>
       <v-col class="col-12 col-md-3 col-lg-3 col-xl-3">
-        <!-- Szűrési feltételek -->
+        <!-- Szűrő 1 -->
         <v-card>
-          <v-card-title>Szűrés</v-card-title>
-          <v-expansion-panels>
-            <v-expansion-panel>
-              <v-expansion-panel-header> </v-expansion-panel-header>
+          <v-expansion-panels v-model="expandedPanels" multiple>
+            <v-expansion-panel id="panel1" v-if="showPanel==true">
+              <v-expansion-panel-header>Cím</v-expansion-panel-header>
               <v-expansion-panel-content>
-                <v-form>
+                <div class="scrollable-panel">
                   <v-checkbox
-                    v-for="(filter, index) in filters"
+                    v-for="(filter, index) in filters.title"
                     :key="index"
-                    :value="filter.value"
-                    :label="filter.label"
-                    @change="toggleFilter(filter)"
                     v-model="filter.active"
-                    color="#359756"
+                    :label="filter.label"
+                    @click="toggleFilter(filter)"
+                    class="small-checkbox"
                   ></v-checkbox>
-                </v-form>
+                </div>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+
+            <!-- Szűrő 2 -->
+            <v-expansion-panel id="panel2" v-if="showPanel==true">
+              <v-expansion-panel-header>Kategória</v-expansion-panel-header>
+              <v-expansion-panel-content>
+                <div class="scrollable-panel">
+                  <v-checkbox
+                    v-for="(filter, index) in filters.title"
+                    :key="index"
+                    v-model="filter.active"
+                    :label="filter.label"
+                    @click="toggleFilter(filter)"
+                    class="small-checkbox"
+                  ></v-checkbox>
+                </div>
               </v-expansion-panel-content>
             </v-expansion-panel>
           </v-expansion-panels>
           <div style="display: block; margin: 20px 20px"></div>
         </v-card>
       </v-col>
+
       <v-col class="col-12 col-md-9 col-lg-9 col-xl-9">
         <div class="container">
           <!-- Legördülő menü a kártyák számának testreszabásához -->
-          <div class="form-group">
-            <label for="itemsPerPageSelect">Kártyák száma oldalanként:</label>
-            <select v-model="selectedPageSize" @change="updatePageSize">
-              <option :value="null">Összes listázása</option>
-              <option
-                v-for="option in pageSizeOptions"
-                :key="option"
-                :value="option"
-              >
-                {{ option }}
-              </option>
-            </select>
-          </div>
+          <v-select
+            :items="perPageOptions"
+            v-model="perPage"
+            label="Találat oldalanként"
+            item-text="label"
+            item-value="value"
+            outlined
+          ></v-select>
 
           <div class="row">
             <div
               class="col-md-4"
-              v-for="(product, index) in historyList"
+              v-for="(product, index) in visibleProducts"
               :key="index"
             >
               <!-- Kártya megjelenítése -->
@@ -110,7 +121,7 @@
             </div>
           </div>
 
-          <!-- Lapozó 2 -->
+          <!-- Lapozó -->
           <template>
             <div class="text-center">
               <v-container>
@@ -119,9 +130,8 @@
                     <v-container class="max-width">
                       <v-pagination
                         class="pagination mb-2"
-                        v-model="page"
-                        :length="pages"
-                        @input="updatePage"
+                        v-model="currentPage"
+                        :length="totalPages"
                       ></v-pagination>
                     </v-container>
                   </v-col>
@@ -146,120 +156,116 @@ export default {
   },
   data() {
     return {
-      page: 1,
-      selectedPageSize: null, // A kiválasztott pageSize
-      pageSizeOptions: [2, 4, 6, 8], // Az elérhető pageSize lehetőségek
-      products: [{}],
-      listCount: 0,
-      historyList: [],
-      filters: [
-        { label: "Szűrés 1", value: "Title 15", active: false },
-        { label: "Szűrés 2", value: "Title 16", active: false },
-        { label: "Szűrés 3", value: "Title 17", active: false },
-        // Itt adhatsz hozzá további szűrési feltételeket
+      products: [], // Kártyák listája
+      perPageOptions: [
+        {label: '5', value: 5},
+        {label: '10', value: 10},
+        {label: '50', value: 50},
+        {label: '100', value: 100},
+        {label: 'Összes', value: this.productsData.length}
       ],
+      perPage: 5, // Megjelenített elemek száma oldalanként
+      currentPage: 1, // Jelenlegi oldal
+      expandedPanels: [0,1],
+      showPanel: true,
+      filters: {
+        title: [
+          { label: "Szűrés 1", value: "Title 15", active: false },
+          { label: "Szűrés 2", value: "Title 16", active: false },
+          { label: "Szűrés 3", value: "Title 17", active: false },
+        ],
+        category: [],
+        price: [],
+      },
+      // Itt adhatsz hozzá további szűrési feltételeket
     };
   },
+  // Komponens kódjában
+  mounted() {
+    console.log(this.perPageOptions);
+  },
+
   created() {
     this.products = [...this.productsData]; // Másolatot készítünk a props-ról
-
-    this.initPage();
-    this.updatePage(this.page);
-  },
-  methods: {
-    initPage() {
-      this.listCount = this.products.length;
-      this.updatePageSize();
-    },
-    updatePageSize() {
-      if (this.selectedPageSize === null) {
-        // Ha az "Összes listázása" van kiválasztva, akkor az összes elemet megjelenítjük
-        this.historyList = this.products;
-      } else {
-        this.listCount = this.historyList.length;
-
-        const filteredProducts = this.products.filter((product) => {
-          return (
-            this.activeFilters.length === 0 ||
-            this.activeFilters.every((activeFilter) => {
-              return product.title.includes(activeFilter.value);
-            })
-          );
-        });
-
-        const startIndex = (this.page - 1) * this.selectedPageSize;
-        const endIndex = startIndex + this.selectedPageSize;
-        this.historyList = filteredProducts.slice(startIndex, endIndex);
-
-      }
-    },
-    updatePage(pageIndex) {
-      if (this.selectedPageSize === null) {
-        // Ha az "Összes listázása" van kiválasztva, akkor az összes elemet megjelenítjük
-        this.historyList = this.products;
-      } else {
-        // Frissítjük az oldalak számát az aktív szűrők alapján
-        this.listCount = this.historyList.length;
-
-        //Szűrjük az aktív szűrők alapján
-        const filteredProducts = this.products.filter((product) => {
-          return (
-            this.activeFilters.length === 0 ||
-            this.activeFilters.every((activeFilter) => {
-              return product.title.includes(activeFilter.value);
-            })
-          );
-        });
-
-        // Frissítjük a megjelenített termékek listáját
-        const startIndex = (pageIndex - 1) * this.selectedPageSize;
-        const endIndex = startIndex + this.selectedPageSize;
-        this.historyList = filteredProducts.slice(startIndex, endIndex);
-
-      }
-      this.page = pageIndex;
-    },
-    toggleFilter(filter) {
-      // Frissítsd a szűrést minden szűrőváltoztatásnál
-      this.updateFilteredItems();
-      console.log(this.activeFilters);
-    },
-    updateActiveFilters() {
-      this.updateFilteredItems();
-      console.log(this.activeFilters);
-    },
-    updateFilteredItems() {
-      // Szűrjük a termékeket az aktív szűrők alapján
-      this.historyList = this.products.filter((product) => {
-        // Ellenőrizzük, hogy a termék megfelel-e legalább egy aktív szűrőnek
-        return (
-          this.activeFilters.some((activeFilter) => {
-            return product.title.includes(activeFilter);
-          }) ||
-          // Ha nincs aktív szűrő, minden terméket megjelenítünk
-          this.activeFilters.length === 0
-        );
-      });
-      // Frissítsd a listCount értékét
-      this.listCount = this.historyList.length;
-      // Alaphelyzetben az első oldalra irányít
-      this.page = 1;
-    },
   },
   computed: {
-    activeFilters() {
-      return this.filters
-        .filter((filter) => filter.active)
-        .map((filter) => filter.value);
+    // Szűrt kártyák listája a szűrők alapján
+    filteredProducts() {
+      return this.products.filter((product) => {
+        const activeFilters = this.filters.title.filter(
+          (filter) => filter.active
+        );
+        const activeValues = activeFilters.map((filter) => filter.value);
+
+        return this.filters.title.every((filter) => {
+          if (activeValues.length > 0) {
+            return activeValues.some((word) => product.title.includes(word));
+          }
+          return true; // Ha a szűrő inaktív, akkor ne korlátozzuk a kiválasztást
+        });
+      });
     },
-    pages() {
-      if (this.selectedPageSize === null || this.listCount == null) return 0;
-      return Math.ceil(this.listCount / this.selectedPageSize);
+    // Teljes oldalszám a lapozóhoz
+    totalPages() {
+      return Math.ceil(this.filteredProducts.length / this.perPage);
     },
+    // Az aktuális oldalon látható termékek
+    visibleProducts() {
+      const startIndex = (this.currentPage - 1) * this.perPage;
+      if (this.perPage > this.products.length) {
+        return this.filteredProducts.slice(
+          startIndex,
+          startIndex + this.products.length
+        );
+      } else {
+        return this.filteredProducts.slice(
+          startIndex,
+          startIndex + this.perPage
+        );
+      }
+    },
+  },
+  methods: {
+    toggleFilter(filter) {
+      filter.active != filter.active;
+    },
+  },
+  watch: {
+    //
   },
 };
 </script>
 
-<style>
-/* Ezen a helyen stílusozd a kártyákat és a lapozót a Bootstrap segítségével */
+<style >
+/* CSS stílusok a komponenshez */
+.card {
+  margin: 20px 0;
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+.scrollable-panel {
+  max-height: 200px; /* Itt rögzítheted a panel magasságát */
+  overflow-y: auto; /* Ezzel a tulajdonsággal jelenik meg a görgetősáv, ha szükséges */
+}
+
+.v-input--selection-controls .v-input__slot > .v-label,
+.v-input--selection-controls .v-radio > .v-label {
+  font-size: 14px;
+}
+
+.v-messages.theme--light {
+  display: none;
+}
+.v-input__slot {
+  margin-bottom: 0px;
+}
+
+.v-input--selection-controls {
+  margin-top: 0px;
+  margin-left: 10px;
+}
+[type="text"]:focus {
+  --tw-ring-offset-shadow: unset;
+  --tw-ring-shadow: unset;
+}
 </style>
