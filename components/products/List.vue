@@ -5,7 +5,7 @@
         <!-- Szűrő 1 -->
         <v-card>
           <v-expansion-panels v-model="expandedPanels" multiple>
-            <v-expansion-panel id="panel1" v-if="showPanel==true">
+            <v-expansion-panel id="panel1" v-if="showPanel == true">
               <v-expansion-panel-header>Cím</v-expansion-panel-header>
               <v-expansion-panel-content>
                 <div class="scrollable-panel">
@@ -22,12 +22,12 @@
             </v-expansion-panel>
 
             <!-- Szűrő 2 -->
-            <v-expansion-panel id="panel2" v-if="showPanel==true">
+            <v-expansion-panel id="panel2" v-if="showPanel == true">
               <v-expansion-panel-header>Kategória</v-expansion-panel-header>
               <v-expansion-panel-content>
                 <div class="scrollable-panel">
                   <v-checkbox
-                    v-for="(filter, index) in filters.title"
+                    v-for="(filter, index) in filters.category"
                     :key="index"
                     v-model="filter.active"
                     :label="filter.label"
@@ -158,15 +158,15 @@ export default {
     return {
       products: [], // Kártyák listája
       perPageOptions: [
-        {label: '5', value: 5},
-        {label: '10', value: 10},
-        {label: '50', value: 50},
-        {label: '100', value: 100},
-        {label: 'Összes', value: this.productsData.length}
+        { label: "5", value: 5 },
+        { label: "10", value: 10 },
+        { label: "50", value: 50 },
+        { label: "100", value: 100 },
+        { label: "Összes", value: this.productsData.length },
       ],
       perPage: 5, // Megjelenített elemek száma oldalanként
       currentPage: 1, // Jelenlegi oldal
-      expandedPanels: [0,1],
+      expandedPanels: [0, 1],
       showPanel: true,
       filters: {
         title: [
@@ -174,7 +174,7 @@ export default {
           { label: "Szűrés 2", value: "Title 16", active: false },
           { label: "Szűrés 3", value: "Title 17", active: false },
         ],
-        category: [],
+        category: [{}],
         price: [],
       },
       // Itt adhatsz hozzá további szűrési feltételeket
@@ -182,27 +182,61 @@ export default {
   },
   // Komponens kódjában
   mounted() {
-    console.log(this.perPageOptions);
+    //
   },
 
   created() {
     this.products = [...this.productsData]; // Másolatot készítünk a props-ról
+    this.filters2;
   },
+
   computed: {
     // Szűrt kártyák listája a szűrők alapján
     filteredProducts() {
       return this.products.filter((product) => {
-        const activeFilters = this.filters.title.filter(
+        const activeTitleFilters = this.filters.title.filter(
           (filter) => filter.active
         );
-        const activeValues = activeFilters.map((filter) => filter.value);
+        const activeCategoryFilters = this.filters.category.filter(
+          (filter) => filter.active
+        );
+
+        const activeTitleValues = activeTitleFilters.map(
+          (filter) => filter.value
+        );
+
+        const activeCategoryValues = activeCategoryFilters.map(
+          (filter) => filter.value
+        );
 
         return this.filters.title.every((filter) => {
-          if (activeValues.length > 0) {
-            return activeValues.some((word) => product.title.includes(word));
+          if (activeTitleValues.length > 0) {
+            return (
+              activeTitleValues.some((word) => product.title.includes(word)) &&
+              activeCategoryFilters
+            );
           }
           return true; // Ha a szűrő inaktív, akkor ne korlátozzuk a kiválasztást
         });
+      });
+    },
+    filters2() {
+      this.filters.title = [];
+      this.filters.category = [];
+
+      return this.filteredProducts.forEach((product) => {
+        this.filters.title.push({
+          label: product.title,
+          value: product.title,
+          active: false,
+        });
+
+        this.filters.category.push({
+          label: product.category,
+          value: product.category,
+          active: false,
+        });
+        return true;
       });
     },
     // Teljes oldalszám a lapozóhoz
@@ -225,11 +259,13 @@ export default {
       }
     },
   },
+
   methods: {
     toggleFilter(filter) {
       filter.active != filter.active;
     },
   },
+
   watch: {
     //
   },
