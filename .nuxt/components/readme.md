@@ -16,7 +16,6 @@ You can directly use them in pages and other components without the need to impo
 - `<BaseFooter>` | `<base-footer>` (components/base/Footer.vue)
 - `<BaseNavbar>` | `<base-navbar>` (components/base/Navbar.vue)
 - `<BaseSection>` | `<base-section>` (components/base/Section.vue)
-- `<ProductsList>` | `<products-list>` (components/products/List.vue)
 - `<LandingCountdown>` | `<landing-countdown>` (components/landing/Countdown.vue)
 - `<LandingCryptoStatistic>` | `<landing-crypto-statistic>` (components/landing/CryptoStatistic.vue)
 - `<LandingExchange>` | `<landing-exchange>` (components/landing/Exchange.vue)
@@ -26,3 +25,4 @@ You can directly use them in pages and other components without the need to impo
 - `<LandingStep>` | `<landing-step>` (components/landing/Step.vue)
 - `<LandingTradingToolImage>` | `<landing-trading-tool-image>` (components/landing/TradingToolImage.vue)
 - `<LandingWinWin>` | `<landing-win-win>` (components/landing/WinWin.vue)
+- `<ProductsList>` | `<products-list>` (components/products/List.vue)

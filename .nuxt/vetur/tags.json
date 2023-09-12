@@ -29,9 +29,6 @@
   "BaseSection": {
     "description": "Auto imported from components/base/Section.vue"
   },
-  "ProductsList": {
-    "description": "Auto imported from components/products/List.vue"
-  },
   "LandingCountdown": {
     "description": "Auto imported from components/landing/Countdown.vue"
   },
@@ -58,5 +55,8 @@
   },
   "LandingWinWin": {
     "description": "Auto imported from components/landing/WinWin.vue"
+  },
+  "ProductsList": {
+    "description": "Auto imported from components/products/List.vue"
   }
 }

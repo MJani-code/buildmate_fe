@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app class="px-4">
     <v-row>
       <v-col class="col-12 col-md-3 col-lg-3 col-xl-3">
         <!-- Szűrő 1 -->
@@ -193,36 +193,39 @@ export default {
   computed: {
     // Szűrt kártyák listája a szűrők alapján
     filteredProducts() {
+      const activeTitleFilters = this.filters.title.filter(
+        (filter) => filter.active
+      );
+      const activeCategoryFilters = this.filters.category.filter(
+        (filter) => filter.active
+      );
+
       return this.products.filter((product) => {
-        const activeTitleFilters = this.filters.title.filter(
-          (filter) => filter.active
-        );
-        const activeCategoryFilters = this.filters.category.filter(
-          (filter) => filter.active
-        );
+        const titleMatches =
+          activeTitleFilters.length === 0 ||
+          activeTitleFilters.some((filter) =>
+            product.title.includes(filter.value)
+          );
+        const categoryMatches =
+          activeCategoryFilters.length === 0 ||
+          activeCategoryFilters.some((filter) =>
+            product.category.includes(filter.value)
+          );
 
-        const activeTitleValues = activeTitleFilters.map(
-          (filter) => filter.value
-        );
+        // Ellenőrizd, hogy a bevitt szöveg megegyezik-e a title vagy category mezőkkel
+        // const searchMatches =
+        //   product.title.toLowerCase().includes(searchText) ||
+        //   product.category.toLowerCase().includes(searchText);
 
-        const activeCategoryValues = activeCategoryFilters.map(
-          (filter) => filter.value
-        );
-
-        return this.filters.title.every((filter) => {
-          if (activeTitleValues.length > 0) {
-            return (
-              activeTitleValues.some((word) => product.title.includes(word)) &&
-              activeCategoryFilters
-            );
-          }
-          return true; // Ha a szűrő inaktív, akkor ne korlátozzuk a kiválasztást
-        });
+        return titleMatches && categoryMatches;
       });
     },
     filters2() {
       this.filters.title = [];
       this.filters.category = [];
+
+      let categories = [];
+      let uniqueCategories = [];
 
       return this.filteredProducts.forEach((product) => {
         this.filters.title.push({
@@ -231,12 +234,23 @@ export default {
           active: false,
         });
 
-        this.filters.category.push({
+        categories.push({
           label: product.category,
           value: product.category,
           active: false,
         });
-        return true;
+
+        for (const key in categories) {
+          let value = categories[key].label;
+          if (!uniqueCategories.some((category) => category.label === value)) {
+            uniqueCategories.push({
+              label: value,
+              value: categories[key].value,
+              active: false,
+            });
+          }
+        }
+        this.filters.category = uniqueCategories;
       });
     },
     // Teljes oldalszám a lapozóhoz

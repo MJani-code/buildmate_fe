@@ -8,7 +8,6 @@ export { default as BaseDialog } from '../../components/base/Dialog.vue'
 export { default as BaseFooter } from '../../components/base/Footer.vue'
 export { default as BaseNavbar } from '../../components/base/Navbar.vue'
 export { default as BaseSection } from '../../components/base/Section.vue'
-export { default as ProductsList } from '../../components/products/List.vue'
 export { default as LandingCountdown } from '../../components/landing/Countdown.vue'
 export { default as LandingCryptoStatistic } from '../../components/landing/CryptoStatistic.vue'
 export { default as LandingExchange } from '../../components/landing/Exchange.vue'
@@ -18,6 +17,7 @@ export { default as LandingPartnerImage } from '../../components/landing/Partner
 export { default as LandingStep } from '../../components/landing/Step.vue'
 export { default as LandingTradingToolImage } from '../../components/landing/TradingToolImage.vue'
 export { default as LandingWinWin } from '../../components/landing/WinWin.vue'
+export { default as ProductsList } from '../../components/products/List.vue'
 
 // nuxt/nuxt.js#8607
 function wrapFunctional(options) {
