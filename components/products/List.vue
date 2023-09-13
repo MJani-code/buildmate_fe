@@ -71,14 +71,14 @@
             outlined
           ></v-select>
 
-          <div class="row">
+          <div class="row listing-products">
             <div
               class="col-md-4"
               v-for="(product, index) in visibleProducts"
               :key="index"
             >
               <!-- Kártya megjelenítése -->
-              <v-card class="mx-auto my-12" max-width="300" v-if="product">
+              <v-card class="mx-auto" max-width="300" v-if="product">
                 <template slot="progress">
                   <v-progress-linear
                     color="blue darken-2"
@@ -125,7 +125,7 @@
                 </v-card-text>
 
                 <div class="d-flex align-center">
-                  <v-card-title class="align-self-start subtitle-1">
+                  <v-card-title class="align-self-start subtitle-1 countdown-parent">
                     <LandingCountdown
                       :expirationDate="product.validityEndDate"
                     ></LandingCountdown>
@@ -363,5 +363,13 @@ export default {
 [type="text"]:focus {
   --tw-ring-offset-shadow: unset;
   --tw-ring-shadow: unset;
+}
+.listing-products{
+  max-height: 100vh;
+  overflow: auto;
+}
+.countdown-parent{
+  padding: 8px;
+  margin: auto;
 }
 </style>
