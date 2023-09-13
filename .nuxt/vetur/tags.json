@@ -8,9 +8,6 @@
   "ResponseHandlerModal": {
     "description": "Auto imported from components/ResponseHandlerModal.vue"
   },
-  "AdminNavbar": {
-    "description": "Auto imported from components/admin/Navbar.vue"
-  },
   "BaseAccordion": {
     "description": "Auto imported from components/base/Accordion.vue"
   },
@@ -28,6 +25,12 @@
   },
   "BaseSection": {
     "description": "Auto imported from components/base/Section.vue"
+  },
+  "AdminNavbar": {
+    "description": "Auto imported from components/admin/Navbar.vue"
+  },
+  "ProductsList": {
+    "description": "Auto imported from components/products/List.vue"
   },
   "LandingCountdown": {
     "description": "Auto imported from components/landing/Countdown.vue"
@@ -55,8 +58,5 @@
   },
   "LandingWinWin": {
     "description": "Auto imported from components/landing/WinWin.vue"
-  },
-  "ProductsList": {
-    "description": "Auto imported from components/products/List.vue"
   }
 }

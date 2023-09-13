@@ -6,11 +6,11 @@
         <v-card>
           <v-expansion-panels v-model="expandedPanels" multiple>
             <v-expansion-panel id="panel1" v-if="showPanel == true">
-              <v-expansion-panel-header>Cím</v-expansion-panel-header>
+              <v-expansion-panel-header>Település</v-expansion-panel-header>
               <v-expansion-panel-content>
                 <div class="scrollable-panel">
                   <v-checkbox
-                    v-for="(filter, index) in filters.title"
+                    v-for="(filter, index) in filters.reedemCity"
                     :key="index"
                     v-model="filter.active"
                     :label="filter.label"
@@ -23,6 +23,23 @@
 
             <!-- Szűrő 2 -->
             <v-expansion-panel id="panel2" v-if="showPanel == true">
+              <v-expansion-panel-header>Kerület</v-expansion-panel-header>
+              <v-expansion-panel-content>
+                <div class="scrollable-panel">
+                  <v-checkbox
+                    v-for="(filter, index) in filters.reedemDistrict"
+                    :key="index"
+                    v-model="filter.active"
+                    :label="filter.label"
+                    @click="toggleFilter(filter)"
+                    class="small-checkbox"
+                  ></v-checkbox>
+                </div>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+
+            <!-- Szűrő 3 -->
+            <v-expansion-panel id="panel3" v-if="showPanel == true">
               <v-expansion-panel-header>Kategória</v-expansion-panel-header>
               <v-expansion-panel-content>
                 <div class="scrollable-panel">
@@ -166,14 +183,11 @@ export default {
       ],
       perPage: 5, // Megjelenített elemek száma oldalanként
       currentPage: 1, // Jelenlegi oldal
-      expandedPanels: [0, 1],
+      expandedPanels: [0, 1, 2],
       showPanel: true,
       filters: {
-        title: [
-          { label: "Szűrés 1", value: "Title 15", active: false },
-          { label: "Szűrés 2", value: "Title 16", active: false },
-          { label: "Szűrés 3", value: "Title 17", active: false },
-        ],
+        reedemCity: [{}],
+        reedemDistrict: [{}],
         category: [{}],
         price: [],
       },
@@ -193,7 +207,10 @@ export default {
   computed: {
     // Szűrt kártyák listája a szűrők alapján
     filteredProducts() {
-      const activeTitleFilters = this.filters.title.filter(
+      const activeCityFilters = this.filters.reedemCity.filter(
+        (filter) => filter.active
+      );
+      const activeDistrictFilters = this.filters.reedemDistrict.filter(
         (filter) => filter.active
       );
       const activeCategoryFilters = this.filters.category.filter(
@@ -201,10 +218,17 @@ export default {
       );
 
       return this.products.filter((product) => {
-        const titleMatches =
-          activeTitleFilters.length === 0 ||
-          activeTitleFilters.some((filter) =>
-            product.title.includes(filter.value)
+        const cityMatches =
+          activeCityFilters.length === 0 ||
+          activeCityFilters.some((filter) =>
+            product.reedemCity.includes(filter.value)
+          );
+
+          console.log(product.reedemDistrict);
+        const districtMatches =
+          activeDistrictFilters.length === 0 ||
+          activeDistrictFilters.some((filter) =>
+            product.reedemDistrict.toString().includes(filter.value)
           );
         const categoryMatches =
           activeCategoryFilters.length === 0 ||
@@ -217,20 +241,30 @@ export default {
         //   product.title.toLowerCase().includes(searchText) ||
         //   product.category.toLowerCase().includes(searchText);
 
-        return titleMatches && categoryMatches;
+        return cityMatches && categoryMatches && districtMatches;
       });
     },
     filters2() {
-      this.filters.title = [];
+      this.filters.reedemCity = [];
+      this.filters.reedemDistrict = [];
       this.filters.category = [];
 
       let categories = [];
       let uniqueCategories = [];
 
+      let reedemDistricts = [];
+      let uniqueReedemDistricts = [];
+
       return this.filteredProducts.forEach((product) => {
-        this.filters.title.push({
-          label: product.title,
-          value: product.title,
+        this.filters.reedemCity.push({
+          label: product.reedemCity,
+          value: product.reedemCity,
+          active: false,
+        });
+
+        reedemDistricts.push({
+          label: product.reedemDistrict.toString(),
+          value: product.reedemDistrict.toString(),
           active: false,
         });
 
@@ -251,6 +285,18 @@ export default {
           }
         }
         this.filters.category = uniqueCategories;
+
+        for (const key in reedemDistricts) {
+          let value = reedemDistricts[key].label;
+          if (!uniqueReedemDistricts.some((reedemDistrict) => reedemDistrict.label === value)) {
+            uniqueReedemDistricts.push({
+              label: value.toString(),
+              value: reedemDistricts[key].value,
+              active: false,
+            });
+          }
+        }
+         this.filters.reedemDistrict = uniqueReedemDistricts;
       });
     },
     // Teljes oldalszám a lapozóhoz
