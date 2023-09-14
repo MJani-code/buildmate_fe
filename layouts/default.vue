@@ -6,11 +6,9 @@
         style="z-index: -100"
       ></div>
       <BaseNavbar />
-      <v-main>
+      <main class="text-neutral-800">
         <Nuxt />
-      </v-main>
-      <!-- <main class="text-neutral-800">
-      </main> -->
+      </main>
       <BaseFooter />
     </div>
   </div>

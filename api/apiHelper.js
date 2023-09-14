@@ -6,6 +6,7 @@ const config = {
   apiUrl: {
     getLandingNewProductsData: 'http://localhost:5000/LastMinute_BE/scripts/landing/getnewproductsdata.php',
     getLandingPartnersData: 'http://localhost:5000/LastMinute_BE/scripts/landing/getpartnersdata.php',
+    getProductsData: 'http://localhost:5000/LastMinute_BE/scripts/products/getproductsdata.php',
     // Itt további végpontokat adhatsz meg
   },
 };

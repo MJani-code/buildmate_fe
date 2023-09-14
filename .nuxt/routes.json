@@ -9,9 +9,16 @@
   {
     "name": "products",
     "path": "/products",
-    "component": "/Users/air/Documents/Progs/Projects/LastMinute/LastMinute_FE/pages/products.vue",
-    "chunkName": "pages/products",
-    "_name": "_ebd5ec78"
+    "component": "/Users/air/Documents/Progs/Projects/LastMinute/LastMinute_FE/pages/products/index.vue",
+    "chunkName": "pages/products/index",
+    "_name": "_db07a572"
+  },
+  {
+    "name": "products-view",
+    "path": "/products/view",
+    "component": "/Users/air/Documents/Progs/Projects/LastMinute/LastMinute_FE/pages/products/view.vue",
+    "chunkName": "pages/products/view",
+    "_name": "_453bb840"
   },
   {
     "name": "index",
