@@ -26,8 +26,8 @@
 </template>
 
 <script>
-import { APIGET } from "../api/apiHelper";
-import ResponseHandlerModal from "../components/ResponseHandlerModal.vue";
+import { APIGET } from "../../api/apiHelper";
+import ResponseHandlerModal from "../../components/ResponseHandlerModal.vue";
 
 export default {
   name: "ProductsPage",

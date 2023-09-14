@@ -1,84 +1,99 @@
 <template>
   <v-app class="px-4">
     <v-row>
-      <v-col class="col-12 col-md-3 col-lg-3 col-xl-3">
+      <v-col class="col-12 col-md-3 col-lg-3 col-xl-3" max-width="227">
         <!-- Szűrő 1 -->
-        <v-card>
-          <v-expansion-panels v-model="expandedPanels" multiple>
-            <v-expansion-panel id="panel1" v-if="showPanel == true">
-              <v-expansion-panel-header>Település</v-expansion-panel-header>
-              <v-expansion-panel-content>
-                <div class="scrollable-panel">
-                  <v-checkbox
-                    v-for="(filter, index) in filters.reedemCity"
-                    :key="index"
-                    v-model="filter.active"
-                    :label="filter.label"
-                    @click="toggleFilter(filter)"
-                    class="small-checkbox"
-                  ></v-checkbox>
-                </div>
-              </v-expansion-panel-content>
-            </v-expansion-panel>
+        <v-expansion-panels
+          v-model="expandedPanels"
+          multiple
+          class="sticky-element"
+        >
+          <v-expansion-panel id="panel1" v-if="showPanel == true">
+            <v-expansion-panel-header>Település</v-expansion-panel-header>
+            <v-expansion-panel-content>
+              <div class="scrollable-panel">
+                <v-checkbox
+                  v-for="(filter, index) in filters.reedemCity"
+                  :key="index"
+                  v-model="filter.active"
+                  :label="filter.label"
+                  @click="toggleFilter(filter)"
+                  class="small-checkbox"
+                ></v-checkbox>
+              </div>
+            </v-expansion-panel-content>
+          </v-expansion-panel>
 
-            <!-- Szűrő 2 -->
-            <v-expansion-panel id="panel2" v-if="showPanel == true">
-              <v-expansion-panel-header>Kerület</v-expansion-panel-header>
-              <v-expansion-panel-content>
-                <div class="scrollable-panel">
-                  <v-checkbox
-                    v-for="(filter, index) in filters.reedemDistrict"
-                    :key="index"
-                    v-model="filter.active"
-                    :label="filter.label"
-                    @click="toggleFilter(filter)"
-                    class="small-checkbox"
-                  ></v-checkbox>
-                </div>
-              </v-expansion-panel-content>
-            </v-expansion-panel>
+          <!-- Szűrő 2 -->
+          <v-expansion-panel id="panel2" v-if="showPanel == true">
+            <v-expansion-panel-header>Kerület</v-expansion-panel-header>
+            <v-expansion-panel-content>
+              <div class="scrollable-panel">
+                <v-checkbox
+                  v-for="(filter, index) in filters.reedemDistrict"
+                  :key="index"
+                  v-model="filter.active"
+                  :label="filter.label"
+                  @click="toggleFilter(filter)"
+                  class="small-checkbox"
+                ></v-checkbox>
+              </div>
+            </v-expansion-panel-content>
+          </v-expansion-panel>
 
-            <!-- Szűrő 3 -->
-            <v-expansion-panel id="panel3" v-if="showPanel == true">
-              <v-expansion-panel-header>Kategória</v-expansion-panel-header>
-              <v-expansion-panel-content>
-                <div class="scrollable-panel">
-                  <v-checkbox
-                    v-for="(filter, index) in filters.category"
-                    :key="index"
-                    v-model="filter.active"
-                    :label="filter.label"
-                    @click="toggleFilter(filter)"
-                    class="small-checkbox"
-                  ></v-checkbox>
-                </div>
-              </v-expansion-panel-content>
-            </v-expansion-panel>
-          </v-expansion-panels>
-          <div style="display: block; margin: 20px 20px"></div>
-        </v-card>
+          <!-- Szűrő 3 -->
+          <v-expansion-panel id="panel3" v-if="showPanel == true">
+            <v-expansion-panel-header>Kategória</v-expansion-panel-header>
+            <v-expansion-panel-content>
+              <div class="scrollable-panel">
+                <v-checkbox
+                  v-for="(filter, index) in filters.category"
+                  :key="index"
+                  v-model="filter.active"
+                  :label="filter.label"
+                  @click="toggleFilter(filter)"
+                  class="small-checkbox"
+                ></v-checkbox>
+              </div>
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+        </v-expansion-panels>
       </v-col>
 
       <v-col class="col-12 col-md-9 col-lg-9 col-xl-9">
-        <div class="container">
+        <div class="container products-card">
           <!-- Legördülő menü a kártyák számának testreszabásához -->
-          <v-select
-            :items="perPageOptions"
-            v-model="perPage"
-            label="Találat oldalanként"
-            item-text="label"
-            item-value="value"
-            outlined
-          ></v-select>
+          <div class="row d-flex">
+            <div
+              class="col-12 col-md-3 col-lg-3 col-xl-3 per-page-options sticky-element"
+            >
+              <v-select
+                :items="perPageOptions"
+                v-model="perPage"
+                label="Találat oldalanként"
+                item-text="label"
+                item-value="value"
+                outlined
+              ></v-select>
+            </div>
+            <div class="col-12 col-md-8 col-lg-8 col-xl-8 searchText">
+              <v-text-field
+                v-model="searchText"
+                label="Keresés"
+                outlined
+                clearable
+              ></v-text-field>
+            </div>
+          </div>
 
+          <!-- Kártya megjelenítése -->
           <div class="row listing-products">
             <div
-              class="col-md-4"
+              class="col-md-4 mb-4"
               v-for="(product, index) in visibleProducts"
               :key="index"
             >
-              <!-- Kártya megjelenítése -->
-              <v-card class="mx-auto" max-width="300" v-if="product">
+              <v-card>
                 <template slot="progress">
                   <v-progress-linear
                     color="blue darken-2"
@@ -90,8 +105,10 @@
                 <v-img height="200" :src="product.url"></v-img>
 
                 <v-card-title class="d-flex">
-                  <span class="align-self-start">{{ product.title }}</span>
-                  <span>
+                  <span class="align-self-start text-subtitle-1">{{
+                    product.title
+                  }}</span>
+                  <span class="text-subtitle-1">
                     <v-icon
                       class="align-self-end text-subtitle-1 mdi mdi-tag"
                       color="blue darken-2"
@@ -111,8 +128,13 @@
                       {{ product.shopName }}
                     </v-icon>
                   </div>
-                  <div class="pb-1">
-                    <v-icon class="mt-2 text-subtitle-1 mdi mdi-map-marker">
+                  <div
+                    class="pb-1 d-flex"
+                    :style="{ 'justify-content': 'unset' }"
+                  >
+                    <v-icon class="text-subtitle-1 mdi mdi-map-marker">
+                    </v-icon>
+                    <span>
                       {{
                         product.reedemPostalCode +
                         " " +
@@ -120,43 +142,47 @@
                         " " +
                         product.reedemAddress
                       }}
-                    </v-icon>
+                    </span>
                   </div>
                 </v-card-text>
 
                 <div class="d-flex align-center">
-                  <v-card-title class="align-self-start subtitle-1 countdown-parent">
+                  <v-card-title
+                    class="align-self-start subtitle-1 countdown-parent"
+                  >
                     <LandingCountdown
                       :expirationDate="product.validityEndDate"
                     ></LandingCountdown>
                   </v-card-title>
                   <v-card-title class="align-self-end">
-                    <v-btn color="blue darken-2" text> Érdekel </v-btn>
+                    <router-link :to="'/products/view/?id=' + product.id">
+                      <v-btn color="blue darken-2" text> Érdekel </v-btn>
+                    </router-link>
                   </v-card-title>
                 </div>
               </v-card>
             </div>
           </div>
-
-          <!-- Lapozó -->
-          <template>
-            <div class="text-center">
-              <v-container>
-                <v-row justify="center">
-                  <v-col cols="8">
-                    <v-container class="max-width">
-                      <v-pagination
-                        class="pagination mb-2"
-                        v-model="currentPage"
-                        :length="totalPages"
-                      ></v-pagination>
-                    </v-container>
-                  </v-col>
-                </v-row>
-              </v-container>
-            </div>
-          </template>
         </div>
+
+        <!-- Lapozó -->
+        <template>
+          <div class="text-center">
+            <v-container>
+              <v-row justify="center">
+                <v-col cols="8">
+                  <v-container class="max-width">
+                    <v-pagination
+                      class="pagination mb-2"
+                      v-model="currentPage"
+                      :length="totalPages"
+                    ></v-pagination>
+                  </v-container>
+                </v-col>
+              </v-row>
+            </v-container>
+          </div>
+        </template>
       </v-col>
     </v-row>
   </v-app>
@@ -182,6 +208,7 @@ export default {
         { label: "Összes", value: this.productsData.length },
       ],
       perPage: 5, // Megjelenített elemek száma oldalanként
+      searchText: "",
       currentPage: 1, // Jelenlegi oldal
       expandedPanels: [0, 1, 2],
       showPanel: true,
@@ -224,7 +251,6 @@ export default {
             product.reedemCity.includes(filter.value)
           );
 
-          console.log(product.reedemDistrict);
         const districtMatches =
           activeDistrictFilters.length === 0 ||
           activeDistrictFilters.some((filter) =>
@@ -236,12 +262,13 @@ export default {
             product.category.includes(filter.value)
           );
 
-        // Ellenőrizd, hogy a bevitt szöveg megegyezik-e a title vagy category mezőkkel
-        // const searchMatches =
-        //   product.title.toLowerCase().includes(searchText) ||
-        //   product.category.toLowerCase().includes(searchText);
+        const searchMatches =
+          product.title.toLowerCase().includes(this.searchText) ||
+          product.category.toLowerCase().includes(this.searchText);
 
-        return cityMatches && categoryMatches && districtMatches;
+        return (
+          cityMatches && categoryMatches && districtMatches && searchMatches
+        );
       });
     },
     filters2() {
@@ -288,7 +315,11 @@ export default {
 
         for (const key in reedemDistricts) {
           let value = reedemDistricts[key].label;
-          if (!uniqueReedemDistricts.some((reedemDistrict) => reedemDistrict.label === value)) {
+          if (
+            !uniqueReedemDistricts.some(
+              (reedemDistrict) => reedemDistrict.label === value
+            )
+          ) {
             uniqueReedemDistricts.push({
               label: value.toString(),
               value: reedemDistricts[key].value,
@@ -296,7 +327,7 @@ export default {
             });
           }
         }
-         this.filters.reedemDistrict = uniqueReedemDistricts;
+        this.filters.reedemDistrict = uniqueReedemDistricts;
       });
     },
     // Teljes oldalszám a lapozóhoz
@@ -346,7 +377,7 @@ export default {
 
 .v-input--selection-controls .v-input__slot > .v-label,
 .v-input--selection-controls .v-radio > .v-label {
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .v-messages.theme--light {
@@ -364,12 +395,23 @@ export default {
   --tw-ring-offset-shadow: unset;
   --tw-ring-shadow: unset;
 }
-.listing-products{
-  max-height: 100vh;
+.listing-products {
+  /* max-height: 100vh; */
   overflow: auto;
 }
-.countdown-parent{
+.countdown-parent {
   padding: 8px;
   margin: auto;
+}
+.container.products-card {
+  min-height: 200vh;
+  overflow: auto;
+}
+
+@media (min-width: 992px) {
+  .sticky-element {
+    position: sticky !important;
+    top: 50px !important;
+  }
 }
 </style>
