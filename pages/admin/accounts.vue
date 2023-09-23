@@ -1,5 +1,6 @@
 <template>
   <v-container class="lighten-5" style="height: 100vh; overflow: auto">
+    <Alert :show="showAlert" :message="alertMessage" :type="alertType"></Alert>
     <FieldsNewAccount
       :newAccount="isModalOpen"
       @close="closeModal"
@@ -18,8 +19,25 @@
       >
         <v-card class="mx-auto" max-width="344">
           <v-card-text>
-            <p class="text-h4 text--primary">
+            <p class="text-h4 text--primary" style="position: relative">
               {{ account.lastName + " " + account.firstName }}
+              <v-icon
+                v-if="!account.saveButton"
+                @click="
+                  (account.edit = !account.edit),
+                    (account.saveButton = !account.saveButton)
+                "
+                >mdi-pencil</v-icon
+              >
+              <v-icon
+                v-if="account.edit"
+                @click="
+                  (account.saveButton = !account.saveButton),
+                    (account.edit = !account.edit),
+                    update(account, index)
+                "
+                >mdi-check</v-icon
+              >
             </p>
             <p v-if="account.professionalField">
               {{ account.professionalField }}
@@ -27,15 +45,17 @@
             <div class="text--primary">
               <v-text-field
                 prepend-icon="mdi-cellphone"
-                filled
-                readonly
+                v-model="account.phoneNumber"
+                :filled="!account.edit"
+                :readonly="!account.edit"
                 color="#359756"
                 :value="account.phoneNumber"
               ></v-text-field>
               <v-text-field
                 prepend-icon="mdi-email"
-                filled
-                readonly
+                v-model="account.email"
+                :filled="!account.edit"
+                :readonly="!account.edit"
                 color="#359756"
                 :value="account.email"
               ></v-text-field>
@@ -81,6 +101,9 @@ export default {
     return {
       accounts: [],
       isModalOpen: false,
+      showAlert: false,
+      alertMessage: "",
+      alertType: "",
     };
   },
   async fetch() {
@@ -101,6 +124,8 @@ export default {
             flat: item.flat,
             resident: item.resident,
             professionalField: item.professionalField,
+            edit: false,
+            saveButton: false,
           });
         });
       }
@@ -143,6 +168,47 @@ export default {
         });
       }
     },
+    async update(data, index) {
+      console.log(data, index);
+      try {
+        const response = await APIPOST("updateAccountsData", data);
+
+        if (response.data.confirmUpdateAccountData == true) {
+          this.accounts[index] = data;
+          this.alertMessage = "A mentés sikeres volt!";
+          this.alertType = "success";
+          this.showAlert = true;
+          if ((this.showAlert = true)) {
+            setTimeout(() => {
+              this.showAlert = false; // Az értesítés elrejtése
+            }, 3000);
+          }
+        }
+      } catch (error) {
+        console.log(error);
+        this.checkError(error, {
+          show: true,
+          title: "Hiba",
+          message: `Hiba történt az adatok lekérése közben: ${error.code} - ${error.name} - ${error.message}`,
+          options: [],
+          type: {
+            action: "error",
+          },
+        });
+      }
+    },
   },
 };
 </script>
+
+<style scoped>
+button.mdi-pencil,
+button.mdi-check {
+  position: absolute;
+  top: 10%;
+  right: 0%;
+}
+i.mdi-pencil:hover {
+  cursor: pointer;
+}
+</style>

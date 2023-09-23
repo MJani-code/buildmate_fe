@@ -4,16 +4,18 @@ import axios from 'axios';
 
 const config = {
   apiUrl: {
-    login: 'http://localhost:5000/THFustike3/build_mate_be/login.php',
-    logout: 'http://localhost:5000/THFustike3/build_mate_be/logout.php',
-    auth: 'http://localhost:5000/THFustike3/build_mate_be/auth.php',
-    getUserData: 'http://localhost:5000/THFustike3/build_mate_be/getuserdata.php',
-    getAccountsData: 'http://localhost:5000/THFustike3/build_mate_be/getaccountsdata.php',
-    addAccountsData: 'http://localhost:5000/THFustike3/build_mate_be/addnewaccount.php',
-    updateUserData: 'http://localhost:5000/THFustike3/build_mate_be/updateuserdata.php',
-    getTodo: 'http://localhost:5000/THFustike3/build_mate_be/gettodo.php',
-    updateTodo: 'http://localhost:5000/THFustike3/build_mate_be/updatetodo.php',
-    addTodo: 'http://localhost:5000/THFustike3/build_mate_be/addtodo.php',
+    login: 'http://localhost:5000/THFustike3/build_mate_be/API/login.php',
+    logout: 'http://localhost:5000/THFustike3/build_mate_be/API/logout.php',
+    auth: 'http://localhost:5000/THFustike3/build_mate_be/API/auth.php',
+    getUserData: 'http://localhost:5000/THFustike3/build_mate_be/API/settings/getuserdata.php',
+    updateUserData: 'http://localhost:5000/THFustike3/build_mate_be/API/settings/updateuserdata.php',
+    getAccountsData: 'http://localhost:5000/THFustike3/build_mate_be/API/accounts/getaccountsdata.php',
+    addAccountsData: 'http://localhost:5000/THFustike3/build_mate_be/API/accounts/addnewaccount.php',
+    updateAccountsData: 'http://localhost:5000/THFustike3/build_mate_be/API/accounts/updateaccountdata.php',
+    getTodo: 'http://localhost:5000/THFustike3/build_mate_be/API/todo/gettodo.php',
+    updateTodo: 'http://localhost:5000/THFustike3/build_mate_be/API/todo/updatetodo.php',
+    addTodo: 'http://localhost:5000/THFustike3/build_mate_be/API/todo/addtodo.php',
+    addDocumentsData: 'http://localhost:5000/THFustike3/build_mate_be/API/documents/uploaddocument.php',
     posts: 'http://localhost:5000/THFustike3/build_mate_be/posts.php',
     // Itt további végpontokat adhatsz meg
   },
@@ -43,10 +45,18 @@ export const APIDELETE = async (url) => {
   return await API.delete(url);
 }
 
-export const APIUPLOAD = async (url, data) => {
+export const APIUPLOAD = async (endpoint, data) => {
+  const url = config.apiUrl[endpoint];
   return await API.post(url, data, {
     headers: {
       'Content-Type': 'multipart/form-data'
     }
   });
 }
+// export const APIUPLOAD = async (url, data) => {
+//   return await API.post(url, data, {
+//     headers: {
+//       'Content-Type': 'multipart/form-data'
+//     }
+//   });
+// }
