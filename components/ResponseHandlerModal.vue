@@ -42,7 +42,7 @@ export default {
     colorByType() {
       switch (this.$store.state.responseHandler.type.action) {
         case 'success':
-          return { bg: '#359756', text: 'black' };
+          return { bg: '#359756', text: '#359756' };
         case 'warning':
           return { bg: 'warning', text: 'black' };
         case 'error':

@@ -11,7 +11,7 @@ export const createStore = () => {
       auth: {
         loggedIn: false,
         user: null,
-        userRole: null
+        userRole: null,
       },
       responseHandler: {
         show: false,
@@ -53,7 +53,7 @@ export const createStore = () => {
       },
       SET_CLICKED_BUTTON(state, value) {
         state.responseHandler.clickedButton = value;
-      }
+      },
     },
     actions: {
       async login({ commit }, user) {
@@ -138,7 +138,7 @@ export const createStore = () => {
       },
       setDefaultResponseHandler({ commit }) {
         commit('SET_DEFAULT_RESPONSEHANDLER')
-      }
+      },
     },
     getters: {
       isAuthenticated: state => {
@@ -149,7 +149,7 @@ export const createStore = () => {
       },
       getClickedButton: state => {
         return state.responseHandler.clickedButton;
-      }
+      },
     }
   })
 }

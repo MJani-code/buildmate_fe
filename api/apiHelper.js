@@ -8,6 +8,8 @@ const config = {
     logout: 'http://localhost:5000/THFustike3/build_mate_be/logout.php',
     auth: 'http://localhost:5000/THFustike3/build_mate_be/auth.php',
     getUserData: 'http://localhost:5000/THFustike3/build_mate_be/getuserdata.php',
+    getAccountsData: 'http://localhost:5000/THFustike3/build_mate_be/getaccountsdata.php',
+    addAccountsData: 'http://localhost:5000/THFustike3/build_mate_be/addnewaccount.php',
     updateUserData: 'http://localhost:5000/THFustike3/build_mate_be/updateuserdata.php',
     getTodo: 'http://localhost:5000/THFustike3/build_mate_be/gettodo.php',
     updateTodo: 'http://localhost:5000/THFustike3/build_mate_be/updatetodo.php',

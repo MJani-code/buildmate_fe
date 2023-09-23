@@ -30,6 +30,11 @@ export const routers = [
     to: '/admin/statements'
   },
   {
+    icon: 'mdi-account-box',
+    title: 'Névjegyzék',
+    to: '/admin/accounts'
+  },
+  {
     icon: 'mdi-cog-outline',
     title: 'Beállítások',
     to: '/admin/settings'

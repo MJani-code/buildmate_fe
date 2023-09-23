@@ -15,7 +15,9 @@ const mixin = {
       title: 'Hiba',
       message: 'Hiba történt a kérés során.',
       options: [],
-      type: 'error'
+      type: {
+        action: '',
+      }
     })
     {
       this.$store.state.responseHandler = config;
