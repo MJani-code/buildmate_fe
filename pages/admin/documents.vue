@@ -47,7 +47,9 @@
             ><v-icon size="20">mdi-cash-check</v-icon></v-btn
           >
 
-          <v-btn icon><v-icon size="20">mdi-eye</v-icon></v-btn>
+          <v-btn :href="item.url" icon
+            ><v-icon size="20">mdi-eye</v-icon></v-btn
+          >
           <v-btn @click="openDialog('edit', index)" icon
             ><v-icon size="20">mdi-pencil-outline</v-icon></v-btn
           >
@@ -89,7 +91,6 @@ export default {
     Alert,
     ResponseHandlerModal,
   },
-  beforeMount() {},
   data() {
     return {
       showAlert: false,
@@ -120,7 +121,7 @@ export default {
           text: "Dokumentum neve",
           align: "start",
           filterable: true,
-          value: "name",
+          value: "title",
         },
         { text: "Feltöltés dátuma", value: "createdAt" },
         { text: "Feltöltötte", value: "createdBy" },
@@ -128,123 +129,18 @@ export default {
         { text: "Típus", value: "type" },
         { text: "Műveletek", align: "center", value: "actions" },
       ],
-      documents: [
-        {
-          id: 1,
-          name: "Dokumentum1",
-          createdAt: "2023-01-01",
-          createdBy: "John Doe",
-          path: "",
-          typeId: 2,
-          type: "Számla",
-          statusId: 1,
-          status: "Nyitott",
-        },
-        {
-          id: 2,
-          name: "Dokumentum2",
-          createdAt: "2023-01-01",
-          createdBy: "Jane Doe",
-          path: "",
-          typeId: 2,
-          type: "Számla",
-          statusId: 2,
-          status: "Jóváhagyásra vár",
-        },
-        {
-          id: 3,
-          name: "Dokumentum3",
-          createdAt: "2023-01-01",
-          createdBy: "John Doe",
-          path: "",
-          typeId: 2,
-          type: "Számla",
-          statusId: 3,
-          status: "Visszaigazolásra vár",
-        },
-        {
-          id: 4,
-          name: "Dokumentum4",
-          createdAt: "2023-01-01",
-          createdBy: "John Doe",
-          path: "",
-          typeId: 1,
-          type: "Dokumentum",
-          statusId: 5,
-          status: "Lezárt",
-        },
-        {
-          id: 5,
-          name: "Dokumentum5",
-          createdAt: "2023-01-01",
-          createdBy: "John Doe",
-          path: "",
-          typeId: 1,
-          type: "Dokumentum",
-          statusId: 5,
-          status: "Lezárt",
-        },
-        {
-          id: 6,
-          name: "Dokumentum6",
-          createdAt: "2023-01-01",
-          createdBy: "John Doe",
-          path: "",
-          typeId: 1,
-          type: "Dokumentum",
-          statusId: 5,
-          status: "Lezárt",
-        },
-        {
-          id: 7,
-          name: "Dokumentum7",
-          createdAt: "2023-01-01",
-          createdBy: "John Doe",
-          path: "",
-          typeId: 1,
-          type: "Dokumentum",
-          statusId: 5,
-          status: "Lezárt",
-        },
-        {
-          id: 8,
-          name: "Dokumentum8",
-          createdAt: "2023-01-01",
-          createdBy: "John Doe",
-          path: "",
-          typeId: 1,
-          type: "Dokumentum",
-          statusId: 5,
-          status: "Lezárt",
-        },
-        {
-          id: 9,
-          name: "Dokumentum9",
-          createdAt: "2023-01-01",
-          createdBy: "John Doe",
-          path: "",
-          typeId: 1,
-          type: "Dokumentum",
-          statusId: 5,
-          status: "Lezárt",
-        },
-      ],
+      documents: [],
     };
+  },
+  mounted() {
+    this.getData();
   },
   methods: {
     async getData() {
       try {
-        const response = await APIGET(
-          "http://zmakra.com/public/index.php/filestorage"
-        );
-        console.log(response);
-        response.data.forEach((item, index) => {
-          this.documents.push({
-            ...this.documents[index],
-            ...item,
-            id: index + 10,
-          });
-        });
+        const response = await APIGET("getDocumentsData");
+        this.documents = response.data.result;
+
       } catch (error) {
         this.checkError(error, {
           show: true,
@@ -257,28 +153,36 @@ export default {
         });
       }
     },
-
     async postData(data) {
-      console.log(data);
       try {
         const response = await APIUPLOAD("addDocumentsData", data);
-        console.log(data);
 
-        // response.data.forEach((item, index) => {
-        //     this.documents.push({ ...this.documents[index], ...item, id: index + 10 })
-        // })
+        if (response.data.confirm == true) {
+          this.getData();
+
+          this.uploadDialog = false;
+          //If succes
+          this.alertMessage = "A mentés sikeres volt!";
+          this.alertType = "success";
+          this.showAlert = true;
+          if ((this.showAlert = true)) {
+            setTimeout(() => {
+              this.showAlert = false; // Az értesítés elrejtése
+            }, 3000);
+          }
+        }
       } catch (error) {
-        console.log(error);
         this.checkError(error, {
           show: true,
           title: "Hiba",
           message: `Hiba történt az adatok lekérése közben: ${error.code} - ${error.name} - ${error.message}`,
           options: [],
-          type: "error",
+          type: {
+            action: "error",
+          },
         });
       }
     },
-
     openDialog(dialogType, index) {
       this.dialogType = dialogType;
       if (dialogType !== "download") {
@@ -338,23 +242,6 @@ export default {
         }, 3000);
       }
     },
-    // saveUploadedItem(data) {
-
-    //     //implement save logic here
-
-    //     this.uploadDialog = false;
-    //     // If error
-
-    //     //If succes
-    //     this.alertMessage = 'A mentés sikeres volt!'
-    //     this.alertType = 'success';
-    //     this.showAlert = true
-    //     if (this.showAlert = true) {
-    //         setTimeout(() => {
-    //             this.showAlert = false; // Az értesítés elrejtése
-    //         }, 3000);
-    //     }
-    // },
   },
 };
 </script>

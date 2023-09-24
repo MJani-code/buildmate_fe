@@ -15,6 +15,7 @@ const config = {
     getTodo: 'http://localhost:5000/THFustike3/build_mate_be/API/todo/gettodo.php',
     updateTodo: 'http://localhost:5000/THFustike3/build_mate_be/API/todo/updatetodo.php',
     addTodo: 'http://localhost:5000/THFustike3/build_mate_be/API/todo/addtodo.php',
+    getDocumentsData: 'http://localhost:5000/THFustike3/build_mate_be/API/documents/getdocument.php',
     addDocumentsData: 'http://localhost:5000/THFustike3/build_mate_be/API/documents/uploaddocument.php',
     posts: 'http://localhost:5000/THFustike3/build_mate_be/posts.php',
     // Itt további végpontokat adhatsz meg
