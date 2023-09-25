@@ -7,7 +7,9 @@
       @save="postData"
       @close="closeDialog"
     ></UploadFile>
-    <v-btn class="ma-10" @click="openUploadDialog">Új dokumentum</v-btn>
+    <v-btn class="ma-10" @click="uploadDialog = !uploadDialog"
+      >Új dokumentum</v-btn
+    >
     <v-btn class="ma-10" @click="getData">Get data</v-btn>
     <v-btn class="ma-10" @click="postData">Post data</v-btn>
     <v-col lg="3" xl="3">
@@ -29,34 +31,34 @@
           <v-btn
             v-if="item.typeId == 2 && item.statusId == 1"
             icon
-            @click="openDialog('confirm', index)"
+            @click="updateItem('confirm', item)"
             ><v-icon size="20">mdi-cash-clock</v-icon></v-btn
           >
           <!-- Második státusz, elutalva. Jóváhagyásra vár. Csak akkor van státusz léptetési funkciója, ha a belépett userRole = admin -->
           <v-btn
             v-if="item.typeId == 2 && item.statusId == 2"
             icon
-            @click="openDialog('confirm', index)"
+            @click="updateItem('confirm', item)"
             ><v-icon size="20">mdi-cash-sync</v-icon></v-btn
           >
           <!-- Harmadik státusz, a pénz beérkezett az igénylő számlájára. Csak akkor van státusz léptetési funkciója, ha a belépett user megegyezik a számlát feltöltő userrel. -->
           <v-btn
             v-if="item.typeId == 2 && item.statusId == 3"
             icon
-            @click="openDialog('confirm', index)"
+            @click="updateItem('confirm', item)"
             ><v-icon size="20">mdi-cash-check</v-icon></v-btn
           >
 
           <v-btn :href="item.url" icon
             ><v-icon size="20">mdi-eye</v-icon></v-btn
           >
-          <v-btn @click="openDialog('edit', index)" icon
+          <v-btn @click="updateItem('edit', item)" icon
             ><v-icon size="20">mdi-pencil-outline</v-icon></v-btn
           >
           <v-btn @click="openDialog('download', index)" icon
             ><v-icon size="20">mdi-download-outline</v-icon></v-btn
           >
-          <v-btn @click="openDialog('delete', index)" icon
+          <v-btn @click="updateItem('delete', item)" icon
             ><v-icon size="20">mdi-delete-outline</v-icon></v-btn
           >
         </div>
@@ -67,10 +69,8 @@
       :itemDialog="itemDialog"
       :dialogType="dialogType"
       :editedItem="editedItem"
-      @save="saveItem"
-      @delete="deleteItem"
+      @update="saveItem"
       @close="closeDialog"
-      @confirm="updateInvoice"
     />
   </v-card>
 </template>
@@ -82,7 +82,7 @@ import UploadFile from "../../components/Fields/UploadFile.vue";
 import Alert from "../../components/Alert.vue";
 import ResponseHandlerModal from "../../components/ResponseHandlerModal";
 import axios from "axios";
-import { APIGET, APIUPLOAD, APIPOST } from "~/api/apiHelper";
+import { APIGET, APIUPLOAD, APIPOST2 } from "~/api/apiHelper";
 
 export default {
   components: {
@@ -94,26 +94,19 @@ export default {
   data() {
     return {
       showAlert: false,
-      alertMessage: "",
-      alertType: "",
       itemDialog: false,
       uploadDialog: false,
-      showAlert: false,
       alertMessage: "",
       typeId: 1,
       alertType: "Dokumentum",
-      statusId: 5,
       typeId: 1,
       dialogType: "Dokumentum",
-      statusId: 5,
       editedItem: {},
       deletedItem: {
         index: "",
         id: 1,
         name: "",
       },
-      editedIndex: -1,
-      deletedIndex: -1,
       isLoading: false,
       search: "",
       headers: [
@@ -139,18 +132,17 @@ export default {
     async getData() {
       try {
         const response = await APIGET("getDocumentsData");
-        this.documents = response.data.result;
 
+        if (response.data.confirm == true) {
+          this.documents = response.data.result;
+          this.documentStatuses = response.data.documentStatuses;
+          console.log(this.documentStatuses);
+        } else {
+          const error = response.data;
+          this.showServerError(error);
+        }
       } catch (error) {
-        this.checkError(error, {
-          show: true,
-          title: "Hiba",
-          message: `Hiba történt az adatok lekérése közben: ${error.code} - ${error.name} - ${error.message}`,
-          options: [],
-          type: {
-            action: "error",
-          },
-        });
+        this.showCatchError(error);
       }
     },
     async postData(data) {
@@ -159,81 +151,98 @@ export default {
 
         if (response.data.confirm == true) {
           this.getData();
-
-          this.uploadDialog = false;
-          //If succes
-          this.alertMessage = "A mentés sikeres volt!";
-          this.alertType = "success";
-          this.showAlert = true;
-          if ((this.showAlert = true)) {
-            setTimeout(() => {
-              this.showAlert = false; // Az értesítés elrejtése
-            }, 3000);
-          }
+          this.showServerResponse();
+        } else {
+          const error = response.data;
+          this.showServerError(error);
         }
       } catch (error) {
-        this.checkError(error, {
-          show: true,
-          title: "Hiba",
-          message: `Hiba történt az adatok lekérése közben: ${error.code} - ${error.name} - ${error.message}`,
-          options: [],
-          type: {
-            action: "error",
-          },
-        });
+        this.showCatchError(error);
       }
     },
-    openDialog(dialogType, index) {
+    updateItem(dialogType, item) {
       this.dialogType = dialogType;
       if (dialogType !== "download") {
         this.itemDialog = true;
-        this.editedItem = Object.assign({}, this.documents[index]);
+        this.editedItem = item;
+        this.editedItem.eventType = dialogType;
       }
     },
-    openUploadDialog() {
-      this.uploadDialog = true;
-    },
-    saveItem() {
-      // implement save logic here
-      this.itemDialog = false;
-      // If error
+    async saveItem(eventType, editedItem) {
+      switch (eventType) {
+        case "save":
+          try {
+            const response = await APIPOST2("updateDocumentsData", editedItem);
+            if (response.data.confirmUpdateDocumentData == true) {
+              this.itemDialog = false;
+              this.showServerResponse();
+            } else {
+              const error = response.data;
+              this.showServerError(error);
+            }
+          } catch (error) {
+            this.showCatchError(error);
+          }
+          break;
+        case "delete":
+          try {
+            const response = await APIPOST2("updateDocumentsData", editedItem);
+            if (response.data.confirmUpdateDocumentData == true) {
+              this.itemDialog = false;
+              this.showServerResponse();
 
-      //If succes
-      this.alertMessage = "A mentés sikeres volt!";
-      this.alertType = "success";
-      this.showAlert = true;
-      if ((this.showAlert = true)) {
-        setTimeout(() => {
-          this.showAlert = false; // Az értesítés elrejtése
-        }, 3000);
-      }
-    },
-    deleteItem() {
-      // implement delete logic here
-      this.itemDialog = false;
-      // If error
+              this.documents = this.documents.filter(
+                (document) => document.id !== editedItem.id
+              );
+            } else {
+              const error = response.data;
+              this.showServerError(error);
+            }
+          } catch (error) {
+            this.showCatchError(error);
+          }
+          break;
+        case "confirm":
+          try {
+            const response = await APIPOST2("updateDocumentsData", editedItem);
+            if (response.data.confirmUpdateDocumentData == true) {
+              const newStatusId = response.data.statusId;
+              const newStatusData = this.documentStatuses.find(
+                (status) => status.id == newStatusId
+              );
+              const newStatus = newStatusData.name;
 
-      //If succes
-      this.alertMessage = "A törlés sikeres volt!";
-      this.alertType = "success";
-      this.showAlert = true;
-      if ((this.showAlert = true)) {
-        setTimeout(() => {
-          this.showAlert = false; // Az értesítés elrejtése
-        }, 3000);
+              this.itemDialog = false;
+              this.showServerResponse();
+
+              this.documents = this.documents.map((document) => {
+                if (document.id === editedItem.id) {
+                  return {
+                    ...document,
+                    statusId: newStatusId,
+                    status: newStatus,
+                  };
+                } else {
+                  return document;
+                }
+              });
+            } else {
+              const error = response.data;
+              this.showServerError(error);
+            }
+          } catch (error) {
+            this.showCatchError(error);
+          }
       }
     },
     closeDialog() {
       this.itemDialog = false;
       this.uploadDialog = false;
     },
-    updateInvoice() {
-      //implement update logic here on the id of invoice to be updated onto the next status id. this.editedItem-el azonosítható
-      this.itemDialog = false;
-      // If error
-
+    showServerResponse() {
+      this.uploadDialog = false;
       //If succes
-      this.alertMessage = "A mentés sikeres volt!";
+      this.alertMessage = "A művelet sikeres volt!";
       this.alertType = "success";
       this.showAlert = true;
       if ((this.showAlert = true)) {
@@ -241,6 +250,28 @@ export default {
           this.showAlert = false; // Az értesítés elrejtése
         }, 3000);
       }
+    },
+    showServerError(error) {
+      this.checkError(error, {
+        show: true,
+        title: "Hiba",
+        message: `Hiba történt az adatok lekérése közben: ${error}`,
+        options: [],
+        type: {
+          action: "error",
+        },
+      });
+    },
+    showCatchError(error) {
+      this.checkError(error, {
+        show: true,
+        title: "Hiba",
+        message: `Hiba történt az adatok lekérése közben: ${error.code} - ${error.name} - ${error.message}`,
+        options: [],
+        type: {
+          action: "error",
+        },
+      });
     },
   },
 };
