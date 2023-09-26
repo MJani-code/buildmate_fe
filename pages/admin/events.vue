@@ -48,6 +48,7 @@
           @mousedown:time="startTime"
           @mousemove:time="mouseMove"
           @mouseup:time="endDrag"
+          @mouseup:event="endDrag"
           @mouseleave.native="cancelDrag"
         >
           <template v-slot:event="{ event, timed, eventSummary }">
@@ -66,7 +67,7 @@
           <v-card>
             <v-card-title>{{ eventToEdit.name }} szerkesztése</v-card-title>
             <v-card-text>
-              <v-form>
+              <v-form ref="form">
                 <v-text-field
                   color="#359756"
                   v-model="eventToEdit.name"
@@ -75,21 +76,26 @@
                 <datePicker
                   :starttime="eventToEdit.start"
                   :endtime="eventToEdit.end"
+                  @startTimeUnix="handlerStartUnixData"
+                  @endTimeUnix="handlerEndUnixData"
                 ></datePicker>
                 <v-select
                   color="#359756"
-                  v-model="eventToEdit.category"
+                  v-model="selectedCategoryId"
                   :items="eventCategories"
                   item-text="name"
                   item-value="id"
                   label="Kategória"
+                  :rules="rules.select"
                 >
                 </v-select>
               </v-form>
             </v-card-text>
             <v-card-actions>
               <v-btn @click="closeDialog">Mégsem</v-btn>
-              <v-btn @click="saveUploadedItem" color="#359756">Mentés</v-btn>
+              <v-btn @click="saveUploadedItem(eventToEdit)" color="#359756"
+                >Mentés</v-btn
+              >
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -111,14 +117,21 @@ export default {
     alertType: "",
     eventToEdit: [],
     eventName: "",
+    selectedCategoryId: null,
+    userId: null,
+    emitStartTimeUnix: null,
+    emitEndTimeUnix: null,
     eventCategories: [
-      { name: "Kerti esemény", color: "#b5f556" },
-      { name: "Kuka-kommunális", color: "#19542b" },
-      { name: "Kuka-szelektív", color: "#c7c420" },
-      { name: "Fűnyírás", color: "#359756" },
-      { name: "Közgyűlés", color: "#c29844" },
-      { name: "Egyéb", color: "#56f5e8" },
+      { id: 3, name: "Kerti esemény", color: "#b5f556" },
+      { id: 1, name: "Kuka-kommunális", color: "#19542b" },
+      { id: 2, name: "Kuka-szelektív", color: "#c7c420" },
+      { id: 4, name: "Fűnyírás", color: "#359756" },
+      { id: 5, name: "Közgyűlés", color: "#c29844" },
+      { id: 6, name: "Egyéb", color: "#56f5e8" },
     ],
+    rules: {
+      select: [(v) => !!v || "Válassz a listából egy kategóriát"],
+    },
     type: "week",
     types: ["month", "week", "day", "4day"],
     mode: "stack",
@@ -141,6 +154,24 @@ export default {
   components: {
     datePicker,
     Alert,
+  },
+  watch: {
+    selectedCategoryId(newId) {
+      const selectedType = this.eventCategories.find(
+        (item) => item.id === newId
+      );
+      if (selectedType) {
+        this.eventToEdit.categoryId = newId;
+        this.eventToEdit.category = selectedType.name;
+      }
+    },
+  },
+  mounted() {
+    this.getEvents();
+    const dataFromLocalStorage = localStorage.getItem("apiLogin");
+    const parsedData = JSON.parse(dataFromLocalStorage);
+
+    this.userId = parsedData.userId;
   },
   methods: {
     startDrag({ event, timed }) {
@@ -198,12 +229,13 @@ export default {
         this.createEvent.end = max;
       }
     },
-    endDrag() {
+    endDrag({event, nativeEvent }) {
       this.dragTime = null;
       this.dragEvent = null;
       this.createEvent = null;
       this.createStart = null;
       this.extendOriginal = null;
+      this.editEvent({event, nativeEvent});
     },
     cancelDrag() {
       if (this.createEvent) {
@@ -250,19 +282,64 @@ export default {
         ? `rgba(${r}, ${g}, ${b}, 0.7)`
         : event.color;
     },
+    rnd(a, b) {
+      return Math.floor((b - a + 1) * Math.random()) + a;
+    },
+    rndElement(arr) {
+      return arr[this.rnd(0, arr.length - 1)];
+    },
     editEvent({ event, nativeEvent }) {
       nativeEvent.stopPropagation();
       // save the event to edit and open the dialog
       this.eventToEdit = event;
       this.eventName = event.category;
+      this.selectedCategoryId = event.categoryId;
       this.dialogOpen = true;
     },
-    saveUploadedItem() {
-      // implement save logic here
-      this.dialogOpen = false;
-      // If error
+    async getEvents() {
+      try {
+        const response = await APIGET("getEvents");
+        if (response.data) {
+          this.events = response.data.result;
+        } else {
+          const error = response.data;
+          this.showServerError(error);
+        }
+      } catch (error) {
+        this.showCatchError(error);
+      }
+    },
+    async saveUploadedItem(eventToEdit) {
+      eventToEdit.userId = this.userId;
+      const isValid = await this.$refs.form.validate();
+      if (!isValid) {
+        return;
+      } else {
+        try {
+          const response = await APIPOST2("addEvent", eventToEdit);
+          if (response.data.confirmAddNewEvent == true) {
+            this.dialogOpen = false;
+            this.events.push(eventToEdit);
+            this.showServerResponse();
+          } else if (response.data.confirmUpdateEvent == true) {
+            this.dialogOpen = false;
+            this.showServerResponse();
+          } else {
+            const error = response.data.error;
+            this.showServerError(error);
+          }
+        } catch (error) {
+          this.showCatchError(error);
+        }
+      }
+    },
+    handlerStartUnixData(newUnixData){
+      this.emitStartTimeUnix = newUnixData;
 
-      //If succes
+    },
+    handlerEndUnixData(newUnixData){
+      this.emitEndTimeUnix = newUnixData;
+
     },
     showServerResponse() {
       this.uploadDialog = false;
