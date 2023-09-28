@@ -47,20 +47,32 @@
           @mousedown:event="startDrag"
           @mousedown:time="startTime"
           @mousemove:time="mouseMove"
-          @mouseup:time="endDrag"
           @mouseup:event="endDrag"
           @mouseleave.native="cancelDrag"
         >
+          <!-- kivettem a v-calendarból: @mouseup:time="endDrag" -->
+
           <template v-slot:event="{ event, timed, eventSummary }">
             <div class="v-event-draggable">
               <component :is="{ render: eventSummary }"> </component>
-              <p>{{ event.name }}</p>
+              <p>
+                {{ event.name }}
+              </p>
             </div>
             <div
               v-if="timed"
               class="v-event-drag-bottom"
               @mousedown.stop="extendBottom(event)"
             ></div>
+            <v-btn
+              class="mx-2"
+              fab
+              dark
+              color="primary"
+              @click.stop="deleteEvent(event)"
+            >
+              <v-icon dark> mdi-minus </v-icon>
+            </v-btn>
           </template>
         </v-calendar>
         <v-dialog v-model="dialogOpen" width="400">
@@ -89,11 +101,23 @@
                   :rules="rules.select"
                 >
                 </v-select>
+                <v-autocomplete
+                  v-model="eventToEdit.responsibles"
+                  :items="responsibleNames"
+                  chips
+                  label="Felelősök"
+                  full-width
+                  hide-details
+                  hide-no-data
+                  hide-selected
+                  multiple
+                  single-line
+                ></v-autocomplete>
               </v-form>
             </v-card-text>
             <v-card-actions>
               <v-btn @click="closeDialog">Mégsem</v-btn>
-              <v-btn @click="saveUploadedItem(eventToEdit)" color="#359756"
+              <v-btn @click="saveEvent(eventToEdit)" color="#359756"
                 >Mentés</v-btn
               >
             </v-card-actions>
@@ -107,7 +131,7 @@
 <script>
 import datePicker from "../../components/Fields/datepicker.vue";
 import Alert from "../../components/Alert.vue";
-import { APIGET, APIUPLOAD, APIPOST2 } from "~/api/apiHelper";
+import { APIGET, APIUPLOAD, APIPOST, APIPOST2 } from "~/api/apiHelper";
 
 export default {
   data: () => ({
@@ -121,14 +145,12 @@ export default {
     userId: null,
     emitStartTimeUnix: null,
     emitEndTimeUnix: null,
-    eventCategories: [
-      { id: 3, name: "Kerti esemény", color: "#b5f556" },
-      { id: 1, name: "Kuka-kommunális", color: "#19542b" },
-      { id: 2, name: "Kuka-szelektív", color: "#c7c420" },
-      { id: 4, name: "Fűnyírás", color: "#359756" },
-      { id: 5, name: "Közgyűlés", color: "#c29844" },
-      { id: 6, name: "Egyéb", color: "#56f5e8" },
-    ],
+    users: [],
+    responsibleNames: [],
+    selectedResponsibles: [],
+    eventCategories: [],
+    deletion: false,
+    drag: false,
     rules: {
       select: [(v) => !!v || "Válassz a listából egy kategóriát"],
     },
@@ -146,6 +168,7 @@ export default {
     value: "",
     events: [],
     dragEvent: null,
+    dragEvent2: null,
     dragStart: null,
     createEvent: null,
     createStart: null,
@@ -167,7 +190,6 @@ export default {
     },
   },
   mounted() {
-    this.getEvents();
     const dataFromLocalStorage = localStorage.getItem("apiLogin");
     const parsedData = JSON.parse(dataFromLocalStorage);
 
@@ -206,6 +228,8 @@ export default {
       this.createEvent = event;
       this.createStart = event.start;
       this.extendOriginal = event.end;
+      this.dragEvent = event;
+      this.dragEvent2 = true;
     },
     mouseMove(tms) {
       const mouse = this.toTime(tms);
@@ -218,6 +242,7 @@ export default {
         const newStart = this.roundTime(newStartTime);
         const newEnd = newStart + duration;
 
+        this.dragEvent2 = true;
         this.dragEvent.start = newStart;
         this.dragEvent.end = newEnd;
       } else if (this.createEvent && this.createStart !== null) {
@@ -229,13 +254,15 @@ export default {
         this.createEvent.end = max;
       }
     },
-    endDrag({event, nativeEvent }) {
+    endDrag({ event, nativeEvent }) {
+      if (this.dragEvent2) {
+        this.saveEventByDrag(event);
+      }
       this.dragTime = null;
       this.dragEvent = null;
       this.createEvent = null;
       this.createStart = null;
       this.extendOriginal = null;
-      this.editEvent({event, nativeEvent});
     },
     cancelDrag() {
       if (this.createEvent) {
@@ -290,17 +317,23 @@ export default {
     },
     editEvent({ event, nativeEvent }) {
       nativeEvent.stopPropagation();
-      // save the event to edit and open the dialog
+
       this.eventToEdit = event;
       this.eventName = event.category;
       this.selectedCategoryId = event.categoryId;
-      this.dialogOpen = true;
+      if(!this.dragEvent2){
+        this.dialogOpen = true;
+      }
     },
     async getEvents() {
       try {
         const response = await APIGET("getEvents");
         if (response.data) {
           this.events = response.data.result;
+          this.eventCategories = response.data.categories;
+
+          this.responsibleNames = response.data.users.map((item) => item.name);
+          this.users = response.data.users;
         } else {
           const error = response.data;
           this.showServerError(error);
@@ -309,14 +342,28 @@ export default {
         this.showCatchError(error);
       }
     },
-    async saveUploadedItem(eventToEdit) {
+    async saveEvent(eventToEdit) {
       eventToEdit.userId = this.userId;
+
+      const responsiblesIds = [];
+      if (eventToEdit.responsibles) {
+        eventToEdit.responsibles.forEach((responsibleNames) => {
+          const talalat = this.users.find(
+            (item) => item.name === responsibleNames
+          );
+          if (talalat) {
+            responsiblesIds.push(talalat.id);
+          }
+        });
+        eventToEdit.responsiblesIds = responsiblesIds;
+      }
+
       const isValid = await this.$refs.form.validate();
       if (!isValid) {
         return;
       } else {
         try {
-          const response = await APIPOST2("addEvent", eventToEdit);
+          const response = await APIPOST("addEvent", eventToEdit);
           if (response.data.confirmAddNewEvent == true) {
             this.dialogOpen = false;
             this.events.push(eventToEdit);
@@ -333,13 +380,51 @@ export default {
         }
       }
     },
-    handlerStartUnixData(newUnixData){
-      this.emitStartTimeUnix = newUnixData;
-
+    async saveEventByDrag(event) {
+      try {
+        const response = await APIPOST("addEvent", event);
+        if (response.data.confirmUpdateEvent == true) {
+          //this.dialogOpen = false;
+          this.showServerResponse();
+          this.dragEvent2 = null;
+        } else {
+          const error = response.data.error;
+          this.showServerError(error);
+        }
+      } catch (error) {
+        this.showCatchError(error);
+      }
     },
-    handlerEndUnixData(newUnixData){
-      this.emitEndTimeUnix = newUnixData;
+    deleteEvent(event) {
+      this.deletion = true;
+      console.log("delete");
 
+      // try {
+      //   const response = await APIPOST("deleteEvent", { id: eventId });
+      //   if (response.data.confirmDeleteEvent == true) {
+      //     this.dialogOpen = false;
+      //     const indexToDelete = this.events.findIndex(
+      //       (item) => item.id === eventId
+      //     );
+      //     if (indexToDelete !== -1) {
+      //       this.events.splice(indexToDelete, 1);
+      //     }
+      //     this.showServerResponse();
+      //   } else {
+      //     const error = response.data.error;
+      //     this.showServerError(error);
+      //   }
+      // } catch (error) {
+      //   this.showCatchError(error);
+      // }
+      this.deletion = false;
+    },
+    handlerStartUnixData(newUnixData) {
+      this.emitStartTimeUnix = newUnixData;
+      //this.eventToEdit.start = newUnixData;
+    },
+    handlerEndUnixData(newUnixData) {
+      this.emitEndTimeUnix = newUnixData;
     },
     showServerResponse() {
       this.uploadDialog = false;
@@ -417,8 +502,36 @@ export default {
     display: block;
   }
 }
-
 ::v-deep .white-text * {
   color: white !important;
+}
+
+button.mx-2.v-btn.v-btn--is-elevated.v-btn--fab.v-btn--has-bg.v-btn--round.theme--dark.v-size--default.primary {
+  //display: none;
+  position: absolute;
+  z-index: 100;
+  right: -20px;
+  top: -10px;
+  max-height: 20px !important;
+  max-width: 20px !important;
+  background-color: #35975659 !important;
+}
+
+p .v-btn--fab.v-size--default,
+.v-icon.notranslate.mdi.mdi-minus.theme--dark {
+  max-height: 20px !important;
+  max-width: 20px !important;
+  color: red;
+}
+
+@media (min-width: 1024px) {
+  button.mx-2.v-btn.v-btn--is-elevated.v-btn--fab.v-btn--has-bg.v-btn--round.theme--dark.v-size--default.primary {
+    display: none;
+  }
+  .v-event-timed.white--text:hover {
+    button.mx-2.v-btn.v-btn--is-elevated.v-btn--fab.v-btn--has-bg.v-btn--round.theme--dark.v-size--default.primary {
+      display: inline-block;
+    }
+  }
 }
 </style>

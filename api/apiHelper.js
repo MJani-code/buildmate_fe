@@ -20,6 +20,7 @@ const config = {
     updateDocumentsData: 'http://localhost:5000/THFustike3/build_mate_be/API/documents/updatedocumentdata.php',
     getEvents: 'http://localhost:5000/THFustike3/build_mate_be/API/events/getevents.php',
     addEvent: 'http://localhost:5000/THFustike3/build_mate_be/API/events/addevent.php',
+    deleteEvent: 'http://localhost:5000/THFustike3/build_mate_be/API/events/deleteevent.php',
     posts: 'http://localhost:5000/THFustike3/build_mate_be/posts.php',
     // Itt további végpontokat adhatsz meg
   },

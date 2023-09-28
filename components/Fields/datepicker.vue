@@ -45,14 +45,7 @@ export default {
     endTimeUnix: null,
   }),
   methods: {
-    // emitStartTimeUnix() {
-    //   // Emit the changes to the parent component
-    //   this.$emit("startTimeUnix", this.startTimeUnix);
-    // },
-    // emitEndTimeUnix() {
-    //   // Emit the changes to the parent component
-    //   this.$emit("endTimeUnix", this.endTimeUnix);
-    // },
+    //
   },
   mounted() {
     this.startTime = moment(this.starttime).format("YYYY-MM-DD HH:mm");
@@ -62,20 +55,18 @@ export default {
     starttime: function (newVal, oldVal) {
       // do something when starttime prop changes
       this.startTime = moment(newVal).format("YYYY-MM-DD HH:mm");
-      //this.startTimeUnix = moment(newVal).unix() * 1000;
-      //this.emitChanges();
+
     },
     endtime: function (newVal, oldVal) {
       // do something when endtime prop changes
       this.endTime = moment(newVal).format("YYYY-MM-DD HH:mm");
-      //this.endTimeUnix = moment(newVal).unix() * 1000;
-      //this.emitChanges();
+
     },
     startTime: function (newVal, oldVal) {
       this.startTimeUnix = moment(newVal).unix() * 1000;
       if (this.startTimeUnix) {
         this.$emit("startTimeUnix", this.startTimeUnix);
-      }else{
+      } else {
         this.$emit("startTimeUnix", this.starttime);
       }
     },
@@ -83,7 +74,7 @@ export default {
       this.endTimeUnix = moment(newVal).unix() * 1000;
       if (this.endTimeUnix) {
         this.$emit("endTimeUnix", this.endTimeUnix);
-      }else{
+      } else {
         this.$emit("endTimeUnix", this.endtime);
       }
     },
