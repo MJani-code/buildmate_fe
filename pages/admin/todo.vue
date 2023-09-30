@@ -57,14 +57,14 @@
             <v-subheader class="subheading" v-if="todos.length == 0"
               >Egyelőre nincsen feladat</v-subheader
             >
-            <v-subheader class="subheading" v-else="todos.length == 1"
+            <v-subheader class="subheading" v-else
               >Aktuális feladatok</v-subheader
             >
             <v-list-item-group>
               <v-list-item v-for="(todo, i) in filteredItems" :key="i">
                 <template #default="{ active }">
                   <v-list-item-action>
-                    <v-checkbox v-model="active" color="#359756"></v-checkbox>
+                    <v-checkbox  color="#359756"></v-checkbox>
                   </v-list-item-action>
                   <v-list-item-content>
                     <v-list-item-title>{{ todo.title }}</v-list-item-title>
@@ -90,7 +90,7 @@
             <v-subheader class="subheading" v-if="doneTodos.length == 0"
               >Egyelőre nincsen elvégzett feladat</v-subheader
             >
-            <v-subheader class="subheading" v-else="doneTodos.length == 1"
+            <v-subheader class="subheading"
               >Elvégzett feladatok</v-subheader
             >
             <v-list-item-group>
