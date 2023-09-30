@@ -105,6 +105,7 @@
                   v-model="eventToEdit.responsibles"
                   :items="responsibleNames"
                   chips
+                  color="#359756"
                   label="Felelősök"
                   full-width
                   hide-details
@@ -123,6 +124,18 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
+        <v-dialog v-model="confirmDialog" max-width="500px" persistent>
+          <v-card>
+            <v-card-title> Esemény törlése </v-card-title>
+            <v-card-text>
+              Biztosan törölni szeretnéd ezt az eseményt?
+            </v-card-text>
+            <v-card-actions>
+              <v-btn @click="confirmDialog = false">Mégsem</v-btn>
+              <v-btn color="error" @click="confirmDeletion">Törlés</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </v-sheet>
     </v-col>
   </v-row>
@@ -136,6 +149,7 @@ import { APIGET, APIUPLOAD, APIPOST, APIPOST2 } from "~/api/apiHelper";
 export default {
   data: () => ({
     dialogOpen: false,
+    confirmDialog: false,
     showAlert: false,
     alertMessage: "",
     alertType: "",
@@ -149,7 +163,7 @@ export default {
     responsibleNames: [],
     selectedResponsibles: [],
     eventCategories: [],
-    deletion: false,
+    evenToDeleteId: null,
     drag: false,
     rules: {
       select: [(v) => !!v || "Válassz a listából egy kategóriát"],
@@ -229,7 +243,9 @@ export default {
       this.createStart = event.start;
       this.extendOriginal = event.end;
       this.dragEvent = event;
-      this.dragEvent2 = true;
+      if(event.id){
+        this.dragEvent2 = true;
+      }
     },
     mouseMove(tms) {
       const mouse = this.toTime(tms);
@@ -321,7 +337,7 @@ export default {
       this.eventToEdit = event;
       this.eventName = event.category;
       this.selectedCategoryId = event.categoryId;
-      if(!this.dragEvent2){
+      if (!this.dragEvent2) {
         this.dialogOpen = true;
       }
     },
@@ -366,7 +382,7 @@ export default {
           const response = await APIPOST("addEvent", eventToEdit);
           if (response.data.confirmAddNewEvent == true) {
             this.dialogOpen = false;
-            this.events.push(eventToEdit);
+            this.events[this.events.length - 1].id = response.data.eventId;
             this.showServerResponse();
           } else if (response.data.confirmUpdateEvent == true) {
             this.dialogOpen = false;
@@ -384,7 +400,6 @@ export default {
       try {
         const response = await APIPOST("addEvent", event);
         if (response.data.confirmUpdateEvent == true) {
-          //this.dialogOpen = false;
           this.showServerResponse();
           this.dragEvent2 = null;
         } else {
@@ -396,28 +411,32 @@ export default {
       }
     },
     deleteEvent(event) {
-      this.deletion = true;
-      console.log("delete");
-
-      // try {
-      //   const response = await APIPOST("deleteEvent", { id: eventId });
-      //   if (response.data.confirmDeleteEvent == true) {
-      //     this.dialogOpen = false;
-      //     const indexToDelete = this.events.findIndex(
-      //       (item) => item.id === eventId
-      //     );
-      //     if (indexToDelete !== -1) {
-      //       this.events.splice(indexToDelete, 1);
-      //     }
-      //     this.showServerResponse();
-      //   } else {
-      //     const error = response.data.error;
-      //     this.showServerError(error);
-      //   }
-      // } catch (error) {
-      //   this.showCatchError(error);
-      // }
-      this.deletion = false;
+      this.evenToDeleteId = event.id;
+      this.confirmDialog = true;
+    },
+    async confirmDeletion() {
+      console.log(this.evenToDeleteId);
+      try {
+        const response = await APIPOST("deleteEvent", {
+          id: this.evenToDeleteId,
+        });
+        if (response.data.confirmDeleteEvent == true) {
+          const indexToDelete = this.events.findIndex(
+            (item) => item.id === this.evenToDeleteId
+          );
+          if (indexToDelete !== -1) {
+            this.events.splice(indexToDelete, 1);
+            this.evenToDeleteId = null;
+          }
+          this.showServerResponse();
+        } else {
+          const error = response.data.error;
+          this.showServerError(error);
+        }
+      } catch (error) {
+        this.showCatchError(error);
+      }
+      this.confirmDialog = false;
     },
     handlerStartUnixData(newUnixData) {
       this.emitStartTimeUnix = newUnixData;
@@ -521,7 +540,7 @@ p .v-btn--fab.v-size--default,
 .v-icon.notranslate.mdi.mdi-minus.theme--dark {
   max-height: 20px !important;
   max-width: 20px !important;
-  color: red;
+  color: white;
 }
 
 @media (min-width: 1024px) {

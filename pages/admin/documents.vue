@@ -55,7 +55,7 @@
           <v-btn @click="updateItem('edit', item)" icon
             ><v-icon size="20">mdi-pencil-outline</v-icon></v-btn
           >
-          <v-btn @click="openDialog('download', index)" icon
+          <v-btn @click="download(item)" icon
             ><v-icon size="20">mdi-download-outline</v-icon></v-btn
           >
           <v-btn @click="updateItem('delete', item)" icon
@@ -82,7 +82,7 @@ import UploadFile from "../../components/Fields/UploadFile.vue";
 import Alert from "../../components/Alert.vue";
 import ResponseHandlerModal from "../../components/ResponseHandlerModal";
 import axios from "axios";
-import { APIGET, APIUPLOAD, APIPOST2 } from "~/api/apiHelper";
+import { APIGET, APIUPLOAD, APIPOST, APIPOST2 } from "~/api/apiHelper";
 
 export default {
   components: {
@@ -136,7 +136,6 @@ export default {
         if (response.data.confirm == true) {
           this.documents = response.data.result;
           this.documentStatuses = response.data.documentStatuses;
-          console.log(this.documentStatuses);
         } else {
           const error = response.data;
           this.showServerError(error);
@@ -234,6 +233,29 @@ export default {
             this.showCatchError(error);
           }
       }
+    },
+    async download(item) {
+      const filename = item.filename;
+      const filetype = item.typeEN;
+      const downloadUrl = `http://localhost:5000/THFustike3/build_mate_be/API/documents/downloaddocument.php?filename=${filename}&type=${filetype}`;
+
+      axios
+        .get(downloadUrl, { responseType: "blob" })
+        .then((response) => {
+          const blob = new Blob([response.data]);
+          const url = window.URL.createObjectURL(blob);
+
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+
+          window.URL.revokeObjectURL(url);
+        })
+        .catch((error) => {
+          console.error("Hiba a letöltés közben:", error);
+        });
     },
     closeDialog() {
       this.itemDialog = false;

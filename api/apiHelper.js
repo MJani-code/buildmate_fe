@@ -2,26 +2,28 @@
 
 import axios from 'axios';
 
+const host = 'http://localhost:5000';
 const config = {
   apiUrl: {
-    login: 'http://localhost:5000/THFustike3/build_mate_be/API/login.php',
-    logout: 'http://localhost:5000/THFustike3/build_mate_be/API/logout.php',
-    auth: 'http://localhost:5000/THFustike3/build_mate_be/API/auth.php',
-    getUserData: 'http://localhost:5000/THFustike3/build_mate_be/API/settings/getuserdata.php',
-    updateUserData: 'http://localhost:5000/THFustike3/build_mate_be/API/settings/updateuserdata.php',
-    getAccountsData: 'http://localhost:5000/THFustike3/build_mate_be/API/accounts/getaccountsdata.php',
-    addAccountsData: 'http://localhost:5000/THFustike3/build_mate_be/API/accounts/addnewaccount.php',
-    updateAccountsData: 'http://localhost:5000/THFustike3/build_mate_be/API/accounts/updateaccountdata.php',
-    getTodo: 'http://localhost:5000/THFustike3/build_mate_be/API/todo/gettodo.php',
-    updateTodo: 'http://localhost:5000/THFustike3/build_mate_be/API/todo/updatetodo.php',
-    addTodo: 'http://localhost:5000/THFustike3/build_mate_be/API/todo/addtodo.php',
-    getDocumentsData: 'http://localhost:5000/THFustike3/build_mate_be/API/documents/getdocument.php',
-    addDocumentsData: 'http://localhost:5000/THFustike3/build_mate_be/API/documents/uploaddocument.php',
-    updateDocumentsData: 'http://localhost:5000/THFustike3/build_mate_be/API/documents/updatedocumentdata.php',
-    getEvents: 'http://localhost:5000/THFustike3/build_mate_be/API/events/getevents.php',
-    addEvent: 'http://localhost:5000/THFustike3/build_mate_be/API/events/addevent.php',
-    deleteEvent: 'http://localhost:5000/THFustike3/build_mate_be/API/events/deleteevent.php',
-    posts: 'http://localhost:5000/THFustike3/build_mate_be/posts.php',
+    login: host+'/THFustike3/build_mate_be/API/login.php',
+    logout: host+'/THFustike3/build_mate_be/API/logout.php',
+    auth: host+'/THFustike3/build_mate_be/API/auth.php',
+    getUserData: host+'/THFustike3/build_mate_be/API/settings/getuserdata.php',
+    updateUserData: host+'/THFustike3/build_mate_be/API/settings/updateuserdata.php',
+    getAccountsData: host+'/THFustike3/build_mate_be/API/accounts/getaccountsdata.php',
+    addAccountsData: host+'/THFustike3/build_mate_be/API/accounts/addnewaccount.php',
+    updateAccountsData: host+'/THFustike3/build_mate_be/API/accounts/updateaccountdata.php',
+    getTodo: host+'/THFustike3/build_mate_be/API/todo/gettodo.php',
+    updateTodo: host+'/THFustike3/build_mate_be/API/todo/updatetodo.php',
+    addTodo: host+'/THFustike3/build_mate_be/API/todo/addtodo.php',
+    getDocumentsData: host+'/THFustike3/build_mate_be/API/documents/getdocument.php',
+    addDocumentsData: host+'/THFustike3/build_mate_be/API/documents/uploaddocument.php',
+    updateDocumentsData: host+'/THFustike3/build_mate_be/API/documents/updatedocumentdata.php',
+    downloadDocument: host+'/THFustike3/build_mate_be/API/documents/downloaddocument.php',
+    getEvents: host+'/THFustike3/build_mate_be/API/events/getevents.php',
+    addEvent: host+'/THFustike3/build_mate_be/API/events/addevent.php',
+    deleteEvent: host+'/THFustike3/build_mate_be/API/events/deleteevent.php',
+    posts: host+'/THFustike3/build_mate_be/posts.php',
     // Itt további végpontokat adhatsz meg
   },
 };
