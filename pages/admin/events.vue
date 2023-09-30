@@ -25,6 +25,9 @@
             label="weekdays"
             class="ma-2"
           ></v-select>
+            <v-toolbar-title v-if="$refs.calendar">
+              {{ $refs.calendar.title }}
+            </v-toolbar-title>
           <v-spacer></v-spacer>
           <v-btn icon class="ma-2" @click="$refs.calendar.next()">
             <v-icon>mdi-chevron-right</v-icon>
@@ -56,8 +59,9 @@
             <div class="v-event-draggable">
               <component :is="{ render: eventSummary }"> </component>
               <p>
-                {{ event.name }}
+                {{ event.name }} - {{ event.flat }}
               </p>
+
             </div>
             <div
               v-if="timed"
@@ -168,7 +172,7 @@ export default {
     rules: {
       select: [(v) => !!v || "Válassz a listából egy kategóriát"],
     },
-    type: "week",
+    type: "month",
     types: ["month", "week", "day", "4day"],
     mode: "stack",
     modes: ["stack", "column"],
@@ -415,7 +419,6 @@ export default {
       this.confirmDialog = true;
     },
     async confirmDeletion() {
-      console.log(this.evenToDeleteId);
       try {
         const response = await APIPOST("deleteEvent", {
           id: this.evenToDeleteId,
@@ -440,10 +443,11 @@ export default {
     },
     handlerStartUnixData(newUnixData) {
       this.emitStartTimeUnix = newUnixData;
-      //this.eventToEdit.start = newUnixData;
+      this.eventToEdit.start = newUnixData;
     },
     handlerEndUnixData(newUnixData) {
       this.emitEndTimeUnix = newUnixData;
+      this.eventToEdit.end = newUnixData;
     },
     showServerResponse() {
       this.uploadDialog = false;
@@ -552,5 +556,9 @@ p .v-btn--fab.v-size--default,
       display: inline-block;
     }
   }
+}
+.v-toolbar__title{
+  margin: auto;
+
 }
 </style>

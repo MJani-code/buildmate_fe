@@ -1,10 +1,6 @@
 <template>
-  <!-- <div id="app">
-        <v-app> -->
-  <!-- <v-main> -->
-  <!-- <v-theme-provider root :dark="isDark"> -->
   <v-container>
-    <!-- <v-row justify="center" class="ma-5"> -->
+    <Alert :show="showAlert" :message="alertMessage" :type="alertType"></Alert>
     <v-row justify="center">
       <v-col xs="12" sm="8">
         <v-card>
@@ -64,7 +60,7 @@
               <v-list-item v-for="(todo, i) in filteredItems" :key="i">
                 <template #default="{ active }">
                   <v-list-item-action>
-                    <v-checkbox  color="#359756"></v-checkbox>
+                    <v-checkbox v-model="active" color="#359756"></v-checkbox>
                   </v-list-item-action>
                   <v-list-item-content>
                     <v-list-item-title>{{ todo.title }}</v-list-item-title>
@@ -78,29 +74,27 @@
                     small
                     color="#359756"
                     v-if="active"
-                    @click="removeTodo(i)"
+                    @click="removeTodo(todo, i)"
                   >
                     <v-icon class="white--text">mdi-check</v-icon>
                   </v-btn>
                 </template>
               </v-list-item>
             </v-list-item-group>
+
             <!-- Elvégzett feladatok -->
             <v-divider></v-divider>
             <v-subheader class="subheading" v-if="doneTodos.length == 0"
               >Egyelőre nincsen elvégzett feladat</v-subheader
             >
-            <v-subheader class="subheading"
-              >Elvégzett feladatok</v-subheader
-            >
+            <v-subheader class="subheading">Elvégzett feladatok</v-subheader>
             <v-list-item-group>
               <v-list-item
                 v-for="(todo, i) in filteredDoneItems"
                 :key="i"
-                v-if="todo.done"
                 :disabled="true"
               >
-                <template #default="{ active }">
+                <template>
                   <v-list-item-content>
                     <v-list-item-title class="done">{{
                       todo.title
@@ -117,10 +111,6 @@
       </v-col>
     </v-row>
   </v-container>
-  <!-- </v-theme-provider> -->
-  <!-- </v-main> -->
-  <!-- </v-app>
-    </div> -->
 </template>
 
 <script>
@@ -128,49 +118,6 @@ import { APIGET, APIPOST, APIUPLOAD } from "~/api/apiHelper";
 
 export default {
   name: "admin-todo",
-  async fetch() {
-    // Itt végezheted az adatlekérdezést
-    try {
-      const response = await APIGET("getTodo");
-      var error = "";
-      if (!response.data.error) {
-        response.data.forEach((item, index) => {
-          this.todos.push({
-            ...this.todos[index],
-            id: item.id,
-            title: item.title,
-            createdAt: item.created_at,
-            createdBy: item.created_by,
-          });
-        });
-      } else {
-        error += response.data.error;
-
-        this.checkError(error, {
-          show: true,
-          title: "Hiba",
-          message: "Hiba történt az adatok lekérése közben: " + error,
-          options: [],
-          type: {
-            action: "error",
-          },
-        });
-      }
-    } catch (error) {
-      error += error.message;
-      this.checkError(error, {
-        show: true,
-        title: "Hiba",
-        message: "Hiba történt az adatok lekérése közben: " + error,
-        options: [],
-        type: {
-          action: "error",
-        },
-      });
-    }
-    // Az itt visszaadott adatokat elmentjük a komponens adattagjában
-    //this.responseData = data;
-  },
   data() {
     return {
       showSearch: false,
@@ -178,6 +125,9 @@ export default {
       isDark: false,
       show: true,
       newTodo: "",
+      showAlert: false,
+      alertMessage: "",
+      alertType: "",
       todos: [],
       doneTodos: [],
       day: this.todoDay(),
@@ -214,8 +164,52 @@ export default {
       }
     },
   },
-
+  async fetch() {
+    try {
+      const response = await APIGET("getTodo");
+      var error = "";
+      if (!response.data.error) {
+        response.data.forEach((item, index) => {
+          if (item.status == 1) {
+            this.todos.push({
+              ...this.todos[index],
+              id: item.id,
+              title: item.title,
+              createdAt: item.created_at,
+              createdBy: item.created_by,
+            });
+          } else {
+            this.doneTodos.push({
+              ...this.doneTodos[index],
+              id: item.id,
+              title: item.title,
+              createdAt: item.created_at,
+              done: true,
+            });
+          }
+        });
+      } else {
+        error = response.data.error;
+        showServerError(error);
+      }
+    } catch (error) {
+      showCatchError(error);
+    }
+  },
   methods: {
+    todoDay() {
+      const d = new Date();
+      const days = [
+        "Vasárnap",
+        "Hétfő",
+        "Kedd",
+        "Szerda",
+        "Csütörtök",
+        "Péntek",
+        "Szombat",
+      ];
+      return days[d.getDay()];
+    },
     async addTodo() {
       this.isTodoExist = false;
       const value = this.newTodo && this.newTodo.trim();
@@ -242,30 +236,60 @@ export default {
         this.isTodoExist = true;
       }
     },
+    async removeTodo(todo, index) {
+      console.log(todo);
 
-    removeTodo(index) {
-      this.doneTodos.push({
-        title: this.todos[index].title,
-        createdAt: this.todos[index].createdAt,
-        done: true,
-      });
-      // TODO API hívás a státusz módosításához
-
-      this.todos.splice(index, 1);
+      try {
+        const response = await APIPOST("updateTodo", { id: todo.id });
+        if (response.data.confirmUpdateTodoData == true) {
+          this.doneTodos.push({
+            title: this.todos[index].title,
+            createdAt: this.todos[index].createdAt,
+            done: true,
+          });
+          this.todos.splice(index, 1);
+          this.showServerResponse();
+        } else {
+          const error = response.data.error;
+          this.showServerError(error);
+        }
+      } catch (error) {
+        this.showCatchError(error);
+      }
     },
-
-    todoDay() {
-      const d = new Date();
-      const days = [
-        "Vasárnap",
-        "Hétfő",
-        "Kedd",
-        "Szerda",
-        "Csütörtök",
-        "Péntek",
-        "Szombat",
-      ];
-      return days[d.getDay()];
+    showServerResponse() {
+      this.uploadDialog = false;
+      //If succes
+      this.alertMessage = "A művelet sikeres volt!";
+      this.alertType = "success";
+      this.showAlert = true;
+      if ((this.showAlert = true)) {
+        setTimeout(() => {
+          this.showAlert = false; // Az értesítés elrejtése
+        }, 3000);
+      }
+    },
+    showServerError(error) {
+      this.checkError(error, {
+        show: true,
+        title: "Hiba",
+        message: `Hiba történt az adatok lekérése közben: ${error}`,
+        options: [],
+        type: {
+          action: "error",
+        },
+      });
+    },
+    showCatchError(error) {
+      this.checkError(error, {
+        show: true,
+        title: "Hiba",
+        message: `Hiba történt az adatok lekérése közben: ${error.code} - ${error.name} - ${error.message}`,
+        options: [],
+        type: {
+          action: "error",
+        },
+      });
     },
   },
 };
