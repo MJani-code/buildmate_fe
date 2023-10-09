@@ -9,6 +9,7 @@ export default async function ({ store, redirect, route }) {
 
     // Ha van token az adatokban, akkor ellenőrizzük annak érvényességét az API-n keresztül
     if (parsedData && parsedData.token) {
+
         try {
             // Az API hívás elvégzése a token-rel
             const response = await APIPOST('auth', parsedData);

@@ -34,7 +34,7 @@
           </v-btn>
         </v-sheet>
       </div>
-      <v-sheet height="600">
+      <v-sheet height="500">
         <v-calendar
           ref="calendar"
           v-model="value"
@@ -275,9 +275,10 @@ export default {
       }
     },
     endDrag({ event, nativeEvent }) {
-      if (this.dragEvent2) {
+      if (this.dragEvent2 && event.id) {
         this.saveEventByDrag(event);
       }
+      this.dragEvent2 = false;
       this.dragTime = null;
       this.dragEvent = null;
       this.createEvent = null;

@@ -164,38 +164,10 @@ export default {
       }
     },
   },
-  async fetch() {
-    try {
-      const response = await APIGET("getTodo");
-      var error = "";
-      if (!response.data.error) {
-        response.data.forEach((item, index) => {
-          if (item.status == 1) {
-            this.todos.push({
-              ...this.todos[index],
-              id: item.id,
-              title: item.title,
-              createdAt: item.created_at,
-              createdBy: item.created_by,
-            });
-          } else {
-            this.doneTodos.push({
-              ...this.doneTodos[index],
-              id: item.id,
-              title: item.title,
-              createdAt: item.created_at,
-              done: true,
-            });
-          }
-        });
-      } else {
-        error = response.data.error;
-        showServerError(error);
-      }
-    } catch (error) {
-      showCatchError(error);
-    }
+  created() {
+    this.getTodo();
   },
+
   methods: {
     todoDay() {
       const d = new Date();
@@ -210,6 +182,39 @@ export default {
       ];
       return days[d.getDay()];
     },
+    async getTodo() {
+      try {
+        const response = await APIGET("getTodo");
+        var error = "";
+        if (!response.data.error) {
+          this.todos = [];
+          response.data.forEach((item, index) => {
+            if (item.status == 1) {
+              this.todos.push({
+                ...this.todos[index],
+                id: item.id,
+                title: item.title,
+                createdAt: item.createdAt,
+                createdBy: item.createdBy,
+              });
+            } else {
+              this.doneTodos.push({
+                ...this.doneTodos[index],
+                id: item.id,
+                title: item.title,
+                createdAt: item.createdAt,
+                done: true,
+              });
+            }
+          });
+        } else {
+          error = response.data.error;
+          this.showServerError(error);
+        }
+      } catch (error) {
+        this.showCatchError(error);
+      }
+    },
     async addTodo() {
       this.isTodoExist = false;
       const value = this.newTodo && this.newTodo.trim();
@@ -218,11 +223,15 @@ export default {
       }
       const isTodoExists = this.todos.find((todo) => todo.title === value);
       if (!isTodoExists) {
-        this.todos.push({
-          title: this.newTodo,
-          done: false,
+        const formattedDate = new Date().toLocaleString("hu-HU", {
+          hour12: false,
         });
 
+        this.todos.push({
+          title: this.newTodo,
+          createdAt: formattedDate,
+          done: false,
+        });
         const dataFromLocalStorage = localStorage.getItem("apiLogin");
         const parsedData = JSON.parse(dataFromLocalStorage);
         //TODO adat eltárolása adatbázisban API hívással
@@ -230,15 +239,15 @@ export default {
           userId: parsedData.userId,
           newTodo: this.newTodo,
         });
-        this.newTodo = "";
+        if (response) {
+          this.newTodo = "";
+        }
       }
       if (isTodoExists) {
         this.isTodoExist = true;
       }
     },
     async removeTodo(todo, index) {
-      console.log(todo);
-
       try {
         const response = await APIPOST("updateTodo", { id: todo.id });
         if (response.data.confirmUpdateTodoData == true) {
