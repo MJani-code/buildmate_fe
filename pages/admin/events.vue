@@ -25,9 +25,9 @@
             label="weekdays"
             class="ma-2"
           ></v-select>
-            <v-toolbar-title v-if="$refs.calendar">
-              {{ $refs.calendar.title }}
-            </v-toolbar-title>
+          <v-toolbar-title v-if="$refs.calendar">
+            {{ $refs.calendar.title }}
+          </v-toolbar-title>
           <v-spacer></v-spacer>
           <v-btn icon class="ma-2" @click="$refs.calendar.next()">
             <v-icon>mdi-chevron-right</v-icon>
@@ -58,10 +58,7 @@
           <template v-slot:event="{ event, timed, eventSummary }">
             <div class="v-event-draggable">
               <component :is="{ render: eventSummary }"> </component>
-              <p>
-                {{ event.name }} - {{ event.flat }}
-              </p>
-
+              <p>{{ event.name }} - {{ event.flat }}</p>
             </div>
             <div
               v-if="timed"
@@ -172,7 +169,7 @@ export default {
     rules: {
       select: [(v) => !!v || "Válassz a listából egy kategóriát"],
     },
-    type: "month",
+    type: "week",
     types: ["month", "week", "day", "4day"],
     mode: "stack",
     modes: ["stack", "column"],
@@ -191,6 +188,7 @@ export default {
     createEvent: null,
     createStart: null,
     extendOriginal: null,
+    userData: null,
   }),
   components: {
     datePicker,
@@ -211,6 +209,7 @@ export default {
     const dataFromLocalStorage = localStorage.getItem("apiLogin");
     const parsedData = JSON.parse(dataFromLocalStorage);
 
+    this.userData = parsedData;
     this.userId = parsedData.userId;
   },
   methods: {
@@ -247,7 +246,7 @@ export default {
       this.createStart = event.start;
       this.extendOriginal = event.end;
       this.dragEvent = event;
-      if(event.id){
+      if (event.id) {
         this.dragEvent2 = true;
       }
     },
@@ -347,8 +346,12 @@ export default {
       }
     },
     async getEvents() {
+      const dataFromLocalStorage = localStorage.getItem("apiLogin");
+      const parsedData = JSON.parse(dataFromLocalStorage);
+
+      this.userData = parsedData;
       try {
-        const response = await APIGET("getEvents");
+        const response = await APIPOST2("getEvents", this.userData);
         if (response.data) {
           this.events = response.data.result;
           this.eventCategories = response.data.categories;
@@ -365,6 +368,7 @@ export default {
     },
     async saveEvent(eventToEdit) {
       eventToEdit.userId = this.userId;
+      eventToEdit.token = this.userData.token;
 
       const responsiblesIds = [];
       if (eventToEdit.responsibles) {
@@ -393,7 +397,7 @@ export default {
             this.dialogOpen = false;
             this.showServerResponse();
           } else {
-            const error = response.data.error;
+            const error = response.data;
             this.showServerError(error);
           }
         } catch (error) {
@@ -402,6 +406,7 @@ export default {
       }
     },
     async saveEventByDrag(event) {
+      event.token = this.userData.token;
       try {
         const response = await APIPOST("addEvent", event);
         if (response.data.confirmUpdateEvent == true) {
@@ -463,10 +468,10 @@ export default {
       }
     },
     showServerError(error) {
-      this.checkError(error, {
+      this.$store.dispatch('setResponseHandler', {
         show: true,
         title: "Hiba",
-        message: `Hiba történt az adatok lekérése közben: ${error}`,
+        message: error,
         options: [],
         type: {
           action: "error",
@@ -533,7 +538,7 @@ export default {
 button.mx-2.v-btn.v-btn--is-elevated.v-btn--fab.v-btn--has-bg.v-btn--round.theme--dark.v-size--default.primary {
   //display: none;
   position: absolute;
-  z-index: 100;
+  z-index: 1;
   right: -20px;
   top: -10px;
   max-height: 20px !important;
@@ -558,8 +563,7 @@ p .v-btn--fab.v-size--default,
     }
   }
 }
-.v-toolbar__title{
+.v-toolbar__title {
   margin: auto;
-
 }
 </style>

@@ -25,7 +25,20 @@
 
 <script>
 export default {
+  data() {
+    return {
+      color: "black"
+    }
+  },
   name: 'ResponseHandlerModal',
+  watch:{
+    '$vuetify.theme.isDark': {
+      immediate: true, // Azonnali kiváltás a komponens létrehozásakor
+      handler(isDark) {
+        this.color = isDark ? 'white' : 'black';
+      },
+    },
+  },
   computed: {
     show() {
       return this.$store.state.responseHandler.show;
@@ -42,13 +55,13 @@ export default {
     colorByType() {
       switch (this.$store.state.responseHandler.type.action) {
         case 'success':
-          return { bg: '#359756', text: '#359756' };
+          return { bg: '#359756', text: this.color };
         case 'warning':
-          return { bg: 'warning', text: 'black' };
+          return { bg: 'warning', text: this.color };
         case 'error':
-          return { bg: 'error', text: 'black' };
+          return { bg: 'error', text: this.color };
         case 'confirm':
-          return { bg: '#359756', text: 'black' };
+          return { bg: '#359756', text: this.color };
       }
     },
     buttons() {
@@ -58,7 +71,7 @@ export default {
         case 'error':
           return [
             {
-              label: 'Close',
+              label: 'Bezár',
               color: this.colorByType.bg,
               action: null,
             },

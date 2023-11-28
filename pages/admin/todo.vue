@@ -114,7 +114,7 @@
 </template>
 
 <script>
-import { APIGET, APIPOST, APIUPLOAD } from "~/api/apiHelper";
+import { APIGET, APIPOST, APIPOST2,APIUPLOAD } from "~/api/apiHelper";
 
 export default {
   name: "admin-todo",
@@ -139,6 +139,7 @@ export default {
         weekday: "long",
       }),
       isTodoExist: false,
+      userData: null
     };
   },
   computed: {
@@ -183,8 +184,12 @@ export default {
       return days[d.getDay()];
     },
     async getTodo() {
+      const dataFromLocalStorage = localStorage.getItem("apiLogin");
+      const parsedData = JSON.parse(dataFromLocalStorage);
+
+      this.userData = parsedData;
       try {
-        const response = await APIGET("getTodo");
+        const response = await APIPOST("getTodo", this.userData);
         var error = "";
         if (!response.data.error) {
           this.todos = [];
@@ -235,9 +240,10 @@ export default {
         const dataFromLocalStorage = localStorage.getItem("apiLogin");
         const parsedData = JSON.parse(dataFromLocalStorage);
         //TODO adat eltárolása adatbázisban API hívással
-        const response = await APIPOST("addTodo", {
+        const response = await APIPOST2("addTodo", {
           userId: parsedData.userId,
           newTodo: this.newTodo,
+          token: this.userData.token
         });
         if (response) {
           this.newTodo = "";

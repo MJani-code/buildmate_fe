@@ -1,29 +1,32 @@
-// i need an axios base config and functions like APIPOST APIGET APIPUT APIDELETE
-
 import axios from 'axios';
 
-const host = 'http://localhost:5000';
-const config = {
+//DEV
+const host = 'http://localhost:5000/THFustike3';
+
+//Live
+//const host = window.location.origin;
+
+export const config = {
   apiUrl: {
-    login: host+'/THFustike3/build_mate_be/API/login.php',
-    logout: host+'/THFustike3/build_mate_be/API/logout.php',
-    auth: host+'/THFustike3/build_mate_be/API/auth.php',
-    getUserData: host+'/THFustike3/build_mate_be/API/settings/getuserdata.php',
-    updateUserData: host+'/THFustike3/build_mate_be/API/settings/updateuserdata.php',
-    getAccountsData: host+'/THFustike3/build_mate_be/API/accounts/getaccountsdata.php',
-    addAccountsData: host+'/THFustike3/build_mate_be/API/accounts/addnewaccount.php',
-    updateAccountsData: host+'/THFustike3/build_mate_be/API/accounts/updateaccountdata.php',
-    getTodo: host+'/THFustike3/build_mate_be/API/todo/gettodo.php',
-    updateTodo: host+'/THFustike3/build_mate_be/API/todo/updatetodo.php',
-    addTodo: host+'/THFustike3/build_mate_be/API/todo/addtodo.php',
-    getDocumentsData: host+'/THFustike3/build_mate_be/API/documents/getdocument.php',
-    addDocumentsData: host+'/THFustike3/build_mate_be/API/documents/uploaddocument.php',
-    updateDocumentsData: host+'/THFustike3/build_mate_be/API/documents/updatedocumentdata.php',
-    downloadDocument: host+'/THFustike3/build_mate_be/API/documents/downloaddocument.php',
-    getEvents: host+'/THFustike3/build_mate_be/API/events/getevents.php',
-    addEvent: host+'/THFustike3/build_mate_be/API/events/addevent.php',
-    deleteEvent: host+'/THFustike3/build_mate_be/API/events/deleteevent.php',
-    posts: host+'/THFustike3/build_mate_be/posts.php',
+    login: host + '/build_mate_be/API/login.php',
+    logout: host + '/build_mate_be/API/logout.php',
+    auth: host + '/build_mate_be/API/auth.php',
+    getUserData: host + '/build_mate_be/API/settings/getuserdata.php',
+    updateUserData: host + '/build_mate_be/API/settings/updateuserdata.php',
+    getAccountsData: host + '/build_mate_be/API/accounts/getaccountsdata.php',
+    addAccountsData: host + '/build_mate_be/API/accounts/addnewaccount.php',
+    updateAccountsData: host + '/build_mate_be/API/accounts/updateaccountdata.php',
+    getTodo: host + '/build_mate_be/API/todo/gettodo.php',
+    updateTodo: host + '/build_mate_be/API/todo/updatetodo.php',
+    addTodo: host + '/build_mate_be/API/todo/addtodo.php',
+    getDocumentsData: host + '/build_mate_be/API/documents/getdocument.php',
+    addDocumentsData: host + '/build_mate_be/API/documents/uploaddocument.php',
+    updateDocumentsData: host + '/build_mate_be/API/documents/updatedocumentdata.php',
+    downloadDocument: host + '/build_mate_be/API/documents/downloaddocument.php',
+    getEvents: host + '/build_mate_be/API/events/getevents.php',
+    addEvent: host + '/build_mate_be/API/events/addevent.php',
+    deleteEvent: host + '/build_mate_be/API/events/deleteevent.php',
+    posts: host + '/build_mate_be/posts.php',
     // Itt további végpontokat adhatsz meg
   },
 };

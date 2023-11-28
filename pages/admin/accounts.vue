@@ -7,10 +7,16 @@
       @save="save"
     ></FieldsNewAccount>
     <v-btn class="mb-4" @click="openModal">Új névjegy</v-btn>
+    <v-btn
+      class="mb-4"
+      :style="{ 'background-color': buttonColor }"
+      @click="toggleFilter"
+      >{{ accountsScope }}</v-btn
+    >
     <!-- Columns start at 50% wide on mobile and bump up to 33.3% wide on desktop -->
     <v-row>
       <v-col
-        v-for="(account, index) in accounts"
+        v-for="(account, index) in filteredAccounts"
         :key="index"
         cols="12"
         md="4"
@@ -19,7 +25,7 @@
       >
         <v-card class="mx-auto" max-width="344">
           <v-card-text>
-            <p class="text-h4 text--primary" style="position: relative">
+            <p class="text-h5 text--primary" style="position: relative">
               {{ account.lastName + " " + account.firstName }}
               <v-icon
                 v-if="!account.saveButton"
@@ -104,12 +110,21 @@ export default {
       showAlert: false,
       alertMessage: "",
       alertType: "",
+      userData: null,
+      buttonColor: "", // Kezdeti szín
+      isFilterActive: false,
+      filteredAccounts: [],
+      accountsScope: 'Lakók'
     };
   },
   async fetch() {
     // Itt végezheted az adatlekérdezést
+    const dataFromLocalStorage = localStorage.getItem("apiLogin");
+    const parsedData = JSON.parse(dataFromLocalStorage);
+
+    this.userData = parsedData;
     try {
-      const response = await APIGET("getAccountsData");
+      const response = await APIPOST("getAccountsData", this.userData);
       var error = "";
       if (!response.data.error) {
         response.data.forEach((item, index) => {
@@ -128,6 +143,8 @@ export default {
             saveButton: false,
           });
         });
+        this.filteredAccounts = this.accounts;
+        this.toggleFilter();
       }
     } catch (error) {
       this.checkError(error, {
@@ -195,6 +212,20 @@ export default {
             action: "error",
           },
         });
+      }
+    },
+    toggleFilter() {
+      this.isFilterActive = !this.isFilterActive;
+
+      if (this.isFilterActive) {
+        this.accountsScope = 'Lakók';
+        this.filteredAccounts = this.accounts.filter(account => !account.professionalField);
+        this.buttonColor = '#359756';
+      } else {
+        // Ha a szűrés kikapcsolva van, akkor visszaállítjuk az eredeti adatokat
+        this.filteredAccounts = this.accounts;
+        this.buttonColor = ''; // Üres string a szín eltávolításához
+        this.accountsScope = 'Összes';
       }
     },
   },

@@ -10,8 +10,6 @@
     <v-btn class="ma-10" @click="uploadDialog = !uploadDialog"
       >Új dokumentum</v-btn
     >
-    <v-btn class="ma-10" @click="getData">Get data</v-btn>
-    <v-btn class="ma-10" @click="postData">Post data</v-btn>
     <v-col lg="3" xl="3">
       <v-card-title>
         <v-text-field
@@ -24,7 +22,12 @@
         ></v-text-field>
       </v-card-title>
     </v-col>
-    <v-data-table :headers="headers" :items="documents" :search="search">
+    <v-data-table
+      :headers="headers"
+      :items="documents"
+      :search="search"
+      :loading="isLoading"
+    >
       <template v-slot:item.actions="{ item, index }">
         <div>
           <!-- Első státusz, nyitott státusz. Utalásra vár. Csak akkor van státusz léptetési funkciója, ha a belépett userRole = admin -->
@@ -82,20 +85,21 @@ import UploadFile from "../../components/Fields/UploadFile.vue";
 import Alert from "../../components/Alert.vue";
 import ResponseHandlerModal from "../../components/ResponseHandlerModal";
 import axios from "axios";
-import { APIGET, APIUPLOAD, APIPOST, APIPOST2 } from "~/api/apiHelper";
+import { APIGET, APIUPLOAD, APIPOST, APIPOST2, config } from "~/api/apiHelper";
 
 export default {
   components: {
     DialogFieldVue,
     UploadFile,
     Alert,
-    ResponseHandlerModal,
+    ResponseHandlerModal
   },
   data() {
     return {
       showAlert: false,
       itemDialog: false,
       uploadDialog: false,
+      isLoading: true,
       alertMessage: "",
       typeId: 1,
       alertType: "Dokumentum",
@@ -107,7 +111,6 @@ export default {
         id: 1,
         name: "",
       },
-      isLoading: false,
       search: "",
       headers: [
         {
@@ -130,18 +133,23 @@ export default {
   },
   methods: {
     async getData() {
-      try {
-        const response = await APIGET("getDocumentsData");
+      const dataFromLocalStorage = localStorage.getItem("apiLogin");
+      const parsedData = JSON.parse(dataFromLocalStorage);
 
+      try {
+        const response = await APIPOST2("getDocumentsData", parsedData);
         if (response.data.confirm == true) {
           this.documents = response.data.result;
           this.documentStatuses = response.data.documentStatuses;
+          this.isLoading = false;
         } else {
           const error = response.data;
           this.showServerError(error);
+          this.isLoading = false;
         }
       } catch (error) {
         this.showCatchError(error);
+        this.isLoading = false;
       }
     },
     async postData(data) {
@@ -237,7 +245,7 @@ export default {
     async download(item) {
       const filename = item.filename;
       const filetype = item.typeEN;
-      const downloadUrl = `http://localhost:5000/THFustike3/build_mate_be/API/documents/downloaddocument.php?filename=${filename}&type=${filetype}`;
+      const downloadUrl = `${config.apiUrl.downloadDocument}?filename=${filename}&type=${filetype}`;
 
       axios
         .get(downloadUrl, { responseType: "blob" })
@@ -302,6 +310,12 @@ export default {
 
 <style scoped>
 .my-table >>> tr:hover {
+  background-color: #359756 !important;
+}
+</style>
+
+<style>
+.v-application .primary{
   background-color: #359756 !important;
 }
 </style>

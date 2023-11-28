@@ -2,6 +2,8 @@ import colors from 'vuetify/es5/util/colors'
 // use .env variables
 require('dotenv').config()
 export default {
+  fetch: true,
+  fetchOnServer: true,
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
 
