@@ -3,7 +3,7 @@
     <Alert :show="showAlert" :message="alertMessage" :type="alertType"></Alert>
     <v-col>
       <div class="selects">
-        <v-sheet tile height="54" color="#359756" class="d-flex white-text">
+        <v-sheet tile height="auto" color="#359756" class="white-text">
           <v-btn icon class="ma-2" @click="$refs.calendar.prev()">
             <v-icon>mdi-chevron-left</v-icon>
           </v-btn>
@@ -13,7 +13,7 @@
             dense
             outlined
             hide-details
-            class="ma-2"
+            class="ma-2 select"
             label="type"
           ></v-select>
           <v-select
@@ -23,15 +23,18 @@
             outlined
             hide-details
             label="weekdays"
-            class="ma-2"
+            class="ma-2 select"
           ></v-select>
-          <v-toolbar-title v-if="$refs.calendar">
+          <v-toolbar-title v-if="$refs.calendar" class="month">
             {{ $refs.calendar.title }}
           </v-toolbar-title>
           <v-spacer></v-spacer>
           <v-btn icon class="ma-2" @click="$refs.calendar.next()">
             <v-icon>mdi-chevron-right</v-icon>
           </v-btn>
+          <v-toolbar-title v-if="$refs.calendar" class="monthonmobile">
+            {{ $refs.calendar.title }}
+          </v-toolbar-title>
         </v-sheet>
       </div>
       <v-sheet height="500">
@@ -468,7 +471,7 @@ export default {
       }
     },
     showServerError(error) {
-      this.$store.dispatch('setResponseHandler', {
+      this.$store.dispatch("setResponseHandler", {
         show: true,
         title: "Hiba",
         message: error,
@@ -565,5 +568,30 @@ p .v-btn--fab.v-size--default,
 }
 .v-toolbar__title {
   margin: auto;
+}
+.white-text {
+  display: flex !important;
+}
+.monthonmobile {
+  display: none !important;
+}
+
+@media (max-width: 767px) {
+  .month {
+    display: none !important;
+  }
+  .monthonmobile {
+    display: block !important;
+  }
+  .spacer {
+    display: none;
+  }
+  .select {
+    max-width: min-content;
+    display: inline-flex;
+  }
+  .v-toolbar__title {
+    width: fit-content;
+  }
 }
 </style>

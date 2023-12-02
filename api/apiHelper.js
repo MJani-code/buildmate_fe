@@ -27,6 +27,8 @@ export const config = {
     addEvent: host + '/build_mate_be/API/events/addevent.php',
     deleteEvent: host + '/build_mate_be/API/events/deleteevent.php',
     posts: host + '/build_mate_be/posts.php',
+    getFaqs: host + '/build_mate_be/API/faq/getfaqs.php',
+    updateFaq: host + '/build_mate_be/API/faq/updatefaq.php',
     // Itt további végpontokat adhatsz meg
   },
 };

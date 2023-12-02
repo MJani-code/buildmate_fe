@@ -35,6 +35,11 @@ export const routers = [
     to: '/admin/accounts'
   },
   {
+    icon: 'mdi-help',
+    title: 'GYIK',
+    to: '/admin/faq'
+  },
+  {
     icon: 'mdi-cog-outline',
     title: 'Beállítások',
     to: '/admin/settings'
