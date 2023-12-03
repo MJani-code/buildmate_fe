@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <Alert :show="showAlert" :message="alertMessage" :type="alertType"></Alert>
-    <v-btn class="mb-4" @click="newDialog = true">Új hozzáadása</v-btn>
+    <v-btn class="mb-4" @click="newItemDialog = true">Új hozzáadása</v-btn>
     <v-expansion-panels>
       <v-expansion-panel v-for="(item, i) in items" :key="i">
         <v-expansion-panel-header>
@@ -26,7 +26,7 @@
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
-    <v-dialog v-model="newDialog" max-width="600">
+    <v-dialog v-model="newItemDialog" max-width="600">
       <v-card>
         <v-card-title> Új elem hozzáadása </v-card-title>
         <v-card-text>
@@ -35,7 +35,7 @@
           <v-textarea v-model="newItem.description" outlined></v-textarea>
         </v-card-text>
         <v-card-actions>
-          <v-btn @click="newDialog = false">Mégsem</v-btn>
+          <v-btn @click="newItemDialog = false">Mégsem</v-btn>
           <v-btn color="success" @click="saveItem">Mentés</v-btn>
         </v-card-actions>
       </v-card>
@@ -78,7 +78,7 @@ import { APIGET, APIPOST, APIPOST2, APIUPLOAD } from "~/api/apiHelper";
 export default {
   data() {
     return {
-      newDialog: false,
+      newItemDialog: false,
       editDialog: false,
       confirmDialog: false,
       showAlert: false,
@@ -86,12 +86,11 @@ export default {
       alertType: "",
       userData: null,
       items: null,
-      newItem: [
-        {
-          title: "",
-          description: "",
-        },
-      ],
+      newItem: {
+        title: "",
+        description: "",
+      },
+
       itemToEdit: {},
       itemToDelete: {},
     };
@@ -128,40 +127,88 @@ export default {
     },
     async saveItem() {
       //adatfrissítés
-      if (
-        this.itemToEdit.title === this.items[this.itemToEdit.index].title &&
-        this.itemToEdit.description ===
-          this.items[this.itemToEdit.index].description
-      ) {
-        this.editDialog = false;
-        this.showServerResponse();
-      }else{
-        const item = this.itemToEdit;
-        const index = this.itemToEdit.index;
-        try {
-          const response = await APIPOST2("updateFaq", item);
 
-          if (response.data.confirmUpdateFaqData == true) {
-            this.editDialog = false;
-            this.items[index] = item;
-            this.showServerResponse();
-          } else {
-            const error = response.data;
-            this.showServerError(error);
+      if (this.editDialog) {
+        if (
+          this.itemToEdit.title === this.items[this.itemToEdit.index].title &&
+          this.itemToEdit.description ===
+            this.items[this.itemToEdit.index].description
+        ) {
+          this.editDialog = false;
+          this.showServerResponse();
+        } else {
+          const item = this.itemToEdit;
+          item.userId = this.userData.userId;
+          const index = this.itemToEdit.index;
+          try {
+            const response = await APIPOST2("updateFaq", item);
+
+            if (response.data.confirmUpdateFaqData == true) {
+              this.editDialog = false;
+              this.items[index] = item;
+              this.showServerResponse();
+            } else {
+              const error = response.data;
+              this.showServerError(error);
+            }
+          } catch (error) {
+            this.showCatchError(error);
           }
-        } catch (error) {
-          this.showCatchError(error);
         }
       }
-      // TODO Új elem létrehozása
+      // Új elem létrehozása
+      else if (this.newItemDialog) {
+        if (this.newItem.title === "" && this.newItem.description === "") {
+          this.newItemDialog = false;
+        } else {
+          const item = this.newItem;
+          item.token = this.userData.token;
+          try {
+            const response = await APIPOST2("addFaq", item);
+            if (response.data.confirmAddNewFaq == true) {
+              this.newItemDialog = false;
+              this.newItem.title = '',
+              this.newItem.description = '',
 
+              this.items.unshift(response.data);
+              console.log(this.items);
+              this.showServerResponse();
+            } else {
+              const error = response.data;
+              this.showServerError(error);
+            }
+          } catch (error) {
+            this.showCatchError(error);
+          }
+        }
+      }
     },
-    deleteItem(event, item) {
+    deleteItem(event, item, i) {
       event.stopPropagation();
+      console.log(item);
       this.itemToDelete.id = item.id;
+      this.itemToDelete.index = i;
       this.confirmDialog = true;
     },
-    confirmDeletion() {},
+    async confirmDeletion() {
+        try {
+        const response = await APIPOST2("deleteFaq", {
+          id: this.itemToDelete.id,
+        });
+        if (response.data.confirmDeleteFaq == true) {
+            this.items.splice(this.itemToDelete.index, 1);
+            this.itemToDelete.id = '';
+            this.itemToDelete.index = '';
+          this.showServerResponse();
+        } else {
+          const error = response.data.error;
+          this.showServerError(error);
+        }
+      } catch (error) {
+        this.showCatchError(error);
+      }
+      this.confirmDialog = false;
+    },
     showServerResponse() {
       this.uploadDialog = false;
       //If succes
