@@ -43,7 +43,7 @@
       </v-container>
     </v-main>
     <v-footer :absolute="!fixed" app>
-      <span>&copy; {{ new Date().getFullYear() }} BY: Martolin. Version: 1.0.0</span>
+      <span>&copy; {{ new Date().getFullYear() }} BY: Martolin. Version: 1.0.2</span>
     </v-footer>
   </v-app>
 </template>

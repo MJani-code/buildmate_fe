@@ -1,148 +1,221 @@
 <template>
-  <v-row class="fill-height">
-    <Alert :show="showAlert" :message="alertMessage" :type="alertType"></Alert>
-    <v-col>
-      <div class="selects">
-        <v-sheet tile height="auto" color="#359756" class="white-text">
-          <v-btn icon class="ma-2" @click="$refs.calendar.prev()">
-            <v-icon>mdi-chevron-left</v-icon>
-          </v-btn>
-          <v-select
-            v-model="type"
-            :items="types"
-            dense
-            outlined
-            hide-details
-            class="ma-2 select"
-            label="type"
-          ></v-select>
-          <v-select
-            v-model="weekday"
-            :items="weekdays"
-            dense
-            outlined
-            hide-details
-            label="weekdays"
-            class="ma-2 select"
-          ></v-select>
-          <v-toolbar-title v-if="$refs.calendar" class="month">
-            {{ $refs.calendar.title }}
-          </v-toolbar-title>
-          <v-spacer></v-spacer>
-          <v-btn icon class="ma-2" @click="$refs.calendar.next()">
-            <v-icon>mdi-chevron-right</v-icon>
-          </v-btn>
-          <v-toolbar-title v-if="$refs.calendar" class="monthonmobile">
-            {{ $refs.calendar.title }}
-          </v-toolbar-title>
-        </v-sheet>
-      </div>
-      <v-sheet height="500">
-        <v-calendar
-          ref="calendar"
-          v-model="value"
-          color="primary"
-          :type="type"
-          :events="events"
-          :weekdays="weekday"
-          :event-color="getEventColor"
-          :event-overlap-mode="mode"
-          :event-ripple="false"
-          @click:event="editEvent"
-          @change="getEvents"
-          @mousedown:event="startDrag"
-          @mousedown:time="startTime"
-          @mousemove:time="mouseMove"
-          @mouseup:event="endDrag"
-          @mouseleave.native="cancelDrag"
-        >
-          <!-- kivettem a v-calendarból: @mouseup:time="endDrag" -->
-
-          <template v-slot:event="{ event, timed, eventSummary }">
-            <div class="v-event-draggable">
-              <component :is="{ render: eventSummary }"> </component>
-              <p>{{ event.name }} - {{ event.flat }}</p>
-            </div>
-            <div
-              v-if="timed"
-              class="v-event-drag-bottom"
-              @mousedown.stop="extendBottom(event)"
-            ></div>
-            <v-btn
-              class="mx-2"
-              fab
-              dark
-              color="primary"
-              @click.stop="deleteEvent(event)"
-            >
-              <v-icon dark> mdi-minus </v-icon>
+  <v-container class="lighten-5">
+    <v-row class="fill-height">
+      <Alert
+        :show="showAlert"
+        :message="alertMessage"
+        :type="alertType"
+      ></Alert>
+      <v-col xs="12" sm="12" md="12" lg="12" xl="12" class="col">
+        <div class="selects">
+          <v-sheet tile height="auto" color="#359756" class="white-text">
+            <v-btn icon class="ma-2" @click="$refs.calendar.prev()">
+              <v-icon>mdi-chevron-left</v-icon>
             </v-btn>
-          </template>
-        </v-calendar>
-        <v-dialog v-model="dialogOpen" width="400">
-          <v-card>
-            <v-card-title>{{ eventToEdit.name }} szerkesztése</v-card-title>
-            <v-card-text>
-              <v-form ref="form">
-                <v-text-field
-                  color="#359756"
-                  v-model="eventToEdit.name"
-                  label="Esemény neve"
-                />
-                <datePicker
-                  :starttime="eventToEdit.start"
-                  :endtime="eventToEdit.end"
-                  @startTimeUnix="handlerStartUnixData"
-                  @endTimeUnix="handlerEndUnixData"
-                ></datePicker>
-                <v-select
-                  color="#359756"
-                  v-model="selectedCategoryId"
-                  :items="eventCategories"
-                  item-text="name"
-                  item-value="id"
-                  label="Kategória"
-                  :rules="rules.select"
-                >
-                </v-select>
-                <v-autocomplete
-                  v-model="eventToEdit.responsibles"
-                  :items="responsibleNames"
-                  chips
-                  color="#359756"
-                  label="Felelősök"
-                  full-width
-                  hide-details
-                  hide-no-data
-                  hide-selected
-                  multiple
-                  single-line
-                ></v-autocomplete>
-              </v-form>
-            </v-card-text>
-            <v-card-actions>
-              <v-btn @click="closeDialog">Mégsem</v-btn>
-              <v-btn @click="saveEvent(eventToEdit)" color="#359756"
-                >Mentés</v-btn
+            <v-select
+              v-model="type"
+              :items="types"
+              dense
+              outlined
+              hide-details
+              class="ma-2 select"
+              label="type"
+            ></v-select>
+            <v-select
+              v-model="weekday"
+              :items="weekdays"
+              dense
+              outlined
+              hide-details
+              label="weekdays"
+              class="ma-2 select"
+            ></v-select>
+            <v-toolbar-title v-if="$refs.calendar" class="month">
+              {{ $refs.calendar.title }}
+            </v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-btn icon class="ma-2" @click="$refs.calendar.next()">
+              <v-icon>mdi-chevron-right</v-icon>
+            </v-btn>
+            <v-toolbar-title v-if="$refs.calendar" class="monthonmobile">
+              {{ $refs.calendar.title }}
+            </v-toolbar-title>
+          </v-sheet>
+        </div>
+        <v-sheet height="500">
+          <v-calendar
+            ref="calendar"
+            v-model="value"
+            color="primary"
+            :type="type"
+            :events="events"
+            :weekdays="weekday"
+            :event-color="getEventColor"
+            :event-overlap-mode="mode"
+            :event-ripple="false"
+            @click:event="editEvent"
+            @change="getEvents"
+            @mousedown:event="startDrag"
+            @mousedown:time="startTime"
+            @mousemove:time="mouseMove"
+            @mouseup:event="endDrag"
+            @mouseleave.native="cancelDrag"
+          >
+            <!-- kivettem a v-calendarból: @mouseup:time="endDrag" -->
+
+            <template v-slot:event="{ event, timed, eventSummary }">
+              <div class="v-event-draggable">
+                <component :is="{ render: eventSummary }"> </component>
+                <p>{{ event.name }} - {{ event.flat }}</p>
+              </div>
+              <div
+                v-if="timed"
+                class="v-event-drag-bottom"
+                @mousedown.stop="extendBottom(event)"
+              ></div>
+              <v-btn
+                class="mx-2"
+                fab
+                dark
+                color="primary"
+                @click.stop="deleteEvent(event)"
               >
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-        <v-dialog v-model="confirmDialog" max-width="500px" persistent>
-          <v-card>
-            <v-card-title> Esemény törlése </v-card-title>
-            <v-card-text>
-              Biztosan törölni szeretnéd ezt az eseményt?
-            </v-card-text>
-            <v-card-actions>
-              <v-btn @click="confirmDialog = false">Mégsem</v-btn>
-              <v-btn color="error" @click="confirmDeletion">Törlés</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-      </v-sheet>
-    </v-col>
-  </v-row>
+                <v-icon dark> mdi-minus </v-icon>
+              </v-btn>
+            </template>
+          </v-calendar>
+          <v-dialog v-model="dialogOpen" width="400">
+            <v-card>
+              <v-card-title>{{ eventToEdit.name }} szerkesztése</v-card-title>
+              <v-card-text>
+                <v-form ref="form">
+                  <v-text-field
+                    color="#359756"
+                    v-model="eventToEdit.name"
+                    label="Esemény neve"
+                  />
+                  <datePicker
+                    :starttime="eventToEdit.start"
+                    :endtime="eventToEdit.end"
+                    @startTimeUnix="handlerStartUnixData"
+                    @endTimeUnix="handlerEndUnixData"
+                  ></datePicker>
+                  <v-select
+                    color="#359756"
+                    v-model="selectedCategoryId"
+                    :items="eventCategories"
+                    item-text="name"
+                    item-value="id"
+                    label="Kategória"
+                    :rules="rules.select"
+                  >
+                  </v-select>
+                  <v-autocomplete
+                    v-model="eventToEdit.responsibles"
+                    :items="responsibleNames"
+                    chips
+                    color="#359756"
+                    label="Felelősök"
+                    full-width
+                    hide-details
+                    hide-no-data
+                    hide-selected
+                    multiple
+                    single-line
+                  ></v-autocomplete>
+                </v-form>
+              </v-card-text>
+              <v-card-actions>
+                <v-btn @click="closeDialog">Mégsem</v-btn>
+                <v-btn @click="saveEvent(eventToEdit)" color="#359756"
+                  >Mentés</v-btn
+                >
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+          <v-dialog v-model="confirmDialog" max-width="500px" persistent>
+            <v-card>
+              <v-card-title> Esemény törlése </v-card-title>
+              <v-card-text>
+                Biztosan törölni szeretnéd ezt az eseményt?
+              </v-card-text>
+              <v-card-actions>
+                <v-btn @click="confirmDialog = false">Mégsem</v-btn>
+                <v-btn color="error" @click="confirmDeletion">Törlés</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-sheet>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col xs="12" sm="12" md="12" lg="6" xl="6" class="col">
+        <table
+          border="1"
+          class="table table-striped eventsToTableView"
+          :data-bs-theme="getBootstrapThemeAttribute"
+        >
+          <thead>
+            <tr>
+              <th></th>
+              <th scope="col" colspan="2">Kuka-kommunális</th>
+              <th scope="col" colspan="2">Kuka-szelektív</th>
+              <th scope="col" colspan="2">Fűnyírás</th>
+            </tr>
+            <tr>
+              <th>Hónap</th>
+              <th>Dátum</th>
+              <th>Lakás</th>
+              <th>Dátum</th>
+              <th>Lakás</th>
+              <th>Dátum</th>
+              <th>Lakás</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(event, index) in eventsToTableView" :key="index">
+              <td>{{ event.month }}</td>
+              <td>{{ event["Kuka-kommunális"].dates }}</td>
+              <td>{{ event["Kuka-kommunális"].flat }}</td>
+              <td>{{ event["Kuka-szelektív"].dates }}</td>
+              <td>{{ event["Kuka-szelektív"].flat }}</td>
+              <td>{{ event["Fűnyírás"] ? event["Fűnyírás"].dates : "" }}</td>
+              <td>{{ event["Fűnyírás"] ? event["Fűnyírás"].flat : "" }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </v-col>
+      <v-col xs="12" sm="12" md="12" lg="6" xl="6" class="col">
+        <v-data-table
+          dense
+          :headers="eventsToTableViewHeaders"
+          :items="filteredEvents"
+          item-key="id"
+          class="elevation-1"
+        >
+          <template v-slot:item.comment="{ item, index }">
+            <div>
+              <v-text-field
+                v-model="item.comment"
+                dense
+                hide-details
+                solo
+                :append-icon="item.commentIcon ? 'mdi-check': '' "
+                color="#359756"
+                class="m-2"
+                :disabled="isCommentDisabled"
+                @click:append="setComment(item)"
+                @input="handleInputChange(item)"
+                @blur="handleChangeInput(item)"
+              >
+            </v-text-field>
+
+            </div>
+          </template>
+        </v-data-table>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
@@ -185,6 +258,34 @@ export default {
     ],
     value: "",
     events: [],
+    eventsToTableView: [],
+    eventsToTableViewHeaders: [
+      {
+        text: "Feladat",
+        align: "start",
+        filterable: true,
+        value: "name",
+      },
+      {
+        text: "Dátum",
+        align: "start",
+        filterable: true,
+        value: "start_event",
+      },
+      {
+        text: "Lakás",
+        align: "start",
+        filterable: true,
+        value: "flat",
+      },
+      {
+        text: "Megjegyzés",
+        align: "start",
+        filterable: true,
+        value: "comment",
+      },
+    ],
+    eventsToTableViewComment: "",
     dragEvent: null,
     dragEvent2: null,
     dragStart: null,
@@ -192,6 +293,7 @@ export default {
     createStart: null,
     extendOriginal: null,
     userData: null,
+    isCommentDisabled: true,
   }),
   components: {
     datePicker,
@@ -208,12 +310,35 @@ export default {
       }
     },
   },
+  computed: {
+    getBootstrapThemeAttribute() {
+      return this.$vuetify.theme.dark ? "dark" : null;
+    },
+    filteredEvents() {
+      // Szűrd le az összes objektumot, ahol van 'Fűnyírás' kategória
+      const fűnyírásCategories = this.eventsToTableView
+        .filter((categoryObj) => categoryObj.hasOwnProperty("Fűnyírás"))
+        .map((categoryObj) => categoryObj.Fűnyírás);
+
+      // Gyűjtsd össze a 'Fűnyírás' kategória eseményeit
+      const fűnyírásEvents = fűnyírásCategories.reduce(
+        (events, category) => events.concat(category.events),
+        []
+      );
+
+      return fűnyírásEvents;
+    },
+  },
   mounted() {
     const dataFromLocalStorage = localStorage.getItem("apiLogin");
     const parsedData = JSON.parse(dataFromLocalStorage);
 
     this.userData = parsedData;
     this.userId = parsedData.userId;
+
+    if(this.$store.state.auth.userRole === 'admin'){
+      this.isCommentDisabled = false;
+    };
   },
   methods: {
     startDrag({ event, timed }) {
@@ -361,6 +486,9 @@ export default {
 
           this.responsibleNames = response.data.users.map((item) => item.name);
           this.users = response.data.users;
+
+          this.eventsToTableView = response.data.responseToTableView;
+          console.log(this.eventsToTableView);
         } else {
           const error = response.data;
           this.showServerError(error);
@@ -457,6 +585,31 @@ export default {
     handlerEndUnixData(newUnixData) {
       this.emitEndTimeUnix = newUnixData;
       this.eventToEdit.end = newUnixData;
+    },
+    async setComment(item){
+      console.log("update comment: "+item.comment + "id: "+ item.id);
+      const data = item;
+      item.token = this.userData.token;
+
+      try {
+        const response = await APIPOST("addEvent", data);
+        item.commentIcon = false;
+        if (response.data.confirmUpdateEvent == true) {
+          this.showServerResponse();
+        } else {
+          const error = response.data.error;
+          this.showServerError(error);
+        }
+      } catch (error) {
+        this.showCatchError(error);
+      }
+    },
+    handleInputChange(item) {
+      item.commentIcon = false;
+      item.commentIcon = true;
+    },
+    handleChangeInput(item){
+      item.commentIcon = false;
     },
     showServerResponse() {
       this.uploadDialog = false;
@@ -593,5 +746,23 @@ p .v-btn--fab.v-size--default,
   .v-toolbar__title {
     width: fit-content;
   }
+}
+table.eventsToTableView {
+  border-collapse: collapse !important;
+}
+table.eventsToTableView td {
+  padding: 10px;
+}
+</style>
+
+<style>
+.container {
+  max-width: unset;
+  max-width: 100% !important;
+}
+table.eventsToTableView {
+  font-size: 12px;
+  width: 100%;
+  --bs-table-bg: transparent;
 }
 </style>

@@ -10,8 +10,9 @@ export const createStore = () => {
     state: {
       auth: {
         loggedIn: false,
-        user: null,
+        userId: null,
         userRole: null,
+        token: '',
       },
       responseHandler: {
         show: false,
@@ -28,8 +29,11 @@ export const createStore = () => {
       SET_LOGGED_IN(state, value) {
         state.auth.loggedIn = value
       },
-      SET_USER(state, user) {
-        state.auth.user = user
+      SET_USERID(state, user) {
+        state.auth.userId = user
+      },
+      SET_USERTOKEN(state, token) {
+        state.auth.token = token
       },
       SET_USERROLE(state, value) {
         state.auth.userRole = value
@@ -66,10 +70,13 @@ export const createStore = () => {
 
           if (!response.data.error && response.data.loggedIn == true) {
             const userRole = response.data.userRole;
+            const userId = response.data.userId;
+            const token = response.data.token;
 
             commit('SET_LOGGED_IN', true)
-            commit('SET_USER', user)
+            commit('SET_USERID', userId)
             commit('SET_USERROLE', userRole)
+            commit('SET_USERTOKEN', token)
 
             this.$router.push('/' + userRole + '/home') // Módosítsd a célútvonalat a saját alkalmazásodhoz igazítva
           } else {

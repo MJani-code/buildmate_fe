@@ -9,7 +9,7 @@
           <div style="text-align: end">
             <v-icon
               style="justify-content: flex-end"
-              @click.stop="updateItem($event, item, i)"
+              @click.stop="editItem($event, item, i)"
               icon
               >mdi-pencil</v-icon
             >
@@ -36,7 +36,7 @@
         </v-card-text>
         <v-card-actions>
           <v-btn @click="newItemDialog = false">Mégsem</v-btn>
-          <v-btn color="success" @click="saveItem">Mentés</v-btn>
+          <v-btn color="success" @click="addItem">Mentés</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -54,7 +54,7 @@
         </v-card-text>
         <v-card-actions>
           <v-btn @click="editDialog = false">Mégsem</v-btn>
-          <v-btn color="success" @click="saveItem">Mentés</v-btn>
+          <v-btn color="success" @click="updateItem">Mentés</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -117,7 +117,7 @@ export default {
         this.showCatchError(error);
       }
     },
-    updateItem(event, item, i) {
+    editItem(event, item, i) {
       event.stopPropagation();
       this.itemToEdit.id = item.id;
       this.itemToEdit.index = i;
@@ -125,62 +125,47 @@ export default {
       this.itemToEdit.description = item.description;
       this.editDialog = true;
     },
-    async saveItem() {
+    async updateItem() {
       //adatfrissítés
+      const item = this.itemToEdit;
+      item.userId = this.userData.userId;
+      const index = this.itemToEdit.index;
 
-      if (this.editDialog) {
-        if (
-          this.itemToEdit.title === this.items[this.itemToEdit.index].title &&
-          this.itemToEdit.description ===
-            this.items[this.itemToEdit.index].description
-        ) {
+      try {
+        const response = await APIPOST2("updateFaq", item);
+
+        if (response.data.confirmUpdateFaqData == true) {
           this.editDialog = false;
+          this.items[index] = item;
           this.showServerResponse();
         } else {
-          const item = this.itemToEdit;
-          item.userId = this.userData.userId;
-          const index = this.itemToEdit.index;
-          try {
-            const response = await APIPOST2("updateFaq", item);
-
-            if (response.data.confirmUpdateFaqData == true) {
-              this.editDialog = false;
-              this.items[index] = item;
-              this.showServerResponse();
-            } else {
-              const error = response.data;
-              this.showServerError(error);
-            }
-          } catch (error) {
-            this.showCatchError(error);
-          }
+          const error = response.data;
+          this.showServerError(error);
         }
+      } catch (error) {
+        this.showCatchError(error);
       }
-      // Új elem létrehozása
-      else if (this.newItemDialog) {
-        if (this.newItem.title === "" && this.newItem.description === "") {
-          this.newItemDialog = false;
-        } else {
-          const item = this.newItem;
-          item.token = this.userData.token;
-          try {
-            const response = await APIPOST2("addFaq", item);
-            if (response.data.confirmAddNewFaq == true) {
-              this.newItemDialog = false;
-              this.newItem.title = '',
-              this.newItem.description = '',
+    },
+    async addItem() {
+      //Új elem létrehozása
+      const item = this.newItem;
+      item.token = this.userData.token;
 
-              this.items.unshift(response.data);
-              console.log(this.items);
-              this.showServerResponse();
-            } else {
-              const error = response.data;
-              this.showServerError(error);
-            }
-          } catch (error) {
-            this.showCatchError(error);
-          }
+      try {
+        const response = await APIPOST2("addFaq", item);
+        if (response.data.confirmAddNewFaq == true) {
+          this.newItemDialog = false;
+          (this.newItem.title = ""),
+            (this.newItem.description = ""),
+            this.items.unshift(response.data);
+          console.log(this.items);
+          this.showServerResponse();
+        } else {
+          const error = response.data;
+          this.showServerError(error);
         }
+      } catch (error) {
+        this.showCatchError(error);
       }
     },
     deleteItem(event, item, i) {
@@ -191,14 +176,14 @@ export default {
       this.confirmDialog = true;
     },
     async confirmDeletion() {
-        try {
+      try {
         const response = await APIPOST2("deleteFaq", {
           id: this.itemToDelete.id,
         });
         if (response.data.confirmDeleteFaq == true) {
-            this.items.splice(this.itemToDelete.index, 1);
-            this.itemToDelete.id = '';
-            this.itemToDelete.index = '';
+          this.items.splice(this.itemToDelete.index, 1);
+          this.itemToDelete.id = "";
+          this.itemToDelete.index = "";
           this.showServerResponse();
         } else {
           const error = response.data.error;

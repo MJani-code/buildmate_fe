@@ -13,6 +13,7 @@
     "@capacitor/cli": "^4.0.1",
     "@capacitor/core": "^4.0.1",
     "axios": "^0.27.2",
+    "bootstrap": "^5.3.2",
     "core-js": "^3.19.3",
     "exceljs": "^4.3.0",
     "moment": "^2.29.4",
