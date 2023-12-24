@@ -13,6 +13,8 @@ export const createStore = () => {
         userId: null,
         userRole: null,
         token: '',
+        userRoleId: null,
+        pageCategory: '',
       },
       responseHandler: {
         show: false,
@@ -37,6 +39,12 @@ export const createStore = () => {
       },
       SET_USERROLE(state, value) {
         state.auth.userRole = value
+      },
+      SET_USERROLEID(state, value) {
+        state.auth.userRoleId = value
+      },
+      SET_PAGECATEGORY(state, value) {
+        state.auth.pageCategory = value
       },
       SET_RESPONSEHANDLER(state, value) {
         state.responseHandler = value
@@ -69,6 +77,8 @@ export const createStore = () => {
           localStorage.setItem('apiLogin', jsonData);
 
           if (!response.data.error && response.data.loggedIn == true) {
+            const pageCategory = response.data.pageCategory;
+            const userRoleId = response.data.userRoleId;
             const userRole = response.data.userRole;
             const userId = response.data.userId;
             const token = response.data.token;
@@ -76,9 +86,11 @@ export const createStore = () => {
             commit('SET_LOGGED_IN', true)
             commit('SET_USERID', userId)
             commit('SET_USERROLE', userRole)
+            commit('SET_USERROLEID', userRoleId)
+            commit('SET_PAGECATEGORY', pageCategory)
             commit('SET_USERTOKEN', token)
 
-            this.$router.push('/' + userRole + '/home') // Módosítsd a célútvonalat a saját alkalmazásodhoz igazítva
+            this.$router.push('/' + pageCategory + '/home') // Módosítsd a célútvonalat a saját alkalmazásodhoz igazítva
           } else {
             this.dispatch('setResponseHandler', {
               show: true,

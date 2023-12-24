@@ -336,6 +336,8 @@ export default {
     this.userData = parsedData;
     this.userId = parsedData.userId;
 
+    console.log(this.$store.state.auth);
+
     if(this.$store.state.auth.userRole === 'admin'){
       this.isCommentDisabled = false;
     };

@@ -55,7 +55,7 @@
                 counter
                 multiple
                 color="#359756"
-                class="w-px h-px opacity-0 overflow-hidden absolute"
+                class="w-px h-px overflow-hidden absolute"
                 accept=".xlsx,.xls,.docx,.doc,.pdf,.jpg,.jpeg,.png"
                 :rules="fileRule"
               ></v-file-input>

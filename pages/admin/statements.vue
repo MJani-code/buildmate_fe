@@ -381,5 +381,6 @@ img.selected-picture {
 .sticky-top {
     position: sticky !important;
     top: 60px !important;
+    z-index: 0;
 }
 </style>

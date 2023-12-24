@@ -285,7 +285,7 @@ export default {
       this.checkError(error, {
         show: true,
         title: "Hiba",
-        message: `Hiba történt az adatok lekérése közben: ${error}`,
+        message: error,
         options: [],
         type: {
           action: "error",
@@ -296,7 +296,7 @@ export default {
       this.checkError(error, {
         show: true,
         title: "Hiba",
-        message: `Hiba történt az adatok lekérése közben: ${error.code} - ${error.name} - ${error.message}`,
+        message: `${error.code} - ${error.name} - ${error.message}`,
         options: [],
         type: {
           action: "error",
