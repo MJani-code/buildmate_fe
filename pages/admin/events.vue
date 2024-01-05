@@ -200,7 +200,7 @@
                 dense
                 hide-details
                 solo
-                :append-icon="item.commentIcon ? 'mdi-check': '' "
+                :append-icon="item.commentIcon ? 'mdi-check' : ''"
                 color="#359756"
                 class="m-2"
                 :disabled="isCommentDisabled"
@@ -208,8 +208,7 @@
                 @input="handleInputChange(item)"
                 @blur="handleChangeInput(item)"
               >
-            </v-text-field>
-
+              </v-text-field>
             </div>
           </template>
         </v-data-table>
@@ -325,7 +324,6 @@ export default {
         (events, category) => events.concat(category.events),
         []
       );
-
       return fűnyírásEvents;
     },
   },
@@ -336,11 +334,14 @@ export default {
     this.userData = parsedData;
     this.userId = parsedData.userId;
 
-    console.log(this.$store.state.auth);
-
-    if(this.$store.state.auth.userRole === 'admin'){
+    if (this.$store.state.auth.userRole === "admin") {
       this.isCommentDisabled = false;
+    }
+    this.handleResize = () => {
+      this.type = window.innerWidth < 768 ? 'day' : 'week';
     };
+    window.addEventListener('resize', this.handleResize);
+    this.handleResize();
   },
   methods: {
     startDrag({ event, timed }) {
@@ -588,8 +589,8 @@ export default {
       this.emitEndTimeUnix = newUnixData;
       this.eventToEdit.end = newUnixData;
     },
-    async setComment(item){
-      console.log("update comment: "+item.comment + "id: "+ item.id);
+    async setComment(item) {
+      console.log("update comment: " + item.comment + "id: " + item.id);
       const data = item;
       item.token = this.userData.token;
 
@@ -610,7 +611,7 @@ export default {
       item.commentIcon = false;
       item.commentIcon = true;
     },
-    handleChangeInput(item){
+    handleChangeInput(item) {
       item.commentIcon = false;
     },
     showServerResponse() {

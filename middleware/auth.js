@@ -9,6 +9,10 @@ export default async function ({ store, redirect, route }) {
 
     // Ha van token az adatokban, akkor ellenőrizzük annak érvényességét az API-n keresztül
     if (parsedData && parsedData.token) {
+        var token = parsedData.token;
+        var userId = parsedData.userId;
+        var userRole = parsedData.userRole;
+        var userRoleId = parsedData.userRoleId;
 
         try {
             // Az API hívás elvégzése a token-rel
@@ -19,7 +23,11 @@ export default async function ({ store, redirect, route }) {
             const pageCategory = response.data.pageCategory;
 
             store.state.auth.loggedIn = response.data.tokenValid;
-            store.state.auth.userRole = response.data.pageCategory;
+            store.state.auth.pageCategory = response.data.pageCategory;
+            store.state.auth.token = token;
+            store.state.auth.userId = userId;
+            store.state.auth.userRole = userRole;
+            store.state.auth.userRoleId = userRoleId;
 
             // Ha a token érvényes, a válasz 200-as státuszkóddal érkezik
             if (response.status === 200) {

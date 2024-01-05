@@ -39,7 +39,7 @@
     <v-main>
       <v-container>
         <Nuxt />
-        <ResponseHandlerModal />
+        <ResponseHandlerModal @response-handled="handleResponseInLayout"/>
       </v-container>
     </v-main>
     <v-footer :absolute="!fixed" app>
@@ -79,6 +79,10 @@ export default {
   methods: {
     logout() {
       this.$store.dispatch('logout')
+    },
+    handleResponseInLayout(response) {
+      // Továbbítás az aktuális oldalnak
+      this.$nuxt.$emit('response-handled-in-page', response);
     },
   },
 }

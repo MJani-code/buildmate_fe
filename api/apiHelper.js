@@ -1,10 +1,10 @@
 import axios from 'axios';
 
 //DEV
-//const host = 'http://localhost:5000/THFustike3';
+const host = 'http://localhost:5000/THFustike3';
 
 //Live
-const host = window.location.origin;
+//const host = window.location.origin;
 
 export const config = {
   apiUrl: {
@@ -31,6 +31,7 @@ export const config = {
     addFaq: host + '/build_mate_be/API/faq/addFaq.php',
     updateFaq: host + '/build_mate_be/API/faq/updatefaq.php',
     deleteFaq: host + '/build_mate_be/API/faq/deletefaq.php',
+    getPolls: host + '/build_mate_be/API/polls/getpolls.php',
     // Itt további végpontokat adhatsz meg
   },
 };

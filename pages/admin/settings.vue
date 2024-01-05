@@ -33,7 +33,7 @@
                   </v-col>
                 </v-row>
                 <v-row>
-                  <v-col cols="12" lg="6" xl="6">
+                  <v-col cols="12" lg="12" xl="12">
                     <v-text-field
                       :clearable="editMode"
                       color="#359756"

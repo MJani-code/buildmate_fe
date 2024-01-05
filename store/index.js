@@ -122,7 +122,7 @@ export const createStore = () => {
           message: 'Biztosan ki szeretnél jelentkezni?',
           options: ['Mégsem', 'Igen'],
           type: {
-            action: 'confirm',
+            action: 'confirmLogout',
           }
         })
       },
@@ -151,6 +151,9 @@ export const createStore = () => {
         if (token) {
           deleteTokenFromDatabase()
         }
+      },
+      confirmPoll(){
+
       },
       setResponseHandler({ commit }, value) {
         commit('SET_RESPONSEHANDLER', value)
