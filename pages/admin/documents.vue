@@ -92,7 +92,7 @@ export default {
     DialogFieldVue,
     UploadFile,
     Alert,
-    ResponseHandlerModal
+    ResponseHandlerModal,
   },
   data() {
     return {
@@ -315,7 +315,7 @@ export default {
 </style>
 
 <style>
-.v-application .primary{
+.v-application .primary {
   background-color: #359756 !important;
 }
 </style>

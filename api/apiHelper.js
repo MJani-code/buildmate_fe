@@ -32,6 +32,7 @@ export const config = {
     updateFaq: host + '/build_mate_be/API/faq/updatefaq.php',
     deleteFaq: host + '/build_mate_be/API/faq/deletefaq.php',
     getPolls: host + '/build_mate_be/API/polls/getpolls.php',
+    addVotes: host + '/build_mate_be/API/polls/addvotes.php',
     // Itt további végpontokat adhatsz meg
   },
 };

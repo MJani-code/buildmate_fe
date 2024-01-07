@@ -5,6 +5,7 @@
       <v-expansion-panel v-for="(poll, index) in activePolls" :key="index">
         <v-expansion-panel-header>
           {{ poll.questionText }}
+          <small class="text-muted">határidő: {{ poll.deadline }}</small>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
           <v-form :ref="index">
@@ -44,7 +45,9 @@ export default {
   computed: {
     activePolls() {
       // Szűrjük csak azokat az elemeket, ahol a 'active' érték true
-      return this.polls.filter((poll) => poll.active);
+      if(this.polls){
+          return this.polls.filter((poll) => poll.active);
+      }
     },
   },
   methods: {
@@ -87,3 +90,9 @@ export default {
   },
 };
 </script>
+
+<style>
+.v-application--is-ltr .v-expansion-panel-header{
+    text-align: end;
+}
+</style>

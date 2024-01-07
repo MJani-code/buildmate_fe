@@ -16,36 +16,36 @@
           <template>
             <v-card-text>
               <v-form>
-                <div v-for="(query, index) in queries" :key="index">
+                <div v-for="(createPoll, index) in createPolls" :key="index">
                   <div class="v-form-group">
                     <v-text-field
                       type="text"
-                      v-model="query.question"
+                      v-model="createPoll.question"
                       :placeholder="'Ide írd a kérdést'"
                       color="#359756"
                     ></v-text-field>
                   </div>
                   <div
                     class="v-form-group"
-                    v-for="(choice, choiceIndex) in query.choices"
+                    v-for="(choice, choiceIndex) in createPoll.choices"
                     :key="choiceIndex"
                   >
                     <v-text-field
                       type="text"
-                      v-model="query.choices[choiceIndex]"
+                      v-model="createPoll.choices[choiceIndex]"
                       :placeholder="'Válasz ' + (choiceIndex + 1)"
                       color="#359756"
                     >
                       <template #append>
                         <v-icon
                           class="icon-text-field-icon"
-                          @click="addChoice(query.choices)"
+                          @click="addChoice(createPoll.choices)"
                           >mdi-plus</v-icon
                         >
                         <v-icon
                           class="icon-text-field-icon"
                           v-if="choiceIndex > 0"
-                          @click="removeChoice(query.choices, choiceIndex)"
+                          @click="removeChoice(createPoll.choices, choiceIndex)"
                           >mdi-trash-can-outline</v-icon
                         >
                       </template>
@@ -58,7 +58,7 @@
                   />
                   <v-checkbox
                     style="width: fit-content"
-                    v-model="query.multiple"
+                    v-model="createPoll.multiple"
                     label="Több válasz engedélyezése"
                     color="#359756"
                   >
@@ -119,9 +119,9 @@ export default {
     alertMessage: "",
     showAlert: false,
     alertType: "",
-    queries: [{ question: "", selected: "", multiple: false, choices: [""] }],
+    createPolls: [{ question: "", multiple: false, choices: [""] }],
     activePolls: [],
-    pollData:[]
+    pollData: {},
   }),
   components: {
     PollField,
@@ -129,11 +129,11 @@ export default {
   },
   mounted() {
     this.getActivePolls();
-    this.$nuxt.$on('response-handled-in-page', this.handlePollConfirm);
+    this.$nuxt.$on("response-handled-in-page", this.handlePollConfirm);
   },
   beforeDestroy() {
     // Az eseményhallgatás megszüntetése az oldal megsemmisülése előtt
-    this.$nuxt.$off('response-handled-in-page', this.handlePollConfirm);
+    this.$nuxt.$off("response-handled-in-page", this.handlePollConfirm);
   },
   methods: {
     addChoice(choices) {
@@ -143,14 +143,14 @@ export default {
       choices.splice(index, 1);
     },
     addquery() {
-      this.queries.push({
+      this.createPolls.push({
         question: "",
         multiple: false,
         choices: ["", ""],
       });
     },
     removequery(index) {
-      this.queries.splice(index, 1);
+      this.createPolls.splice(index, 1);
     },
     async getActivePolls() {
       var token = this.$store.state.auth.token;
@@ -167,24 +167,56 @@ export default {
       }
     },
     postQuery() {
-      console.log(this.queries);
+      console.log(this.createPolls);
     },
     poll(poll) {
-      this.$store.dispatch('setResponseHandler', {
-          show: true,
-          title: 'Szavazás megerősítése',
-          message: 'Megerősíted a szavazatodat?',
-          options: ['Mégsem', 'Igen'],
-          type: {
-            action: 'confirmPoll',
-          }
-        });
-        this.pollData = poll;
+      this.$store.dispatch("setResponseHandler", {
+        show: true,
+        title: "Szavazás megerősítése",
+        message: "Megerősíted a szavazatodat?",
+        options: ["Mégsem", "Igen"],
+        type: {
+          action: "confirmPoll",
+        },
+      });
+      this.pollData.questionId = poll.questionId;
+      const options = poll.options;
+      const checkedIds = options
+        .filter((option) => option.checked)
+        .map((option) => option.id);
+      this.pollData.answerIds = checkedIds;
     },
-    handlePollConfirm(response) {
+    async handlePollConfirm(response) {
       // Esemény kezelése az oldalon
-      console.log('Oldal: Válasz a ResponseHandlerModal-ból:', this.pollData);
+      if ((response = "confirmPoll" && this.pollData)) {
+        //API hívás
+        var token = this.$store.state.auth.token;
+        var userId = this.$store.state.auth.userId;
 
+        this.pollData.token = token;
+        this.pollData.userId = userId;
+
+        // console.log("Oldal: Válasz a ResponseHandlerModal-ból:", this.pollData);
+
+        try {
+          const response = await APIPOST("addVotes", this.pollData);
+          if (response.data.confirmAddVotes == true) {
+            this.showServerResponse();
+            //Sikeres hívás után eltűntetjük a kérdést
+            this.activePolls.forEach((item) => {
+                if (item.questionId === this.pollData.questionId) {
+                    item.active = 0;
+              }
+            });
+            this.pollData = {};
+          } else {
+            const error = response.data;
+            this.showServerError(error);
+          }
+        } catch (error) {
+          this.showCatchError(error);
+        }
+      }
     },
     showServerResponse() {
       //If succes
