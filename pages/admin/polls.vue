@@ -52,6 +52,7 @@
                     </v-text-field>
                   </div>
                   <v-text-field
+                    v-model="createPoll.deadline"
                     label="Határidő"
                     type="datetime-local"
                     color="#359756"
@@ -119,7 +120,7 @@ export default {
     alertMessage: "",
     showAlert: false,
     alertType: "",
-    createPolls: [{ question: "", multiple: false, choices: [""] }],
+    createPolls: [{ question: "", multiple: false, deadline: "", choices: [""], token: '' }],
     activePolls: [],
     pollData: {},
   }),
@@ -166,8 +167,23 @@ export default {
         this.showCatchError(error);
       }
     },
-    postQuery() {
-      console.log(this.createPolls);
+    async postQuery() {
+      var token = this.$store.state.auth.token;
+      var condominiumId = this.$store.state.auth.condominiumId;
+      this.createPolls[0].token = token
+      this.createPolls[0].condominiumId = condominiumId
+      try {
+        const response = await APIPOST("addPolls", this.createPolls);
+        if (response.data.confirmAddPolls == true) {
+          this.showServerResponse();
+          this.getActivePolls();
+        } else {
+          const error = response.data;
+          this.showServerError(error);
+        }
+      } catch (error) {
+        this.showCatchError(error);
+      }
     },
     poll(poll) {
       this.$store.dispatch("setResponseHandler", {
@@ -188,7 +204,7 @@ export default {
     },
     async handlePollConfirm(response) {
       // Esemény kezelése az oldalon
-      if ((response = "confirmPoll" && this.pollData)) {
+      if ((response == "confirmPoll" && this.pollData)) {
         //API hívás
         var token = this.$store.state.auth.token;
         var userId = this.$store.state.auth.userId;
@@ -204,8 +220,8 @@ export default {
             this.showServerResponse();
             //Sikeres hívás után eltűntetjük a kérdést
             this.activePolls.forEach((item) => {
-                if (item.questionId === this.pollData.questionId) {
-                    item.active = 0;
+              if (item.questionId === this.pollData.questionId) {
+                item.active = 0;
               }
             });
             this.pollData = {};

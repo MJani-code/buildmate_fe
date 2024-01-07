@@ -13,6 +13,8 @@ export default async function ({ store, redirect, route }) {
         var userId = parsedData.userId;
         var userRole = parsedData.userRole;
         var userRoleId = parsedData.userRoleId;
+        var condominiumId = parsedData.condominium_id;
+
 
         try {
             // Az API hívás elvégzése a token-rel
@@ -28,6 +30,7 @@ export default async function ({ store, redirect, route }) {
             store.state.auth.userId = userId;
             store.state.auth.userRole = userRole;
             store.state.auth.userRoleId = userRoleId;
+            store.state.auth.condominiumId = condominiumId;
 
             // Ha a token érvényes, a válasz 200-as státuszkóddal érkezik
             if (response.status === 200) {
@@ -54,39 +57,3 @@ export default async function ({ store, redirect, route }) {
         redirect('/');
     }
 }
-
-
-// import { APIGET, APIUPLOAD, APIPOST } from "~/api/apiHelper";
-
-// export default function ({ store, redirect, route }) {
-
-//     //TODO: adatok lekérdezése a localstorageből
-//     const dataFromLocalStorage = localStorage.getItem('apiLogin');
-//     const parsedData = JSON.parse(dataFromLocalStorage);
-//     console.log(parsedData);
-
-//     const loggedIn = store.state.auth.loggedIn;
-//     const userRole = store.state.auth.userRole;
-//     //TODO token-t lekrédezni és megvizsgálni, hogy érvényes-e.
-
-//     // Ellenőrizd, hogy a felhasználó be van-e jelentkezve
-//     if (route.path.startsWith('/admin') && loggedIn == false) {
-//         redirect('/')
-//     } else if (route.path.startsWith('/ccr') && loggedIn == false) {
-//         redirect('/')
-//     }
-
-//     //Ellenőrizzük, hogy a felhasználónak van-e megfelelő jogosultsága az utvonal megtekintéséhez
-//     else if (route.path.startsWith('/ccr') && userRole !== 'ccr') {
-//         redirect('/')
-//     }else if (route.path.startsWith('/admin') && userRole !== 'admin') {
-//         redirect('/')
-//     }
-
-//     // Ellenőrizd a felhasználó jogosultságát csak a bizonyos útvonalon.
-//     if (route.path.startsWith('/ccr')) {
-//         if (userRole !== 'ccr') {
-//             return redirect('/')
-//         }
-//     }
-// }

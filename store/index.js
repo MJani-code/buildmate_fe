@@ -15,6 +15,7 @@ export const createStore = () => {
         token: '',
         userRoleId: null,
         pageCategory: '',
+        condominiumId: null
       },
       responseHandler: {
         show: false,
@@ -45,6 +46,9 @@ export const createStore = () => {
       },
       SET_PAGECATEGORY(state, value) {
         state.auth.pageCategory = value
+      },
+      SET_CONDOMINIUMID(state, value) {
+        state.auth.condominiumId = value
       },
       SET_RESPONSEHANDLER(state, value) {
         state.responseHandler = value
@@ -82,6 +86,7 @@ export const createStore = () => {
             const userRole = response.data.userRole;
             const userId = response.data.userId;
             const token = response.data.token;
+            const condominiumId = response.data.condominium_id;
 
             commit('SET_LOGGED_IN', true)
             commit('SET_USERID', userId)
@@ -89,6 +94,7 @@ export const createStore = () => {
             commit('SET_USERROLEID', userRoleId)
             commit('SET_PAGECATEGORY', pageCategory)
             commit('SET_USERTOKEN', token)
+            commit('SET_CONDOMINIUMID', condominiumId)
 
             this.$router.push('/' + pageCategory + '/home') // Módosítsd a célútvonalat a saját alkalmazásodhoz igazítva
           } else {
@@ -138,7 +144,7 @@ export const createStore = () => {
 
             if (response.data.confirmLogout) {
               commit('SET_LOGGED_IN', false);
-              commit('SET_USER', null);
+              commit('SET_USERID', null);
               localStorage.removeItem('apiLogin');
               this.$router.push('/');
             }

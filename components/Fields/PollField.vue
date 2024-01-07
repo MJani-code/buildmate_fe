@@ -12,7 +12,7 @@
             <v-checkbox
               v-for="(choice, choiceIndex) in poll.options"
               :key="choiceIndex"
-              :id="choice.id.toString()"
+              :id="choice.id"
               :label="choice.value"
               :disabled="choice.disabled"
               v-model="choice.checked"
