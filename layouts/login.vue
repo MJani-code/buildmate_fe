@@ -16,15 +16,15 @@ export default {
   props: {
     //
   },
-  async beforeMount() {
-    await APIGET('http://build_mate_be/public/index.php/filestorage', null, true)
-      .then((res) => {
-        console.log(res)
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-  },
+  // async beforeMount() {
+  //   await APIGET('http://build_mate_be/public/index.php/filestorage', null, true)
+  //     .then((res) => {
+  //       console.log(res)
+  //     })
+  //     .catch((err) => {
+  //       console.log(err)
+  //     })
+  // },
   data () {
     return {
       //

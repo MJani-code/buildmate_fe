@@ -1,35 +1,17 @@
 <template>
   <v-container class="lighten-5">
     <v-row class="fill-height">
-      <Alert
-        :show="showAlert"
-        :message="alertMessage"
-        :type="alertType"
-      ></Alert>
+      <Alert :show="showAlert" :message="alertMessage" :type="alertType"></Alert>
       <v-col xs="12" sm="12" md="12" lg="12" xl="12" class="col">
         <div class="selects">
           <v-sheet tile height="auto" color="#359756" class="white-text">
             <v-btn icon class="ma-2" @click="$refs.calendar.prev()">
               <v-icon>mdi-chevron-left</v-icon>
             </v-btn>
-            <v-select
-              v-model="type"
-              :items="types"
-              dense
-              outlined
-              hide-details
-              class="ma-2 select"
-              label="type"
-            ></v-select>
-            <v-select
-              v-model="weekday"
-              :items="weekdays"
-              dense
-              outlined
-              hide-details
-              label="weekdays"
-              class="ma-2 select"
-            ></v-select>
+            <v-select v-model="type" :items="types" dense outlined hide-details class="ma-2 select"
+              label="type"></v-select>
+            <v-select v-model="weekday" :items="weekdays" dense outlined hide-details label="weekdays"
+              class="ma-2 select"></v-select>
             <v-toolbar-title v-if="$refs.calendar" class="month">
               {{ $refs.calendar.title }}
             </v-toolbar-title>
@@ -43,24 +25,10 @@
           </v-sheet>
         </div>
         <v-sheet height="500">
-          <v-calendar
-            ref="calendar"
-            v-model="value"
-            color="primary"
-            :type="type"
-            :events="events"
-            :weekdays="weekday"
-            :event-color="getEventColor"
-            :event-overlap-mode="mode"
-            :event-ripple="false"
-            @click:event="editEvent"
-            @change="getEvents"
-            @mousedown:event="startDrag"
-            @mousedown:time="startTime"
-            @mousemove:time="mouseMove"
-            @mouseup:event="endDrag"
-            @mouseleave.native="cancelDrag"
-          >
+          <v-calendar ref="calendar" v-model="value" color="primary" :type="type" :events="events" :weekdays="weekday"
+            :event-color="getEventColor" :event-overlap-mode="mode" :event-ripple="false" @click:event="editEvent"
+            @change="getEvents" @mousedown:event="startDrag" @mousedown:time="startTime" @mousemove:time="mouseMove"
+            @mouseup:event="endDrag" @mouseleave.native="cancelDrag">
             <!-- kivettem a v-calendarból: @mouseup:time="endDrag" -->
 
             <template v-slot:event="{ event, timed, eventSummary }">
@@ -68,18 +36,8 @@
                 <component :is="{ render: eventSummary }"> </component>
                 <p>{{ event.name }} - {{ event.flat }}</p>
               </div>
-              <div
-                v-if="timed"
-                class="v-event-drag-bottom"
-                @mousedown.stop="extendBottom(event)"
-              ></div>
-              <v-btn
-                class="mx-2"
-                fab
-                dark
-                color="primary"
-                @click.stop="deleteEvent(event)"
-              >
+              <div v-if="timed" class="v-event-drag-bottom" @mousedown.stop="extendBottom(event)"></div>
+              <v-btn class="mx-2" fab dark color="primary" @click.stop="deleteEvent(event)">
                 <v-icon dark> mdi-minus </v-icon>
               </v-btn>
             </template>
@@ -89,47 +47,20 @@
               <v-card-title>{{ eventToEdit.name }} szerkesztése</v-card-title>
               <v-card-text>
                 <v-form ref="form">
-                  <v-text-field
-                    color="#359756"
-                    v-model="eventToEdit.name"
-                    label="Esemény neve"
-                  />
-                  <datePicker
-                    :starttime="eventToEdit.start"
-                    :endtime="eventToEdit.end"
-                    @startTimeUnix="handlerStartUnixData"
-                    @endTimeUnix="handlerEndUnixData"
-                  ></datePicker>
-                  <v-select
-                    color="#359756"
-                    v-model="selectedCategoryId"
-                    :items="eventCategories"
-                    item-text="name"
-                    item-value="id"
-                    label="Kategória"
-                    :rules="rules.select"
-                  >
+                  <v-text-field color="#359756" v-model="eventToEdit.name" label="Esemény neve" />
+                  <datePicker :starttime="eventToEdit.start" :endtime="eventToEdit.end"
+                    @startTimeUnix="handlerStartUnixData" @endTimeUnix="handlerEndUnixData"></datePicker>
+                  <v-select color="#359756" v-model="selectedCategoryId" :items="eventCategories" item-text="name"
+                    item-value="id" label="Kategória" :rules="rules.select">
                   </v-select>
-                  <v-autocomplete
-                    v-model="eventToEdit.responsibles"
-                    :items="responsibleNames"
-                    chips
-                    color="#359756"
-                    label="Felelősök"
-                    full-width
-                    hide-details
-                    hide-no-data
-                    hide-selected
-                    multiple
-                    single-line
-                  ></v-autocomplete>
+                  <v-autocomplete v-model="eventToEdit.responsibles" :items="responsibleNames" chips color="#359756"
+                    label="Felelősök" full-width hide-details hide-no-data hide-selected multiple
+                    single-line></v-autocomplete>
                 </v-form>
               </v-card-text>
               <v-card-actions>
                 <v-btn @click="closeDialog">Mégsem</v-btn>
-                <v-btn @click="saveEvent(eventToEdit)" color="#359756"
-                  >Mentés</v-btn
-                >
+                <v-btn @click="saveEvent(eventToEdit)" color="#359756">Mentés</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -150,11 +81,7 @@
     </v-row>
     <v-row>
       <v-col xs="12" sm="12" md="12" lg="6" xl="6" class="col">
-        <table
-          border="1"
-          class="table table-striped eventsToTableView"
-          :data-bs-theme="getBootstrapThemeAttribute"
-        >
+        <table border="1" class="table table-striped eventsToTableView" :data-bs-theme="getBootstrapThemeAttribute">
           <thead>
             <tr>
               <th></th>
@@ -186,28 +113,14 @@
         </table>
       </v-col>
       <v-col xs="12" sm="12" md="12" lg="6" xl="6" class="col">
-        <v-data-table
-          dense
-          :headers="eventsToTableViewHeaders"
-          :items="filteredEvents"
-          item-key="id"
-          class="elevation-1"
-        >
+        <v-data-table dense :headers="eventsToTableViewHeaders" :items="filteredEvents" item-key="id"
+          class="elevation-1">
           <template v-slot:item.comment="{ item, index }">
             <div>
-              <v-text-field
-                v-model="item.comment"
-                dense
-                hide-details
-                solo
-                :append-icon="item.commentIcon ? 'mdi-check' : ''"
-                color="#359756"
-                class="m-2"
-                :disabled="isCommentDisabled"
-                @click:append="setComment(item)"
-                @input="handleInputChange(item)"
-                @blur="handleChangeInput(item)"
-              >
+              <v-text-field v-model="item.comment" dense hide-details solo
+                :append-icon="item.commentIcon ? 'mdi-check' : ''" color="#359756" class="m-2"
+                :disabled="isCommentDisabled" @click:append="setComment(item)" @input="handleInputChange(item)"
+                @blur="handleChangeInput(item)">
               </v-text-field>
             </div>
           </template>
@@ -241,6 +154,7 @@ export default {
     eventCategories: [],
     evenToDeleteId: null,
     drag: false,
+    isMobile: false,
     rules: {
       select: [(v) => !!v || "Válassz a listából egy kategóriát"],
     },
@@ -342,6 +256,7 @@ export default {
     };
     window.addEventListener('resize', this.handleResize);
     this.handleResize();
+
   },
   methods: {
     startDrag({ event, timed }) {
@@ -406,9 +321,11 @@ export default {
     },
     endDrag({ event, nativeEvent }) {
       if (this.dragEvent2 && event.id) {
-        this.saveEventByDrag(event);
+        if (window.innerWidth > 768) {
+          this.saveEventByDrag(event);
+        }
       }
-      this.dragEvent2 = false;
+      //this.dragEvent2 = false;
       this.dragTime = null;
       this.dragEvent = null;
       this.createEvent = null;
@@ -457,8 +374,8 @@ export default {
       return event === this.dragEvent
         ? `rgba(${r}, ${g}, ${b}, 0.7)`
         : event === this.createEvent
-        ? `rgba(${r}, ${g}, ${b}, 0.7)`
-        : event.color;
+          ? `rgba(${r}, ${g}, ${b}, 0.7)`
+          : event.color;
     },
     rnd(a, b) {
       return Math.floor((b - a + 1) * Math.random()) + a;
@@ -468,11 +385,10 @@ export default {
     },
     editEvent({ event, nativeEvent }) {
       nativeEvent.stopPropagation();
-
       this.eventToEdit = event;
       this.eventName = event.category;
       this.selectedCategoryId = event.categoryId;
-      if (!this.dragEvent2) {
+      if (this.dragEvent2 == null) {
         this.dialogOpen = true;
       }
     },
@@ -491,7 +407,6 @@ export default {
           this.users = response.data.users;
 
           this.eventsToTableView = response.data.responseToTableView;
-          console.log(this.eventsToTableView);
         } else {
           const error = response.data;
           this.showServerError(error);
@@ -690,6 +605,7 @@ export default {
     display: block;
   }
 }
+
 ::v-deep .white-text * {
   color: white !important;
 }
@@ -716,18 +632,18 @@ p .v-btn--fab.v-size--default,
   button.mx-2.v-btn.v-btn--is-elevated.v-btn--fab.v-btn--has-bg.v-btn--round.theme--dark.v-size--default.primary {
     display: none;
   }
+
   .v-event-timed.white--text:hover {
     button.mx-2.v-btn.v-btn--is-elevated.v-btn--fab.v-btn--has-bg.v-btn--round.theme--dark.v-size--default.primary {
       display: inline-block;
     }
   }
 }
+
 .v-toolbar__title {
   margin: auto;
 }
-.white-text {
-  display: flex !important;
-}
+
 .monthonmobile {
   display: none !important;
 }
@@ -736,23 +652,35 @@ p .v-btn--fab.v-size--default,
   .month {
     display: none !important;
   }
+
   .monthonmobile {
     display: block !important;
   }
+
   .spacer {
     display: none;
   }
+
   .select {
     max-width: min-content;
     display: inline-flex;
   }
+
   .v-toolbar__title {
     width: fit-content;
   }
 }
+
+@media (min-width: 468px) {
+  .white-text {
+    display: flex !important;
+  }
+}
+
 table.eventsToTableView {
   border-collapse: collapse !important;
 }
+
 table.eventsToTableView td {
   padding: 10px;
 }
@@ -763,6 +691,7 @@ table.eventsToTableView td {
   max-width: unset;
   max-width: 100% !important;
 }
+
 table.eventsToTableView {
   font-size: 12px;
   width: 100%;

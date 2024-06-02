@@ -177,6 +177,7 @@ export default {
         if (response.data.confirmAddPolls == true) {
           this.showServerResponse();
           this.getActivePolls();
+          this.createPolls = [{ question: "", multiple: false, deadline: "", choices: [""], token: '' }];
         } else {
           const error = response.data;
           this.showServerError(error);

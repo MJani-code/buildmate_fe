@@ -11,7 +11,7 @@
             <v-banner class="custom">
               <v-avatar slot="icon" color="#359756" size="50">
                 <v-icon icon="mdi-calendar-multiple" color="white" class="ma-2"
-                  >mdi-file-document</v-icon
+                  >mdi-delete</v-icon
                 >
               </v-avatar>
             </v-banner>

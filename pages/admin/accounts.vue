@@ -1,94 +1,46 @@
 <template>
   <v-container class="lighten-5" style="height: 100vh; overflow: auto">
     <Alert :show="showAlert" :message="alertMessage" :type="alertType"></Alert>
-    <FieldsNewAccount
-      :newAccount="isModalOpen"
-      @close="closeModal"
-      @save="save"
-    ></FieldsNewAccount>
+    <FieldsNewAccount :newAccount="isModalOpen" @close="closeModal" @save="save"></FieldsNewAccount>
     <v-btn class="mb-4" @click="openModal">Új névjegy</v-btn>
-    <v-btn
-      class="mb-4"
-      :style="{ 'background-color': buttonColor }"
-      @click="toggleFilter"
-      >{{ accountsScope }}</v-btn
-    >
+    <v-btn class="mb-4" :style="{ 'background-color': buttonColor }" @click="toggleFilter">{{ accountsScope }}</v-btn>
     <!-- Columns start at 50% wide on mobile and bump up to 33.3% wide on desktop -->
     <v-row>
-      <v-col
-        v-for="(account, index) in filteredAccounts"
-        :key="index"
-        cols="12"
-        md="4"
-        lg="4"
-        sm="12"
-      >
+      <v-col v-for="(account, index) in filteredAccounts" :key="index" cols="12" md="4" lg="4" sm="12">
         <v-card class="mx-auto" max-width="344">
           <v-card-text>
             <p class="text-h5 text--primary" style="position: relative">
               {{ account.lastName + " " + account.firstName }}
-              <v-icon
-                v-if="!account.saveButton"
-                @click="
-                  (account.edit = !account.edit),
-                    (account.saveButton = !account.saveButton)
-                "
-                >mdi-pencil</v-icon
-              >
-              <v-icon
-                v-if="account.edit"
-                @click="
-                  (account.saveButton = !account.saveButton),
-                    (account.edit = !account.edit),
-                    update(account, index)
-                "
-                >mdi-check</v-icon
-              >
+              <v-icon v-if="!account.saveButton" @click="
+      (account.edit = !account.edit),
+      (account.saveButton = !account.saveButton)
+      ">mdi-pencil</v-icon>
+              <v-icon v-if="account.edit" @click="
+      (account.saveButton = !account.saveButton),
+      (account.edit = !account.edit),
+      update(account, index)
+      ">mdi-check</v-icon>
             </p>
             <p v-if="account.professionalField">
               {{ account.professionalField }}
             </p>
             <div class="text--primary">
-              <v-text-field
-                prepend-icon="mdi-cellphone"
-                v-model="account.phoneNumber"
-                :filled="!account.edit"
-                :readonly="!account.edit"
-                color="#359756"
-                :value="account.phoneNumber"
-              ></v-text-field>
-              <v-text-field
-                prepend-icon="mdi-email"
-                v-model="account.email"
-                :filled="!account.edit"
-                :readonly="!account.edit"
-                color="#359756"
-                :value="account.email"
-              ></v-text-field>
-              <v-chip
-                v-if="account.resident"
-                class="ma-2"
-                color="#359756"
-                text-color="white"
-              >
+              <v-text-field prepend-icon="mdi-cellphone" v-model="account.phoneNumber" :filled="!account.edit"
+                :readonly="!account.edit" color="#359756" :value="account.phoneNumber"></v-text-field>
+              <v-text-field prepend-icon="mdi-email" v-model="account.email" :filled="!account.edit"
+                :readonly="!account.edit" color="#359756" :value="account.email"></v-text-field>
+              <v-chip v-if="account.resident" class="ma-2" color="#359756" text-color="white">
                 <v-avatar left>
                   <v-icon>mdi-office-building-outline</v-icon>
                 </v-avatar>
-                <strong>{{ account.stairCase }}</strong
-                >&nbsp;
+                <strong>{{ account.stairCase }}</strong>&nbsp;
                 <span>lépcsőház</span>
               </v-chip>
-              <v-chip
-                v-if="account.resident"
-                class="ma-2"
-                color="#359756"
-                text-color="white"
-              >
+              <v-chip v-if="account.resident" class="ma-2" color="#359756" text-color="white">
                 <v-avatar left>
                   <v-icon>mdi-home-account</v-icon>
                 </v-avatar>
-                <strong>{{ account.flat }}</strong
-                >&nbsp;
+                <strong>{{ account.flat }}</strong>&nbsp;
                 <span>lakás</span>
               </v-chip>
             </div>
@@ -170,39 +122,26 @@ export default {
         const response = await APIPOST("addAccountsData", data);
 
         if (response.data.confirmAddNewAccount == true) {
+          this.isModalOpen = false;
+          this.showServerResponse();
           this.accounts.unshift(data);
+        } else {
+          const error = response.data;
+          this.showServerError(error);
         }
       } catch (error) {
-        console.log(error);
-        this.checkError(error, {
-          show: true,
-          title: "Hiba",
-          message: `Hiba történt az adatok lekérése közben: ${error.code} - ${error.name} - ${error.message}`,
-          options: [],
-          type: {
-            action: "error",
-          },
-        });
+        this.showCatchError(error);
       }
     },
     async update(data, index) {
-      console.log(data, index);
       try {
         const response = await APIPOST("updateAccountsData", data);
 
         if (response.data.confirmUpdateAccountData == true) {
           this.accounts[index] = data;
-          this.alertMessage = "A mentés sikeres volt!";
-          this.alertType = "success";
-          this.showAlert = true;
-          if ((this.showAlert = true)) {
-            setTimeout(() => {
-              this.showAlert = false; // Az értesítés elrejtése
-            }, 3000);
-          }
+          this.showServerResponse();
         }
       } catch (error) {
-        console.log(error);
         this.checkError(error, {
           show: true,
           title: "Hiba",
@@ -228,6 +167,40 @@ export default {
         this.accountsScope = 'Összes';
       }
     },
+    showServerResponse() {
+      this.uploadDialog = false;
+      //If succes
+      this.alertMessage = "A művelet sikeres volt!";
+      this.alertType = "success";
+      this.showAlert = true;
+      if ((this.showAlert = true)) {
+        setTimeout(() => {
+          this.showAlert = false; // Az értesítés elrejtése
+        }, 3000);
+      }
+    },
+    showServerError(error) {
+      this.checkError(error, {
+        show: true,
+        title: "Hiba",
+        message: error,
+        options: [],
+        type: {
+          action: "error",
+        },
+      });
+    },
+    showCatchError(error) {
+      this.checkError(error, {
+        show: true,
+        title: "Hiba",
+        message: `${error.code} - ${error.name} - ${error.message}`,
+        options: [],
+        type: {
+          action: "error",
+        },
+      });
+    },
   },
 };
 </script>
@@ -239,6 +212,7 @@ button.mdi-check {
   top: 10%;
   right: 0%;
 }
+
 i.mdi-pencil:hover {
   cursor: pointer;
 }

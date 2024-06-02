@@ -1,10 +1,17 @@
 import axios from 'axios';
 
 //DEV
-const host = 'http://localhost:5000/THFustike3';
+//const host = 'http://localhost:5000/THFustike3';
 
 //Live
 //const host = window.location.origin;
+
+let host = ''
+if(window.location.hostname === 'localhost'){
+  host = 'http://localhost:5000/THFustike3'
+}else{
+  host = window.location.origin;
+}
 
 export const config = {
   apiUrl: {
