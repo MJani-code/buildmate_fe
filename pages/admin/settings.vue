@@ -5,132 +5,59 @@
       <v-col cols="12" md="6" lg="6" xl="4">
         <template>
           <v-card class="">
-            <v-card-title class="profile-title"
-              >Felhasználói profil</v-card-title
-            >
+            <v-card-title class="profile-title">Felhasználói profil</v-card-title>
             <v-card-text>
               <v-form ref="form" @submit.prevent="onSubmit">
                 <v-row>
                   <v-col cols="12" sm="6" md="6" lg="6" xl="6">
-                    <v-text-field
-                      :clearable="editMode"
-                      color="#359756"
-                      v-model="user.lastName"
-                      :readonly="!editMode"
-                      :filled="!editMode"
-                      label="Vezetéknév"
-                    ></v-text-field>
+                    <v-text-field :clearable="editMode" color="#359756" v-model="user.lastName" :readonly="!editMode"
+                      :filled="!editMode" label="Vezetéknév"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="6" lg="6" xl="6">
-                    <v-text-field
-                      :clearable="editMode"
-                      color="#359756"
-                      v-model="user.firstName"
-                      :readonly="!editMode"
-                      :filled="!editMode"
-                      label="Keresztnév"
-                    ></v-text-field>
+                    <v-text-field :clearable="editMode" color="#359756" v-model="user.firstName" :readonly="!editMode"
+                      :filled="!editMode" label="Keresztnév"></v-text-field>
                   </v-col>
                 </v-row>
                 <v-row>
                   <v-col cols="12" lg="12" xl="12">
-                    <v-text-field
-                      :clearable="editMode"
-                      color="#359756"
-                      v-model="user.email"
-                      :readonly="!editMode"
-                      :filled="!editMode"
-                      label="E-mail"
-                    ></v-text-field>
+                    <v-text-field :clearable="editMode" color="#359756" v-model="user.email" :readonly="!editMode"
+                      :filled="!editMode" label="E-mail"></v-text-field>
                   </v-col>
                   <v-col cols="12" lg="6" xl="6" v-if="editMode">
-                    <v-text-field
-                      :clearable="editMode"
-                      type="password"
-                      color="#359756"
-                      v-model="user.password"
-                      :readonly="!editMode"
-                      :filled="!editMode"
-                      label="Jelszó"
-                      :rules="passwordRule"
-                    ></v-text-field>
+                    <v-text-field :clearable="editMode" type="password" color="#359756" v-model="user.password"
+                      :readonly="!editMode" :filled="!editMode" label="Jelszó" :rules="passwordRule"></v-text-field>
                   </v-col>
                   <v-col cols="12" lg="6" xl="6" v-if="editMode">
-                    <v-text-field
-                      :clearable="editMode"
-                      type="password"
-                      color="#359756"
-                      v-model="user.newPassword"
-                      :readonly="!editMode"
-                      :filled="!editMode"
-                      label="Új jelszó"
-                      :rules="newPasswordRule"
-                    ></v-text-field>
+                    <v-text-field :clearable="editMode" type="password" color="#359756" v-model="user.newPassword"
+                      :readonly="!editMode" :filled="!editMode" label="Új jelszó"
+                      :rules="newPasswordRule"></v-text-field>
                   </v-col>
                   <v-col cols="12" lg="6" xl="6" v-if="editMode">
-                    <v-text-field
-                      :clearable="editMode"
-                      type="password"
-                      color="#359756"
-                      v-model="user.newPasswordConfirm"
-                      :readonly="!editMode"
-                      :filled="!editMode"
-                      label="Új jelszó ismét"
-                      :rules="newPasswordConfirmRule"
-                    ></v-text-field>
+                    <v-text-field :clearable="editMode" type="password" color="#359756"
+                      v-model="user.newPasswordConfirm" :readonly="!editMode" :filled="!editMode"
+                      label="Új jelszó ismét" :rules="newPasswordConfirmRule"></v-text-field>
                   </v-col>
                 </v-row>
                 <v-row>
                   <v-col cols="12" sm="6" md="6" lg="5" xl="6" class="col-xs-8">
-                    <v-text-field
-                      :clearable="editMode"
-                      color="#359756"
-                      v-model="user.phoneNumber"
-                      :readonly="!editMode"
-                      :filled="!editMode"
-                      label="Telefonszám"
-                    ></v-text-field>
+                    <v-text-field :clearable="editMode" color="#359756" v-model="user.phoneNumber" :readonly="!editMode"
+                      :filled="!editMode" label="Telefonszám"></v-text-field>
                   </v-col>
                   <v-col cols="6" sm="3" md="6" lg="4" xl="3">
-                    <v-text-field
-                      :clearable="editMode"
-                      color="#359756"
-                      v-model="user.stairCase"
-                      :readonly="!editMode"
-                      :filled="!editMode"
-                      label="Lépcsőház"
-                    ></v-text-field>
+                    <v-text-field v-if="user.stairCase" :clearable="editMode" color="#359756" v-model="user.stairCase"
+                      :readonly="!editMode" :filled="!editMode" label="Lépcsőház"></v-text-field>
                   </v-col>
                   <v-col cols="6" sm="3" md="6" lg="3" xl="3">
-                    <v-text-field
-                      :clearable="editMode"
-                      color="#359756"
-                      v-model="user.flat"
-                      :readonly="!editMode"
-                      :filled="!editMode"
-                      label="Lakás"
-                    ></v-text-field>
+                    <v-text-field v-if="user.stairCase" :clearable="editMode" color="#359756" v-model="user.flat"
+                      :readonly="!editMode" :filled="!editMode" label="Lakás"></v-text-field>
                   </v-col>
                 </v-row>
                 <v-card-actions>
-                  <v-btn
-                    v-if="editMode"
-                    @click="editMode = !editMode"
-                    class="ma-3"
-                    >Mégsem</v-btn
-                  >
-                  <v-btn
-                    v-if="editMode"
-                    type="submit"
-                    color="#359756"
-                    class="ma-3"
-                    >Profil mentése</v-btn
-                  >
+                  <v-btn v-if="editMode" @click="editMode = !editMode" class="ma-3">Mégsem</v-btn>
+                  <v-btn v-if="editMode" type="submit" color="#359756" class="ma-3">Profil mentése</v-btn>
                 </v-card-actions>
               </v-form>
-              <v-btn v-if="!editMode" @click="editMode = !editMode" class="ma-3"
-                >Szerkesztés</v-btn
-              >
+              <v-btn v-if="!editMode" @click="editMode = !editMode" class="ma-3">Szerkesztés</v-btn>
             </v-card-text>
           </v-card>
         </template>

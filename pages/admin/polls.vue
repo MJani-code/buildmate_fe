@@ -100,7 +100,7 @@
           </v-col>
           <v-col cols="12">
             <v-card class="ml-2 no-border" outlined tile>
-              <v-card-title>Szavazás eredménye</v-card-title>
+              <FieldsPollResults :polls="activePolls"/>
             </v-card>
           </v-col>
         </v-row>
@@ -114,6 +114,7 @@
 import PollField from "../../components/Fields/PollField.vue";
 import Alert from "../../components/Alert.vue";
 import { APIGET, APIUPLOAD, APIPOST, APIPOST2, config } from "~/api/apiHelper";
+import PollResults from "../../components/Fields/PollResults.vue";
 
 export default {
   data: () => ({
