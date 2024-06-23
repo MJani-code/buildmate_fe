@@ -12,6 +12,11 @@ Chart.register(ChartDataLabels);
 
 
 export default {
+    props: {
+        chartData: {
+            type: Array(),
+        },
+    },
     data() {
         return {
             chart: null
@@ -26,10 +31,10 @@ export default {
             this.chart = new Chart(ctx, {
                 type: 'pie',
                 data: {
-                    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                    labels: this.chartData.labels,
                     datasets: [{
-                        label: '# of Votes',
-                        data: [19, 12, 3, 5, 2, 3, 5],
+                        label: 'Szavazatok',
+                        data: this.chartData.data,
                         backgroundColor: [
                             'rgba(53, 151, 86, 1.0)',
                             'rgba(255, 99, 132, 0.2)',

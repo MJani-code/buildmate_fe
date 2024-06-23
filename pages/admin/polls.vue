@@ -9,7 +9,6 @@
             'create-poll-bg-dark': $vuetify.theme.dark,
             'create-poll-bg-light': !$vuetify.theme.dark,
           }"
-          outlined
           tile
         >
           <v-card-title>Szavazás létrehozása</v-card-title>
@@ -100,7 +99,7 @@
           </v-col>
           <v-col cols="12">
             <v-card class="ml-2 no-border" outlined tile>
-              <FieldsPollResults :polls="activePolls"/>
+              <FieldsPollResults :pollResults="pollResults"/>
             </v-card>
           </v-col>
         </v-row>
@@ -114,7 +113,7 @@
 import PollField from "../../components/Fields/PollField.vue";
 import Alert from "../../components/Alert.vue";
 import { APIGET, APIUPLOAD, APIPOST, APIPOST2, config } from "~/api/apiHelper";
-import PollResults from "../../components/Fields/PollResults.vue";
+
 
 export default {
   data: () => ({
@@ -123,6 +122,7 @@ export default {
     alertType: "",
     createPolls: [{ question: "", multiple: false, deadline: "", choices: [""], token: '' }],
     activePolls: [],
+    pollResults: [],
     pollData: {},
   }),
   components: {
@@ -131,6 +131,7 @@ export default {
   },
   mounted() {
     this.getActivePolls();
+    this.getPollResults();
     this.$nuxt.$on("response-handled-in-page", this.handlePollConfirm);
   },
   beforeDestroy() {
@@ -160,6 +161,21 @@ export default {
         const response = await APIPOST2("getPolls", { token: token });
         if (response.data) {
           this.activePolls = response.data.result;
+        } else {
+          const error = response.data;
+          this.showServerError(error);
+        }
+      } catch (error) {
+        this.showCatchError(error);
+      }
+    },
+    async getPollResults() {
+      var token = this.$store.state.auth.token;
+
+      try {
+        const response = await APIPOST2("getPollResults", { token: token });
+        if (response.data) {
+          this.pollResults = response.data;
         } else {
           const error = response.data;
           this.showServerError(error);
@@ -205,22 +221,19 @@ export default {
       this.pollData.answerIds = checkedIds;
     },
     async handlePollConfirm(response) {
-      // Esemény kezelése az oldalon
       if ((response == "confirmPoll" && this.pollData)) {
-        //API hívás
+
         var token = this.$store.state.auth.token;
         var userId = this.$store.state.auth.userId;
 
         this.pollData.token = token;
         this.pollData.userId = userId;
 
-        // console.log("Oldal: Válasz a ResponseHandlerModal-ból:", this.pollData);
-
         try {
           const response = await APIPOST("addVotes", this.pollData);
           if (response.data.confirmAddVotes == true) {
             this.showServerResponse();
-            //Sikeres hívás után eltűntetjük a kérdést
+
             this.activePolls.forEach((item) => {
               if (item.questionId === this.pollData.questionId) {
                 item.active = 0;
@@ -237,13 +250,12 @@ export default {
       }
     },
     showServerResponse() {
-      //If succes
       this.alertMessage = "A művelet sikeres volt!";
       this.alertType = "success";
       this.showAlert = true;
       if ((this.showAlert = true)) {
         setTimeout(() => {
-          this.showAlert = false; // Az értesítés elrejtése
+          this.showAlert = false;
         }, 3000);
       }
     },

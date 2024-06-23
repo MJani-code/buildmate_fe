@@ -2,13 +2,13 @@
     <v-card>
         <v-card-title>Szavazás eredmények</v-card-title>
         <v-expansion-panels>
-            <v-expansion-panel v-for="(poll, index) in activePolls" :key="index">
+            <v-expansion-panel v-if="pollResults"v-for="(poll, index) in pollResults" :key="index">
                 <v-expansion-panel-header>
-                    {{ poll.questionText }}
+                    {{ poll.question }}
 
                 </v-expansion-panel-header>
                 <v-expansion-panel-content>
-                    <ChartsLineChart :chartData="chartData" :chartOptions="chartOptions" />
+                    <ChartsPieChart :chartData="{labels:poll.labels, data:poll.data}" :chartOptions="chartOptions" />
                 </v-expansion-panel-content>
             </v-expansion-panel>
         </v-expansion-panels>
@@ -20,36 +20,53 @@
 export default {
     name: "PollResults",
     props: {
-        polls: {
+        pollResults: {
             type: Array(),
         },
     },
     data() {
         return {
             chartData: {
-                labels: ["Jan", "Feb", "Marc", "Apr"],
-                datasets:[
+                labels: [],
+                datasets: [
                     {
                         labels: "Szavazatok",
-                        data:[100,150,200,250]
+                        data: []
                     }
                 ]
             },
-            chartOptions:{
+            chartOptions: {
                 maintanAspectRatio: false,
                 responsive: true
             }
         }
     },
+    mounted() {
+        this.Polls();
+    },
     computed: {
-        activePolls() {
-            // Szűrjük csak azokat az elemeket, ahol a 'active' érték true
-            if (this.polls) {
-                return this.polls.filter((poll) => poll.active);
-            }
-        },
+
     },
     methods: {
+        Polls() {
+
+            // Szűrjük csak azokat az elemeket, ahol a 'active' érték true
+            if (this.pollResults) {
+                console.log(this.pollResults);
+                // for (const key in this.pollResults) {
+                //     if (this.pollResults.hasOwnProperty(key)) {
+                //         const poll = this.pollResults[key];
+                //         console.log(`Question ID: ${key}`);
+                //         console.log(`Question: ${poll.question}`);
+                //         console.log(`Labels: ${poll.labels.join(', ')}`);
+                //         console.log(`Data: ${poll.data.join(', ')}`);
+                //         console.log('----------------------');
+                //     }
+                // }
+            }else{
+                console.log("nincsenek lezárt szavazások");
+            }
+        },
         hasCheckedOptions(poll) {
             return poll.options.some((option) => option.checked);
         },
