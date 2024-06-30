@@ -3,87 +3,46 @@
     <Alert :show="showAlert" :message="alertMessage" :type="alertType"></Alert>
     <v-row no-gutters>
       <v-col xs="12" sm="12" md="6" lg="6" xl="6" class="col">
-        <v-card
-          class="pa-2"
-          :class="{
-            'create-poll-bg-dark': $vuetify.theme.dark,
-            'create-poll-bg-light': !$vuetify.theme.dark,
-          }"
-          tile
-        >
+        <v-card class="pa-2" :class="{
+      'create-poll-bg-dark': $vuetify.theme.dark,
+      'create-poll-bg-light': !$vuetify.theme.dark,
+    }" tile>
           <v-card-title>Szavazás létrehozása</v-card-title>
           <template>
             <v-card-text>
-              <v-form>
+              <v-form :v-if="key" ref="form" @submit.prevent="onSubmit">
                 <div v-for="(createPoll, index) in createPolls" :key="index">
                   <div class="v-form-group">
-                    <v-text-field
-                      type="text"
-                      v-model="createPoll.question"
-                      :placeholder="'Ide írd a kérdést'"
-                      color="#359756"
-                    ></v-text-field>
+                    <v-text-field type="text" v-model="createPoll.question" :placeholder="'Ide írd a kérdést'"
+                      color="#359756" :rules="rules.question"></v-text-field>
                   </div>
-                  <div
-                    class="v-form-group"
-                    v-for="(choice, choiceIndex) in createPoll.choices"
-                    :key="choiceIndex"
-                  >
-                    <v-text-field
-                      type="text"
-                      v-model="createPoll.choices[choiceIndex]"
-                      :placeholder="'Válasz ' + (choiceIndex + 1)"
-                      color="#359756"
-                    >
+                  <div class="v-form-group" v-for="(choice, choiceIndex) in createPoll.choices" :key="choiceIndex">
+                    <v-text-field type="text" v-model="createPoll.choices[choiceIndex]"
+                      :placeholder="'Válasz ' + (choiceIndex + 1)" color="#359756" :rules="rules.answer">
                       <template #append>
-                        <v-icon
-                          class="icon-text-field-icon"
-                          @click="addChoice(createPoll.choices)"
-                          >mdi-plus</v-icon
-                        >
-                        <v-icon
-                          class="icon-text-field-icon"
-                          v-if="choiceIndex > 0"
-                          @click="removeChoice(createPoll.choices, choiceIndex)"
-                          >mdi-trash-can-outline</v-icon
-                        >
+                        <v-icon class="icon-text-field-icon" @click="addChoice(createPoll.choices)">mdi-plus</v-icon>
+                        <v-icon class="icon-text-field-icon" v-if="choiceIndex > 0"
+                          @click="removeChoice(createPoll.choices, choiceIndex)">mdi-trash-can-outline</v-icon>
                       </template>
                     </v-text-field>
                   </div>
-                  <v-text-field
-                    v-model="createPoll.deadline"
-                    label="Határidő"
-                    type="datetime-local"
-                    color="#359756"
-                  />
-                  <v-checkbox
-                    style="width: fit-content"
-                    v-model="createPoll.multiple"
-                    label="Több válasz engedélyezése"
-                    color="#359756"
-                  >
+                  <v-text-field v-model="createPoll.deadline" label="Határidő" type="datetime-local" color="#359756"
+                    :rules="rules.deadLine" />
+                  <v-checkbox style="width: fit-content" v-model="createPoll.multiple" label="Több válasz engedélyezése"
+                    color="#359756">
                   </v-checkbox>
                   <div style="display: block; margin-bottom: 20px">
-                    <v-btn
-                      style="width: 100%"
-                      :color="'error'"
-                      class="danger"
-                      v-if="index > 0"
-                      @click="removequery(index)"
-                      >Kérdés eltávolítása</v-btn
-                    >
+                    <v-btn style="width: 100%" :color="'error'" class="danger" v-if="index > 0"
+                      @click="removequery(index)">Kérdés
+                      eltávolítása</v-btn>
                   </div>
                 </div>
                 <v-divider class="my-divider"></v-divider>
                 <div style="display: block; margin: 20px 20px">
-                  <v-btn style="width: 100%" @click="addquery"
-                    >Új kérdés hozzáadása</v-btn
-                  >
+                  <v-btn style="width: 100%" @click="addquery">Új kérdés hozzáadása</v-btn>
                 </div>
                 <div style="display: block; margin: 20px 20px">
-                  <v-btn style="width: 100%" color="#359756" @click="postQuery"
-                    >Szavazás indítása</v-btn
-                  >
+                  <v-btn type="submit" style="width: 100%" color="#359756">Szavazás indítása</v-btn>
                 </div>
               </v-form>
             </v-card-text>
@@ -94,12 +53,12 @@
         <v-row no-gutters>
           <v-col cols="12">
             <v-card class="ml-2 no-border" outlined tile>
-              <PollField @makingPoll="poll" :polls="activePolls"></PollField>
+              <PollField @makingPoll="poll" @closingPoll="getPollResults" :polls="activePolls"></PollField>
             </v-card>
           </v-col>
           <v-col cols="12">
             <v-card class="ml-2 no-border" outlined tile>
-              <FieldsPollResults :pollResults="pollResults"/>
+              <FieldsPollResults :pollResults="pollResults" />
             </v-card>
           </v-col>
         </v-row>
@@ -120,7 +79,13 @@ export default {
     alertMessage: "",
     showAlert: false,
     alertType: "",
-    createPolls: [{ question: "", multiple: false, deadline: "", choices: [""], token: '' }],
+    key: 1,
+    rules: {
+      deadLine: [(v) => !!v || "Kötelező megadni lejárati dátumot"],
+      question: [(v) => !!v || "Kötelező megadni legalább egy kérdést"],
+      answer: [(v) => !!v || "Kötelező megadni legalább egy választ"]
+    },
+    createPolls: [{ question: "", multiple: 0, deadline: "", choices: [""], token: '' }],
     activePolls: [],
     pollResults: [],
     pollData: {},
@@ -148,7 +113,7 @@ export default {
     addquery() {
       this.createPolls.push({
         question: "",
-        multiple: false,
+        multiple: 0,
         choices: ["", ""],
       });
     },
@@ -177,11 +142,11 @@ export default {
         if (response.data) {
           this.pollResults = response.data;
         } else {
-          const error = response.data;
-          this.showServerError(error);
+
         }
       } catch (error) {
         this.showCatchError(error);
+
       }
     },
     async postQuery() {
@@ -194,7 +159,8 @@ export default {
         if (response.data.confirmAddPolls == true) {
           this.showServerResponse();
           this.getActivePolls();
-          this.createPolls = [{ question: "", multiple: false, deadline: "", choices: [""], token: '' }];
+          this.$refs.form.reset();
+          this.createPolls = [{ question: "", multiple: 0, deadline: "", choices: [""], token: '' }];
         } else {
           const error = response.data;
           this.showServerError(error);
@@ -236,10 +202,10 @@ export default {
 
             this.activePolls.forEach((item) => {
               if (item.questionId === this.pollData.questionId) {
-                item.active = 0;
+                //item.active = 0;
               }
             });
-            this.pollData = {};
+            //this.pollData = {};
           } else {
             const error = response.data;
             this.showServerError(error);
@@ -247,6 +213,14 @@ export default {
         } catch (error) {
           this.showCatchError(error);
         }
+      }
+    },
+    async onSubmit() {
+      const isValid = await this.$refs.form.validate();
+      if (!isValid) {
+        return;
+      } else {
+        this.postQuery();
       }
     },
     showServerResponse() {

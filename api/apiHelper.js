@@ -42,6 +42,7 @@ export const config = {
     addVotes: host + '/build_mate_be/API/polls/addvotes.php',
     addPolls: host + '/build_mate_be/API/polls/addpolls.php',
     getPollResults: host + '/build_mate_be/API/polls/getpollresults.php',
+    updatePoll: host + '/build_mate_be/API/polls/updatepoll.php'
     // Itt további végpontokat adhatsz meg
   },
 };

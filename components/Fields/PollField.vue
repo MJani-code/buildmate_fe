@@ -34,48 +34,58 @@ export default {
   },
   data: () => ({}),
   mounted() {
-    if(this.polls){
-      this.updateCountdowns();
-      setInterval(this.updateCountdowns, 1000);
+
+  },
+  watch: {
+    polls(newValue) {
+      if (newValue && newValue.length) {
+        setInterval(this.updateCountdowns, 1000);
+      }
     }
   },
   computed: {
     activePolls() {
-      // Szűrjük csak azokat az elemeket, ahol a 'active' érték true
       if (this.polls) {
         return this.polls.filter((poll) => poll.active);
-      }else{
-        console.log("nincsen aktív szavazás");
       }
     },
   },
   methods: {
     updateCountdowns() {
-      this.activePolls.forEach(poll => {
-        const deadline = new Date(poll.deadline);
-        const now = new Date();
-        const timeRemaining = deadline - now;
+      if (this.polls.length > 0) {
+        this.activePolls.forEach(poll => {
+          const deadline = new Date(poll.deadline);
+          const now = new Date();
+          const timeRemaining = deadline - now;
+          let hasExpired = false;
 
-        if (timeRemaining > 0) {
-          const seconds = Math.floor((timeRemaining / 1000) % 60);
-          const minutes = Math.floor((timeRemaining / 1000 / 60) % 60);
-          const hours = Math.floor((timeRemaining / 1000 / 60 / 60) % 24);
-          const days = Math.floor(timeRemaining / 1000 / 60 / 60 / 24);
 
-          poll.countdown = `${days}nap ${hours}:${minutes}:${seconds}`;
-        } else {
-          poll.countdown = 'Lejárt';
-          poll.active = 0;
-          this.fetchResults(poll.questionId);
-        }
-      });
+          if (timeRemaining > 0) {
+            const seconds = Math.floor((timeRemaining / 1000) % 60);
+            const minutes = Math.floor((timeRemaining / 1000 / 60) % 60);
+            const hours = Math.floor((timeRemaining / 1000 / 60 / 60) % 24);
+            const days = Math.floor(timeRemaining / 1000 / 60 / 60 / 24);
+
+            poll.countdown = `${days}nap ${hours}:${minutes}:${seconds}`;
+            hasExpired = false;
+          } else {
+            if (!hasExpired) {
+              poll.countdown = 'Lejárt';
+              poll.active = 0;
+              this.closePoll(poll.questionId);
+              this.$emit("closingPoll", poll.questionId);
+              hasExpired = true;
+            }
+          }
+        });
+      }
+
     },
-    async fetchResults(id) {
+    async closePoll(id) {
       var token = this.$store.state.auth.token;
       var questionId = id;
       try {
-        const response = await APIPOST2("getPollResults", { token: token, id: questionId });
-        console.log(`Eredmények a ${questionId} azonosítójú kérdéshez:`, response.data);
+        const response = await APIPOST2("updatePoll", { token: token, id: questionId, method: 'Close' });
       } catch (error) {
         console.error('Hiba az eredmények lekérésekor:', error);
       }

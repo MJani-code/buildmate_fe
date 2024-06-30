@@ -1,8 +1,8 @@
 <template>
     <v-card>
         <v-card-title>Szavazás eredmények</v-card-title>
-        <v-expansion-panels>
-            <v-expansion-panel v-if="pollResults"v-for="(poll, index) in pollResults" :key="index">
+        <v-expansion-panels v-if="pollResults">
+            <v-expansion-panel v-for="(poll, index) in getPollResults" :key="index" :id="index">
                 <v-expansion-panel-header>
                     {{ poll.question }}
 
@@ -42,31 +42,16 @@ export default {
         }
     },
     mounted() {
-        this.Polls();
+
     },
     computed: {
-
+        getPollResults(){
+            if(this.pollResults){
+                return this.pollResults;
+            }
+        }
     },
     methods: {
-        Polls() {
-
-            // Szűrjük csak azokat az elemeket, ahol a 'active' érték true
-            if (this.pollResults) {
-                console.log(this.pollResults);
-                // for (const key in this.pollResults) {
-                //     if (this.pollResults.hasOwnProperty(key)) {
-                //         const poll = this.pollResults[key];
-                //         console.log(`Question ID: ${key}`);
-                //         console.log(`Question: ${poll.question}`);
-                //         console.log(`Labels: ${poll.labels.join(', ')}`);
-                //         console.log(`Data: ${poll.data.join(', ')}`);
-                //         console.log('----------------------');
-                //     }
-                // }
-            }else{
-                console.log("nincsenek lezárt szavazások");
-            }
-        },
         hasCheckedOptions(poll) {
             return poll.options.some((option) => option.checked);
         },
