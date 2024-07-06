@@ -77,6 +77,7 @@ export default {
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    devicePixelRatio: 4
                 }
             });
         }
@@ -90,5 +91,5 @@ export default {
 </script>
 
 <style>
-.pollresults {}
+
 </style>
