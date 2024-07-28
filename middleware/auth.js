@@ -3,7 +3,10 @@ import { APIPOST } from "~/api/apiHelper";
 export default async function ({ store, redirect, route }) {
     // Adatok lekérése a localstorage-ból
     const dataFromLocalStorage = localStorage.getItem('apiLogin');
-    const parsedData = JSON.parse(dataFromLocalStorage);
+    var parsedData = JSON.parse(dataFromLocalStorage);
+    if(parsedData){
+        parsedData.path = route.path
+    }
 
     var tokenValid = false;
 
@@ -33,7 +36,7 @@ export default async function ({ store, redirect, route }) {
             store.state.auth.condominiumId = condominiumId;
 
             // Ha a token érvényes, a válasz 200-as státuszkóddal érkezik
-            if (response.status === 200) {
+            if (response.data.status === 200) {
                 // Ellenőrizd a felhasználó jogosultságát csak a bizonyos útvonalon.
                 if (route.path.startsWith('/ccr') && pageCategory !== 'ccr') {
                     return redirect('/')
@@ -43,7 +46,7 @@ export default async function ({ store, redirect, route }) {
                 }
             } else {
                 // Ha a token érvénytelen vagy lejárt, átirányítjuk a felhasználót a bejelentkezési oldalra
-                return redirect('/');
+                return redirect('/'+pageCategory+'/home');
             }
         } catch (error) {
             // Ha hiba történt az API hívás során, átirányítjuk a felhasználót a bejelentkezési oldalra

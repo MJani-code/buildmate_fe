@@ -5,13 +5,13 @@
         <v-list-item>
           <v-list-item-title><b>Szia,</b> {{ firstName }}</v-list-item-title>
         </v-list-item>
-        <v-list-item v-for="(item, index) in routers" :key="index" router :to="item.to">
+        <v-list-item v-for="(item, index) in menuItems" :key="index" router :to="item.path">
           <v-list-item-action>
             <v-icon>{{ item.icon }}</v-icon>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>
-              {{ item.title }}
+              {{ item.title_hu }}
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
@@ -69,12 +69,14 @@ export default {
       right: true,
       rightDrawer: false,
       firstName: "",
-      showConfirmLogoutModal: false
+      showConfirmLogoutModal: false,
+      menuItems: []
     };
   },
   created() {
     const dataFromLocalStorage = localStorage.getItem('apiLogin');
     this.firstName = JSON.parse(dataFromLocalStorage).firstName;
+    this.menuItems = JSON.parse(dataFromLocalStorage).menuItems;
   },
   methods: {
     logout() {

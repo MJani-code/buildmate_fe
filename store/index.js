@@ -15,7 +15,8 @@ export const createStore = () => {
         token: '',
         userRoleId: null,
         pageCategory: '',
-        condominiumId: null
+        condominiumId: null,
+        menuItems: [],
       },
       responseHandler: {
         show: false,
@@ -49,6 +50,9 @@ export const createStore = () => {
       },
       SET_CONDOMINIUMID(state, value) {
         state.auth.condominiumId = value
+      },
+      SET_MENUITEMS(state, value) {
+        state.auth.menuItems = value
       },
       SET_RESPONSEHANDLER(state, value) {
         state.responseHandler = value
@@ -87,6 +91,7 @@ export const createStore = () => {
             const userId = response.data.userId;
             const token = response.data.token;
             const condominiumId = response.data.condominium_id;
+            const menuItems = response.data.menuItems;
 
             commit('SET_LOGGED_IN', true)
             commit('SET_USERID', userId)
@@ -95,6 +100,7 @@ export const createStore = () => {
             commit('SET_PAGECATEGORY', pageCategory)
             commit('SET_USERTOKEN', token)
             commit('SET_CONDOMINIUMID', condominiumId)
+            commit('SET_MENUITEMS', menuItems)
 
             this.$router.push('/' + pageCategory + '/home') // Módosítsd a célútvonalat a saját alkalmazásodhoz igazítva
           } else {
