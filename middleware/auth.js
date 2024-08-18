@@ -35,18 +35,13 @@ export default async function ({ store, redirect, route }) {
             store.state.auth.userRoleId = userRoleId;
             store.state.auth.condominiumId = condominiumId;
 
-            // Ha a token érvényes, a válasz 200-as státuszkóddal érkezik
-            if (response.data.status === 200) {
-                // Ellenőrizd a felhasználó jogosultságát csak a bizonyos útvonalon.
-                if (route.path.startsWith('/ccr') && pageCategory !== 'ccr') {
-                    return redirect('/')
-                }
-                else if (route.path.startsWith('/admin') && pageCategory !== 'admin') {
-                    return redirect('/')
-                }
-            } else {
-                // Ha a token érvénytelen vagy lejárt, átirányítjuk a felhasználót a bejelentkezési oldalra
-                return redirect('/'+pageCategory+'/home');
+            if(response.data.status === 401) {
+                //Oldaljogosultság ellenőrzés
+                return redirect(`/${data.pageCategory}/home`);
+            } else if(response.data.status === 404 || response.data.status === 500) {
+                //Lejárt token
+                localStorage.removeItem('apiLogin');
+                return redirect('/');
             }
         } catch (error) {
             // Ha hiba történt az API hívás során, átirányítjuk a felhasználót a bejelentkezési oldalra
@@ -54,9 +49,8 @@ export default async function ({ store, redirect, route }) {
             return redirect('/');
         }
     }
-
     // Ellenőrizd, hogy a felhasználó be van-e jelentkezve
-    if ((route.path.startsWith('/admin') || route.path.startsWith('/ccr')) && !tokenValid) {
-        redirect('/');
-    }
+    // if ((route.path.startsWith('/admin') || route.path.startsWith('/ccr')) && !tokenValid) {
+    //     redirect('/');
+    // }
 }

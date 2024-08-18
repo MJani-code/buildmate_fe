@@ -47,10 +47,15 @@ export const config = {
   },
 };
 
+const dataFromLocalStorage = localStorage.getItem('apiLogin');
+var parsedData = JSON.parse(dataFromLocalStorage);
+
+const token = parsedData ? parsedData.token : '';
+
 const API = axios.create({
   baseURL: process.env.API_URL ?? 'http://',
   timeout: 3000
-  // headers: {'X-Custom-Header': 'foobar'}
+  // headers: {'Authorization': `Bearer ${token}`}
 });
 
 export const APIPOST = async (endpoint, data) => {
@@ -62,7 +67,8 @@ export const APIPOST2 = async (endpoint, data) => {
   const url = config.apiUrl[endpoint];
   return await API.post(url, data, {
     headers: {
-      'Content-Type': 'multipart/form-data'
+      'Content-Type': 'multipart/form-data',
+      'Authorization': `Bearer ${token}`
     }
   });
 }

@@ -91,7 +91,7 @@ export const createStore = () => {
             const userId = response.data.userId;
             const token = response.data.token;
             const condominiumId = response.data.condominium_id;
-            const menuItems = response.data.menuItems;
+            const menuItems = response.data.menuItems.payload;
 
             commit('SET_LOGGED_IN', true)
             commit('SET_USERID', userId)
