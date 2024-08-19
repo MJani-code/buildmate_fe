@@ -138,7 +138,7 @@ export default {
       var token = this.$store.state.auth.token;
 
       try {
-        const response = await APIPOST2("getPollResults", { token: token });
+        const response = await APIPOST2("getPollResults","",token);
         if (response.data) {
           this.pollResults = response.data;
         } else {

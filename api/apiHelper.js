@@ -1,11 +1,5 @@
 import axios from 'axios';
 
-//DEV
-//const host = 'http://localhost:5000/THFustike3';
-
-//Live
-//const host = window.location.origin;
-
 let host = ''
 if(window.location.hostname === 'localhost'){
   host = 'http://localhost:5000/THFustike3'
@@ -47,10 +41,6 @@ export const config = {
   },
 };
 
-const dataFromLocalStorage = localStorage.getItem('apiLogin');
-var parsedData = JSON.parse(dataFromLocalStorage);
-
-const token = parsedData ? parsedData.token : '';
 
 const API = axios.create({
   baseURL: process.env.API_URL ?? 'http://',
@@ -63,7 +53,7 @@ export const APIPOST = async (endpoint, data) => {
   return await API.post(url, data);
 }
 
-export const APIPOST2 = async (endpoint, data) => {
+export const APIPOST2 = async (endpoint, data, token) => {
   const url = config.apiUrl[endpoint];
   return await API.post(url, data, {
     headers: {
@@ -94,10 +84,3 @@ export const APIUPLOAD = async (endpoint, data) => {
     }
   });
 }
-// export const APIUPLOAD = async (url, data) => {
-//   return await API.post(url, data, {
-//     headers: {
-//       'Content-Type': 'multipart/form-data'
-//     }
-//   });
-// }
